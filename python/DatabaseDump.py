@@ -1,11 +1,14 @@
 import mysql.connector as mysql
 import csv
+import bcrypt
+
+salt = bcrypt.gensalt()
 
 db = mysql.connect(
     host = "localhost",
     port = "3306",
     user = "root",
-    passwd = "P@ssw0rd",
+    passwd = "password",
     database = 'moviereviewer'
 )
 
@@ -21,6 +24,8 @@ with open('users3.csv') as csv_file:
     line_count = 1
     for row in csv_reader:
         if line_count != 0:
+            hashed = bcrypt.hashpw(row[7].encode('utf-8'), salt)
+            row[7] = hashed
             # print(f'Column names are {", ".join(row)}')
             # line_count += 1
             query = "INSERT INTO users (fname, lname, street, city, state, zip_code, email, password, phone) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)"
@@ -28,7 +33,7 @@ with open('users3.csv') as csv_file:
 
             cursor.execute(query, values)
 
-            # print(f'First Name: {row[0]} Last Name: {row[1]} Address: {row[2]} City: {row[3]} State: {row[4]} Zip-code: {row[5]} Email: {row[6]} Password: {row[7]} Phone: {row[8]}.')
+            print(f'First Name: {row[0]} Last Name: {row[1]} Address: {row[2]} City: {row[3]} State: {row[4]} Zip-code: {row[5]} Email: {row[6]} Password: {row[7]} Phone: {row[8]}.')
             line_count += 1
     print(f'Processed {line_count} lines.')
 
