@@ -3,14 +3,14 @@ users3.csv
 
 # dependencies
 node_modules/
-/.pnp
+.pnp/
 .pnp.js
 
 # testing
-/coverage
+coverage/
 
 # production
-/build
+build/
 
 # misc
 .DS_Store
