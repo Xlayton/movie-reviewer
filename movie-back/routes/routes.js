@@ -1,3 +1,5 @@
+require("dotenv").config();
+
 const path = require("path");
 const mysql = require("@mysql/xdevapi");
 const frontEndFolderRelativePath = "../movie-react-front/build";
@@ -7,16 +9,24 @@ const serveSPA = (req, res) => {
 }
 
 const getAllUsers = (req, res) => {
-    const con = mysql.getSession({
-        host:process.env.DBHOST,
-        user:process.env.DBUSER,
-        password:process.env.DBPASS,
-        schema:process.env.DBDATABASE,
-        collection:"users"
-    }).then(session => {
-        let results = session.find().execute()
-        console.log(results)
-    }).catch(console.log);
+    const config = {
+        user: process.env.DBUSER,
+        password: process.env.DBPASS,
+        host: process.env.DBHOST,
+        port: process.env.DBPORT,
+        schema: process.env.DBDATABASE
+    }
+    mysql.getSession(config)
+    .then(session => {
+        session.getSchema(config.schema)
+    })
+    .then(schema => console.log(schema))
+    .catch(console.error)
+    res.send("AH")
+}
+
+const loginUser = (req, res) => {
+    
 }
 
 module.exports = {
