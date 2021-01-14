@@ -6,12 +6,17 @@ export default class Homepage extends React.Component {
         
         this.state = {
             email: '',
-            password: ''
+            password: '',
+            review: '',
+            rating: 0,
+            renderReview: false
         }
 
         this.authenticateUser = this.authenticateUser.bind(this);
         this.handleEmail = this.handleEmail.bind(this);
         this.handlePassword = this.handlePassword.bind(this);
+        this.handleRating = this.handleRating.bind(this);
+        this.handleReview = this.handleReview.bind(this);
     }
 
     handleEmail = evt => {
@@ -21,6 +26,14 @@ export default class Homepage extends React.Component {
     handlePassword = evt => {
         this.setState({password: evt.target.value});
     }
+
+    handleRating = evt => {
+        this.setState({rating: evt.target.value});
+    }
+
+    handleReview = evt => {
+        this.setState({review: evt.target.value});
+    }
     
     authenticateUser = () => {
         fetch(`localhost:8080/api/user/${this.state.email}/${this.state.password}`)
@@ -28,8 +41,46 @@ export default class Homepage extends React.Component {
         .then(data => {
             if(data){
                 console.log(true);
+                this.setState({
+                    renderReview: true
+                })
             }
         })
+    }
+
+    postReview = () => {
+        //TODO
+    }
+
+    renderRatingReview = () => {
+        if(this.state.renderReview){
+            return (
+                <div>
+                    <form onSubmit={()=> this.postReview}>
+                        <label>Rating: </label>
+                        <select value={this.state.rating} onChange={this.handleRating}>
+                            <option value="1">1 Star</option>
+                            <option value="2">2 Stars</option>
+                            <option value="3">3 Stars</option>
+                            <option value="4">4 Stars</option>
+                            <option value="4">5 Stars</option>
+                        </select>                       
+                        <br/>
+                        <br/>
+                        <label>Review: </label>
+                        <textarea rows="10" cols="100" value={this.state.review} onChange={this.handleReview} />
+                        <br/>
+                        <br/>
+                        <input type="submit" value="Submit"/>
+                    </form>
+                </div>
+            )
+        } else {
+            return (
+                <>
+                </>
+            )
+        }
     }
 
     render() {
