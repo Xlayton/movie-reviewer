@@ -19,6 +19,10 @@ const getAllUsers = (req, res) => {
     }).catch(console.log);
 }
 
+const getUser = (req, res) => {
+    
+}
+
 module.exports = {
     serveSPA: serveSPA,
     getAllUsers: getAllUsers
