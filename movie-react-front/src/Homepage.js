@@ -36,7 +36,17 @@ export default class Homepage extends React.Component {
     }
     
     authenticateUser = () => {
-        fetch(`localhost:8080/api/user/${this.state.email}/${this.state.password}`)
+        console.log('authenticating......')
+        fetch('http://localhost:8080/login', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
+            },
+            body: new URLSearchParams({
+                email: this.state.email,
+                password: this.state.password
+            })
+          })
         .then(res => res.json())
         .then(data => {
             if(data){
@@ -89,7 +99,7 @@ export default class Homepage extends React.Component {
                 <h1>Homepage</h1>
                 <br/>
                 <br/>
-                <form onSubmit={()=> this.authenticateUser}>
+                {/* <form onSubmit={()=> this.authenticateUser}> */}
                     <label>Email: </label>
                     <input type="text" value={this.state.email} onChange={this.handleEmail} />
                     <br/>
@@ -98,8 +108,9 @@ export default class Homepage extends React.Component {
                     <input type="text" value={this.state.password} onChange={this.handlePassword} />
                     <br/>
                     <br/>
-                    <input type="submit" value="Submit"/>
-                </form>
+                    {/* <input type="submit" value="Submit"/> */}
+                    <button onClick={this.authenticateUser}>Submit</button>
+                {/* </form> */}
             </div>
         )
     }
