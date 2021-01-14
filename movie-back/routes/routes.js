@@ -18,7 +18,7 @@ const getAllUsers = (req, res) => {
     }
     mysql.getSession(config)
     .then(session => {
-        session.getSchema(config.schema)
+        return session.getSchema(config.schema)
     })
     .then(schema => console.log(schema))
     .catch(console.error)
@@ -26,10 +26,11 @@ const getAllUsers = (req, res) => {
 }
 
 const loginUser = (req, res) => {
-    
+
 }
 
 module.exports = {
     serveSPA: serveSPA,
-    getAllUsers: getAllUsers
+    getAllUsers: getAllUsers,
+    loginUser: loginUser
 }
