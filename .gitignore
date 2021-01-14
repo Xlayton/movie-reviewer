@@ -6,6 +6,7 @@ hashedUsers.csv
 node_modules/
 .pnp/
 .pnp.js
+.env
 
 # testing
 coverage/
