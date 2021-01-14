@@ -20,9 +20,10 @@ const getAllUsers = (req, res) => {
     .then(session => {
         return session.getSchema(config.schema)
     })
-    .then(schema => console.log(schema))
+    .then(schema => schema.getTable("users"))
+    .then(table => table.select().execute())
+    .then(result => res.send(result.fetchAll()))
     .catch(console.error)
-    res.send("AH")
 }
 
 const loginUser = (req, res) => {
