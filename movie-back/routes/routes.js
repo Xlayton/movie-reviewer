@@ -35,21 +35,7 @@ const getAllUsers = (req, res) => {
 }
 
 const createUser = (req, res) => {
-<<<<<<< HEAD
-    const {
-        fname,
-        lname,
-        street,
-        city,
-        state,
-        zip_code,
-        email,
-        password,
-        phone
-    } = req.body;
-=======
     const { fname, lname, street, city, state, zip_code, email, password, phone } = req.body;
->>>>>>> e1315b1715cd67e4eb4c24936c0a5d173139358f
     if (!fname || !lname || !street || !city || !state || !zip_code || !email || !password || !phone) {
         res.status(400);
         res.send("Invalid parameters")
@@ -57,21 +43,7 @@ const createUser = (req, res) => {
     }
     getDbConn()
         .then(schema => schema.getTable("users"))
-<<<<<<< HEAD
-        .then(table => table.insert({
-            fname,
-            lname,
-            street,
-            city,
-            state,
-            zip_code,
-            email,
-            password: bcrypt.hashSync(password, 10),
-            phone
-        }).execute())
-=======
         .then(table => table.insert({ fname, lname, street, city, state, zip_code, email, password: bcrypt.hashSync(password, 10), phone }).execute())
->>>>>>> e1315b1715cd67e4eb4c24936c0a5d173139358f
         .then(result => {
             res.status(200);
             res.json(result)
@@ -160,10 +132,7 @@ module.exports = {
     getAllUsers: getAllUsers,
     loginUser: loginUser,
     createUser: createUser,
-<<<<<<< HEAD
     updateUser: updateUser,
     deleteUser: deleteUser,
     prepopulateData: prepopulateData
-=======
->>>>>>> e1315b1715cd67e4eb4c24936c0a5d173139358f
 }
