@@ -144,6 +144,11 @@ const loginUser = (req, res) => {
                 }
             })
         })
+        .catch(err=>{
+            console.log("email not exist")
+            res.json(false);
+        })
+
 }
 
 const postReview = (req, res) => {
