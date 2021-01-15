@@ -16,12 +16,12 @@ const prepopulateData = (req, res) => {
         .then(schema => schema.getTable("users"))
         .then(table => {
             let csv = fs.readFileSync(__dirname + "/users3.csv").toString();
-            let parseData = csvParse(csv, {columns: true});
+            let parseData = csvParse(csv, {
+                columns: true
+            });
             parseData.forEach((dataSet, i) => {
-                if (i !== 0) {
                     dataSet.password = bcrypt.hashSync(dataSet.password, 10);
                     table.insert(dataSet).execute()
-                }
             })
         })
 }
@@ -35,7 +35,17 @@ const getAllUsers = (req, res) => {
 }
 
 const createUser = (req, res) => {
-    const { fname, lname, street, city, state, zip_code, email, password, phone } = req.body;
+    const {
+        fname,
+        lname,
+        street,
+        city,
+        state,
+        zip_code,
+        email,
+        password,
+        phone
+    } = req.body;
     if (!fname || !lname || !street || !city || !state || !zip_code || !email || !password || !phone) {
         res.status(400);
         res.send("Invalid parameters")
@@ -43,7 +53,17 @@ const createUser = (req, res) => {
     }
     getDbConn()
         .then(schema => schema.getTable("users"))
-        .then(table => table.insert({ fname, lname, street, city, state, zip_code, email, password: bcrypt.hashSync(password, 10), phone }).execute())
+        .then(table => table.insert({
+            fname,
+            lname,
+            street,
+            city,
+            state,
+            zip_code,
+            email,
+            password: bcrypt.hashSync(password, 10),
+            phone
+        }).execute())
         .then(result => {
             res.status(200);
             res.json(result)
@@ -85,7 +105,7 @@ const loginUser = (req, res) => {
     email = req.body.email;
     password = req.body.password;
 
-    console.log(email,password);
+    console.log(email, password);
 
     getDbConn()
         .then(schema => schema.getTable("users"))
@@ -95,14 +115,14 @@ const loginUser = (req, res) => {
 
             // console.log(password, user[8])
 
-            userPassword = user[8].slice(2,user[8].length-1)
+            // userPassword = user[8].slice(2, user[8].length - 1)
 
             // console.log(userPassword);
-            bcrypt.compare(password, userPassword, (err,result)=>{
-                if(err){
+            bcrypt.compare(password, user[8], (err, result) => {
+                if (err) {
                     res.send(err)
                     console.error(err)
-                } else{   
+                } else {
                     console.log(result)
                     res.status(200);
                     res.json(result)
@@ -112,7 +132,7 @@ const loginUser = (req, res) => {
 }
 
 const postReview = (req, res) => {
-    
+
 }
 
 let getDbConn = () => {
@@ -124,7 +144,8 @@ let getDbConn = () => {
         schema: process.env.DBDATABASE
     }
     return mysql.getSession(config)
-        .then(session => session.getSchema(config.schema))
+        .then(session => session.getSchema(process.env.DBDATABASE))
+        .catch(console.log)
 }
 
 module.exports = {
