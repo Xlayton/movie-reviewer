@@ -50,7 +50,7 @@ export default class Homepage extends React.Component {
         .then(res => res.json())
         .then(data => {
             if(data){
-                console.log(true);
+                console.log(data);
                 this.setState({
                     renderReview: true
                 })
@@ -105,7 +105,7 @@ export default class Homepage extends React.Component {
                     <br/>
                     <br/>
                     <label>Password: </label>
-                    <input type="text" value={this.state.password} onChange={this.handlePassword} />
+                    <input type="password" value={this.state.password} onChange={this.handlePassword} />
                     <br/>
                     <br/>
                     {/* <input type="submit" value="Submit"/> */}
