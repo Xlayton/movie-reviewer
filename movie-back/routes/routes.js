@@ -190,7 +190,7 @@ const createReview = (req, res) => {
     getDbConn()
     .then(schema => schema.getTable("reviews"))
     .then(table => table.insert("user_id", "movie_id", "review_body", "movie_rating").values(user_id, movie_id, review_body, rating).execute())
-    .then(result => {
+    .then(() => {
         res.status(200);
         res.send({})
     })
@@ -202,7 +202,25 @@ const createReview = (req, res) => {
 }
 
 const updateReview = (req, res) => {
-    
+    const {review_id, review_body, rating} = req.body;
+    if(!review_id || !review_body || !rating) {
+        res.status(400);
+        res.send("Invalid Request Body");
+        return;
+    }
+    getDbConn()
+    .then(schema => schema.getTable("reviews"))
+    .then(table => table.update().set("review_body", review_body).set("movie_rating", rating).where(`id=${review_id}`).execute())
+    .then(result => {
+        console.log(result.getWarnings())
+        res.status(200);
+        res.send({})
+    })
+    .catch(err => {
+        console.log("err")
+        res.status(500);
+
+    })
 }
 
 const deleteReview = (req, res) => {
