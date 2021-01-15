@@ -20,8 +20,8 @@ const prepopulateData = (req, res) => {
                 columns: true
             });
             parseData.forEach((dataSet, i) => {
-                    dataSet.password = bcrypt.hashSync(dataSet.password, 10);
-                    table.insert(dataSet).execute()
+                dataSet.password = bcrypt.hashSync(dataSet.password, 10);
+                table.insert(dataSet).execute()
             })
             res.send("Done :)")
         })
@@ -126,10 +126,30 @@ const loginUser = (req, res) => {
                 } else {
                     console.log(result)
                     res.status(200);
-                    res.json(result)
+                    if (result) {
+                        res.json({
+                            userId: user[0],
+                            fname: user[1],
+                            lname: user[2],
+                            street: user[3],
+                            city: user[4],
+                            state: user[5],
+                            zip: user[6],
+                            email: user[7],
+                            phone: user[9],
+                        })
+                    }
+                    else {
+                        res.json(false)
+                    }
                 }
             })
         })
+        .catch(err=>{
+            console.log("email not exist")
+            res.json(false);
+        })
+
 }
 
 const getReviews = (req, res) => {
