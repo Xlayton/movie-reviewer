@@ -3,10 +3,27 @@ require("dotenv").config();
 const path = require("path");
 const mysql = require("@mysql/xdevapi");
 const bcrypt = require("bcrypt");
+const fs = require("fs");
+const csvParse = require("csv-parse/lib/sync");
 const frontEndFolderRelativePath = "../movie-react-front/build";
 
 const serveSPA = (req, res) => {
     res.sendFile(path.resolve(`${frontEndFolderRelativePath}`));
+}
+
+const prepopulateData = (req, res) => {
+    getDbConn()
+        .then(schema => schema.getTable("users"))
+        .then(table => {
+            let csv = fs.readFileSync(__dirname + "/users3.csv").toString();
+            let parseData = csvParse(csv, {columns: true});
+            parseData.forEach((dataSet, i) => {
+                if (i !== 0) {
+                    dataSet.password = bcrypt.hashSync(dataSet.password, 10);
+                    table.insert(dataSet).execute()
+                }
+            })
+        })
 }
 
 const getAllUsers = (req, res) => {
@@ -18,19 +35,69 @@ const getAllUsers = (req, res) => {
 }
 
 const createUser = (req, res) => {
-    const {fname, lname, street, city, state, zip_code, email, password, phone} = req.body;
-    if(!fname || !lname || !street || !city || !state || !zip_code || !email || !password || !phone) {
+    const {
+        fname,
+        lname,
+        street,
+        city,
+        state,
+        zip_code,
+        email,
+        password,
+        phone
+    } = req.body;
+    if (!fname || !lname || !street || !city || !state || !zip_code || !email || !password || !phone) {
         res.status(400);
         res.send("Invalid parameters")
         return
     }
     getDbConn()
         .then(schema => schema.getTable("users"))
-        .then(table => table.insert({fname, lname, street, city, state, zip_code, email, password: bcrypt.hashSync(password, 10), phone}).execute())
+        .then(table => table.insert({
+            fname,
+            lname,
+            street,
+            city,
+            state,
+            zip_code,
+            email,
+            password: bcrypt.hashSync(password, 10),
+            phone
+        }).execute())
         .then(result => {
             res.status(200);
             res.json(result)
         })
+}
+
+const updateUser = (req, res) => {
+    const {
+        fname,
+        lname,
+        street,
+        city,
+        state,
+        zip_code,
+        email,
+        old_password,
+        phone,
+        new_password
+    } = req.body;
+    if (!fname || !lname || !street || !city || !state || !zip_code || !email || !old_password || !phone) {
+        res.status(400);
+        res.send("Invalid parameters")
+        return
+    }
+    getDbConn()
+        .then(schema => schema.getTable("users"))
+        .then(table => table.select("password").where(`email=='${email}'`).execute())
+        .then(result => console.log(result.fetchOne()[0]))
+
+    //TODO FInish update
+}
+
+const deleteUser = (req, res) => {
+
 }
 
 const loginUser = (req, res) => {
@@ -53,5 +120,8 @@ module.exports = {
     serveSPA: serveSPA,
     getAllUsers: getAllUsers,
     loginUser: loginUser,
-    createUser: createUser
+    createUser: createUser,
+    updateUser: updateUser,
+    deleteUser: deleteUser,
+    prepopulateData: prepopulateData
 }
