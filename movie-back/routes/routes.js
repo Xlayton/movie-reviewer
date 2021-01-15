@@ -171,7 +171,7 @@ const getReviews = (req, res) => {
     .then(result => {
         if(result) {
             res.status(200);
-            res.json(...result.fetchAll());
+            res.json(result.fetchAll());
         }
     })
     .catch(err => {
@@ -202,7 +202,7 @@ const createReview = (req, res) => {
 }
 
 const updateReview = (req, res) => {
-
+    
 }
 
 const deleteReview = (req, res) => {
