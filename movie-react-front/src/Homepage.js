@@ -7,9 +7,11 @@ export default class Homepage extends React.Component {
         this.state = {
             email: '',
             password: '',
-            review: '',
+            review_body: '',
             rating: 0,
             movie: '',
+            user_id: '',
+            movie_id: '',
             renderReview: false
         }
 
@@ -25,7 +27,8 @@ export default class Homepage extends React.Component {
         .then(res => res.json())
         .then(data => {
             this.setState({
-                movie: data
+                movie: data,
+                movie_id: data.id
             })
         })
     }
@@ -43,7 +46,7 @@ export default class Homepage extends React.Component {
     }
 
     handleReview = evt => {
-        this.setState({review: evt.target.value});
+        this.setState({review_body: evt.target.value});
     }
     
     authenticateUser = () => {
@@ -63,14 +66,34 @@ export default class Homepage extends React.Component {
             if(data){
                 console.log(data);
                 this.setState({
-                    renderReview: true
+                    renderReview: true,
+                    user_id: data.userId
                 })
             }
         })
     }
 
     postReview = () => {
-        //TODO
+        //TODO - Page should display all current reviews for the movie 
+        // - User can update their current review for the movie 
+        fetch('http://localhost:8080/api/reviews', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
+            },
+            body: new URLSearchParams({
+                user_id: this.state.user_id,
+                movie_id: this.state.movie_id,
+                review_body: this.state.review_body,
+                rating: this.state.rating
+            })
+          })
+        .then(res => res.json())
+        .then(data => {
+            if(data){
+                console.log(data);
+            }
+        })
     }
 
     renderRatingReview = () => {
