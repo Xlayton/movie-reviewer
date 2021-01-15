@@ -134,5 +134,6 @@ module.exports = {
     createUser: createUser,
     updateUser: updateUser,
     deleteUser: deleteUser,
-    prepopulateData: prepopulateData
+    prepopulateData: prepopulateData,
+    postReview: postReview
 }
