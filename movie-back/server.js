@@ -14,6 +14,8 @@ app.route("/api/users")
 app.route("/login")
 .post(routes.loginUser)
 
+app.route("/postreview")
+.post(routes.postReview)
 
 app.get("*", routes.serveSPA)
 
