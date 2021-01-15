@@ -23,6 +23,7 @@ const prepopulateData = (req, res) => {
                     dataSet.password = bcrypt.hashSync(dataSet.password, 10);
                     table.insert(dataSet).execute()
             })
+            res.send("Done :)")
         })
 }
 
@@ -131,7 +132,60 @@ const loginUser = (req, res) => {
         })
 }
 
-const postReview = (req, res) => {
+const getReviews = (req, res) => {
+    getDbConn()
+    .then(schema => schema.getTable("reviews"))
+    .then(table => {
+        const {user_id, movie_id, review_id} = req.query;
+        if(user_id) {
+            return table.select().where(`user_id=${user_id}`).execute()
+        } else if(movie_id) {
+            return table.select().where(`movie_id=${movie_id}`).execute()
+        } else if(review_id) {
+            return table.select().where(`id=${review_id}`).execute()
+        } else {
+            res.status(400);
+            res.send("Invalid Params")
+        }
+    })
+    .then(result => {
+        if(result) {
+            res.status(200);
+            res.json(...result.fetchAll());
+        }
+    })
+    .catch(err => {
+        res.status(500);
+        res.json(err);
+    });
+}
+
+const createReview = (req, res) => {
+    const {user_id, movie_id, review_body, rating} = req.body;
+    if(!user_id || !movie_id || !review_body || !rating) {
+        res.status(400);
+        res.send("Invalid Request Body")
+        return;
+    }
+    getDbConn()
+    .then(schema => schema.getTable("reviews"))
+    .then(table => table.insert("user_id", "movie_id", "review_body", "movie_rating").values(user_id, movie_id, review_body, rating).execute())
+    .then(result => {
+        res.status(200);
+        res.send({})
+    })
+    .catch(err => {
+        console.log(err)
+        res.status(500);
+        res.send("Server Error");
+    })
+}
+
+const updateReview = (req, res) => {
+
+}
+
+const deleteReview = (req, res) => {
 
 }
 
@@ -156,5 +210,8 @@ module.exports = {
     updateUser: updateUser,
     deleteUser: deleteUser,
     prepopulateData: prepopulateData,
-    postReview: postReview
+    getReviews: getReviews,
+    createReview: createReview,
+    updateReview: updateReview,
+    deleteReview: deleteReview
 }

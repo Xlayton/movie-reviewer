@@ -19,11 +19,14 @@ app.route("/api/users")
 .put(routes.updateUser)
 .delete(routes.deleteUser)
 
+app.route("/api/reviews")
+.get(routes.getReviews)
+.post(routes.createReview)
+.put(routes.updateReview)
+.delete(routes.deleteReview)
+
 app.route("/login")
 .post(routes.loginUser)
- 
-app.route("/postreview")
-.post(routes.postReview)
 
 app.get("*", routes.serveSPA)
 
