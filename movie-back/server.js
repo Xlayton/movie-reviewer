@@ -3,8 +3,11 @@ require("dotenv").config();
 const express = require("express")
 const routes = require("./routes/routes")
 const bodyParser = require("body-parser")
+const cors = require('cors');
 
 const app = express();
+
+app.use(cors());
 app.use(bodyParser.urlencoded({extended: true}))
 
 app.route("/api/test/populate")
@@ -17,7 +20,10 @@ app.route("/api/users")
 .delete(routes.deleteUser)
 
 app.route("/login")
-.get(routes.loginUser)
+.post(routes.loginUser)
+
+app.route("/postreview")
+.post(routes.postReview)
 
 app.get("*", routes.serveSPA)
 

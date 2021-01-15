@@ -35,6 +35,7 @@ const getAllUsers = (req, res) => {
 }
 
 const createUser = (req, res) => {
+<<<<<<< HEAD
     const {
         fname,
         lname,
@@ -46,6 +47,9 @@ const createUser = (req, res) => {
         password,
         phone
     } = req.body;
+=======
+    const { fname, lname, street, city, state, zip_code, email, password, phone } = req.body;
+>>>>>>> e1315b1715cd67e4eb4c24936c0a5d173139358f
     if (!fname || !lname || !street || !city || !state || !zip_code || !email || !password || !phone) {
         res.status(400);
         res.send("Invalid parameters")
@@ -53,6 +57,7 @@ const createUser = (req, res) => {
     }
     getDbConn()
         .then(schema => schema.getTable("users"))
+<<<<<<< HEAD
         .then(table => table.insert({
             fname,
             lname,
@@ -64,6 +69,9 @@ const createUser = (req, res) => {
             password: bcrypt.hashSync(password, 10),
             phone
         }).execute())
+=======
+        .then(table => table.insert({ fname, lname, street, city, state, zip_code, email, password: bcrypt.hashSync(password, 10), phone }).execute())
+>>>>>>> e1315b1715cd67e4eb4c24936c0a5d173139358f
         .then(result => {
             res.status(200);
             res.json(result)
@@ -102,6 +110,37 @@ const deleteUser = (req, res) => {
 
 const loginUser = (req, res) => {
 
+    email = req.body.email;
+    password = req.body.password;
+
+    console.log(email,password);
+
+    getDbConn()
+        .then(schema => schema.getTable("users"))
+        .then((table) => table.select().where('email = :email').bind('email', email).execute())
+        .then(result => {
+            user = result.toArray()[0];
+
+            // console.log(password, user[8])
+
+            userPassword = user[8].slice(2,user[8].length-1)
+
+            // console.log(userPassword);
+            bcrypt.compare(password, userPassword, (err,result)=>{
+                if(err){
+                    res.send(err)
+                    console.error(err)
+                } else{   
+                    console.log(result)
+                    res.status(200);
+                    res.json(result)
+                }
+            })
+        })
+}
+
+const postReview = (req, res) => {
+    
 }
 
 let getDbConn = () => {
@@ -121,7 +160,10 @@ module.exports = {
     getAllUsers: getAllUsers,
     loginUser: loginUser,
     createUser: createUser,
+<<<<<<< HEAD
     updateUser: updateUser,
     deleteUser: deleteUser,
     prepopulateData: prepopulateData
+=======
+>>>>>>> e1315b1715cd67e4eb4c24936c0a5d173139358f
 }
