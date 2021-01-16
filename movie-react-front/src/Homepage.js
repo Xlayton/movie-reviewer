@@ -13,7 +13,10 @@ export default class Homepage extends React.Component {
             user_id: '',
             movie_id: '',
             reviews: '',
-            renderReview: false
+            renderReview: false,
+            userHasReview: false,
+            review_id: undefined,
+            enableEdit: false
         }
 
         this.authenticateUser = this.authenticateUser.bind(this);
@@ -36,6 +39,11 @@ export default class Homepage extends React.Component {
         fetch(`http://localhost:8080/api/reviews/?movie_id=${this.state.movie_id}`)
         .then(res => res.json())
         .then(data => {
+            data.forEach(review => {
+                if(this.state.user_id === review[1]) {
+                    this.setState({userHasReview: true, review_id: review[0]})
+                }
+            })
             this.setState({
                 reviews: data
             })
@@ -57,6 +65,22 @@ export default class Homepage extends React.Component {
     handleReview = evt => {
         this.setState({review_body: evt.target.value});
     }
+
+    refreshReviews = () => {
+        fetch(`http://localhost:8080/api/reviews/?movie_id=${this.state.movie_id}`)
+        .then(res => res.json())
+        .then(data => {
+            data.forEach(review => {
+                console.log(review, this.state.user_id)
+                if(this.state.user_id === review[1]) {
+                    this.setState({userHasReview: true, review_id: review[0], review_body: review[3], rating: review[4]})
+                }
+            })
+            this.setState({
+                reviews: data
+            })
+        })
+    }
     
     authenticateUser = () => {
         console.log('authenticating......')
@@ -74,6 +98,7 @@ export default class Homepage extends React.Component {
         .then(data => {
             if(data){
                 console.log(data);
+                this.refreshReviews()
                 this.setState({
                     renderReview: true,
                     user_id: data.userId
@@ -103,6 +128,31 @@ export default class Homepage extends React.Component {
                 console.log(data);
             }
         })
+    }
+
+    enableEdit = () => {
+        this.setState({enableEdit: true})
+    }
+
+    editReview = () => {
+        if(this.state.userHasReview && this.state.review_id) {
+        fetch('http://localhost:8080/api/reviews', {
+            method: "PUT",
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
+            },
+            body: new URLSearchParams({
+                review_id: this.state.review_id,
+                review_body: this.state.review_body,
+                rating: this.state.rating
+            })
+        }).then(res => res.json())
+        .then(data => {
+            this.setState({enableEdit: false});
+            this.refreshReviews();
+        })
+        .catch(console.log)
+    }
     }
 
     renderRatingReview = () => {
@@ -138,13 +188,34 @@ export default class Homepage extends React.Component {
         var reviews = [];
 
         for (let i = 0; i < this.state.reviews.length; i++) {
-            reviews.push(
-                <>
-                <p>User ID: {this.state.reviews[i][1]}</p>
-                <p>Rating: {this.state.reviews[i][4]}</p>
-                <p>Review: {this.state.reviews[i][3]}</p>
-                </>
-            )
+            console.log("Ah", this.state.reviews[i][1], this.state.review_id)
+            if(this.state.reviews[i][0] === this.state.review_id) {
+                reviews.push( 
+                    <>
+                    <button onClick={this.enableEdit}>Edit Review</button>
+                    {this.state.enableEdit ? this.state.user_id : <p>User ID: {this.state.reviews[i][1]}</p>}
+
+                    {this.state.enableEdit ? <select value={this.state.rating} onChange={this.handleRating}>
+                        <option value="1">1 Star</option>
+                        <option value="2">2 Stars</option>
+                        <option value="3">3 Stars</option>
+                        <option value="4">4 Stars</option>
+                        <option value="4">5 Stars</option>
+                    </select>          : <p>Rating: {this.state.reviews[i][4]}</p>}
+                    
+                    {this.state.enableEdit ? <textarea rows="10" cols="100" value={this.state.review_body} onChange={this.handleReview} /> : <p>Review: {this.state.reviews[i][3]}</p>}
+                    <button onClick={this.editReview}>Submit</button>
+                    </>
+                )
+            } else {
+                reviews.push( 
+                    <>
+                    <p>User ID: {this.state.reviews[i][1]}</p>
+                    <p>Rating: {this.state.reviews[i][4]}</p>
+                    <p>Review: {this.state.reviews[i][3]}</p>
+                    </>
+                )
+            }
         }
 
         return reviews;
