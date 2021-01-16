@@ -128,6 +128,8 @@ export default class Homepage extends React.Component {
                 console.log(data);
             }
         })
+
+        this.refreshReviews();
     }
 
     enableEdit = () => {
@@ -165,7 +167,7 @@ export default class Homepage extends React.Component {
                         <option value="2">2 Stars</option>
                         <option value="3">3 Stars</option>
                         <option value="4">4 Stars</option>
-                        <option value="4">5 Stars</option>
+                        <option value="5">5 Stars</option>
                     </select>                       
                     <br/>
                     <br/>
@@ -192,27 +194,31 @@ export default class Homepage extends React.Component {
             if(this.state.reviews[i][0] === this.state.review_id) {
                 reviews.push( 
                     <>
-                    <button onClick={this.enableEdit}>Edit Review</button>
-                    {this.state.enableEdit ? this.state.user_id : <p>User ID: {this.state.reviews[i][1]}</p>}
+                    <div key={i}>
+                        <button onClick={this.enableEdit}>Edit Review</button>
+                        {this.state.enableEdit ? this.state.user_id : <p>User ID: {this.state.reviews[i][1]}</p>}
 
-                    {this.state.enableEdit ? <select value={this.state.rating} onChange={this.handleRating}>
-                        <option value="1">1 Star</option>
-                        <option value="2">2 Stars</option>
-                        <option value="3">3 Stars</option>
-                        <option value="4">4 Stars</option>
-                        <option value="4">5 Stars</option>
-                    </select>          : <p>Rating: {this.state.reviews[i][4]}</p>}
-                    
-                    {this.state.enableEdit ? <textarea rows="10" cols="100" value={this.state.review_body} onChange={this.handleReview} /> : <p>Review: {this.state.reviews[i][3]}</p>}
-                    <button onClick={this.editReview}>Submit</button>
+                        {this.state.enableEdit ? <select value={this.state.rating} onChange={this.handleRating}>
+                            <option value="1">1 Star</option>
+                            <option value="2">2 Stars</option>
+                            <option value="3">3 Stars</option>
+                            <option value="4">4 Stars</option>
+                            <option value="5">5 Stars</option>
+                        </select>          : <p>Rating: {this.state.reviews[i][4]}</p>}
+                        
+                        {this.state.enableEdit ? <textarea rows="10" cols="100" value={this.state.review_body} onChange={this.handleReview} /> : <p>Review: {this.state.reviews[i][3]}</p>}
+                        <button onClick={this.editReview}>Submit</button>
+                    </div>
                     </>
                 )
             } else {
                 reviews.push( 
                     <>
-                    <p>User ID: {this.state.reviews[i][1]}</p>
-                    <p>Rating: {this.state.reviews[i][4]}</p>
-                    <p>Review: {this.state.reviews[i][3]}</p>
+                    <div key={i}>
+                        <p>User ID: {this.state.reviews[i][1]}</p>
+                        <p>Rating: {this.state.reviews[i][4]}</p>
+                        <p>Review: {this.state.reviews[i][3]}</p>
+                    </div>
                     </>
                 )
             }
