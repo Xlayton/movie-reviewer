@@ -12,6 +12,7 @@ export default class Homepage extends React.Component {
             movie: '',
             user_id: '',
             movie_id: '',
+            reviews: '',
             renderReview: false
         }
 
@@ -22,13 +23,21 @@ export default class Homepage extends React.Component {
         this.handleReview = this.handleReview.bind(this);
     }
 
-    componentDidMount() {
-        fetch('https://api.themoviedb.org/3/movie/550?api_key=77c34d76c76368a57135c21fcb3db278')
+    async componentDidMount() {
+        await fetch('https://api.themoviedb.org/3/movie/550?api_key=77c34d76c76368a57135c21fcb3db278')
         .then(res => res.json())
         .then(data => {
             this.setState({
                 movie: data,
                 movie_id: data.id
+            })
+        })
+
+        fetch(`http://localhost:8080/api/reviews/?movie_id=${this.state.movie_id}`)
+        .then(res => res.json())
+        .then(data => {
+            this.setState({
+                reviews: data
             })
         })
     }
@@ -123,6 +132,10 @@ export default class Homepage extends React.Component {
                 </>
             )
         }
+    }
+
+    renderReviews = () => {
+        
     }
 
     render() {
