@@ -135,10 +135,24 @@ export default class Homepage extends React.Component {
     }
 
     renderReviews = () => {
-        
+        var reviews = [];
+
+        for (let i = 0; i < this.state.reviews.length; i++) {
+            reviews.push(
+                <>
+                <p>User ID: {this.state.reviews[i][1]}</p>
+                <p>Rating: {this.state.reviews[i][4]}</p>
+                <p>Review: {this.state.reviews[i][3]}</p>
+                </>
+            )
+        }
+
+        return reviews;
     }
 
     render() {
+        var reviews = this.renderReviews();
+
         return (
             <div>
                 <h1>Homepage</h1>
@@ -146,6 +160,12 @@ export default class Homepage extends React.Component {
                 <br/>
                 <img style={{width: 200, height: "auto"}} src={`https://image.tmdb.org/t/p/w500/${this.state.movie.poster_path}`}></img>
                 <h2>{this.state.movie.original_title}</h2>
+                <br/>
+                <br/>
+                <h3>Ratings and Reviews</h3>
+                <hr/>
+                {reviews}
+                <br/>
                 <p>john.preston@tbeatty.com</p>
                 <p>ImwH@qxz56t9</p>
                 <label>Email: </label>
