@@ -1,4 +1,5 @@
 import React from 'react'
+import ReviewStars from './components/ReviewStars'
 
 export default class Homepage extends React.Component {
     constructor(props){
@@ -233,9 +234,12 @@ export default class Homepage extends React.Component {
         return (
             <div>
                 <h1>Homepage</h1>
+                {/* TODO: Put stars on ratings */}
+                <ReviewStars score = {0} editable={true}/>
+                <ReviewStars score = {3} editable={false}/>
                 <br/>
                 <br/>
-                <img style={{width: 200, height: "auto"}} src={`https://image.tmdb.org/t/p/w500/${this.state.movie.poster_path}`}></img>
+                <img style={{width: 200, height: "auto"}} src={`https://image.tmdb.org/t/p/w500/${this.state.movie.poster_path}`} alt={this.state.movie}></img>
                 <h2>{this.state.movie.original_title}</h2>
                 <br/>
                 <br/>
