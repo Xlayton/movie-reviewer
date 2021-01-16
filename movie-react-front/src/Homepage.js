@@ -1,5 +1,6 @@
 import React from 'react'
 import ReviewStars from './components/ReviewStars'
+import MovieView from './MovieView';
 
 export default class Homepage extends React.Component {
     constructor(props){
@@ -27,15 +28,7 @@ export default class Homepage extends React.Component {
         this.handleReview = this.handleReview.bind(this);
     }
 
-    async componentDidMount() {
-        await fetch('https://api.themoviedb.org/3/movie/550?api_key=77c34d76c76368a57135c21fcb3db278')
-        .then(res => res.json())
-        .then(data => {
-            this.setState({
-                movie: data,
-                movie_id: data.id
-            })
-        })
+    componentDidMount() {
 
         fetch(`http://localhost:8080/api/reviews/?movie_id=${this.state.movie_id}`)
         .then(res => res.json())
@@ -67,22 +60,6 @@ export default class Homepage extends React.Component {
         this.setState({review_body: evt.target.value});
     }
 
-    refreshReviews = () => {
-        fetch(`http://localhost:8080/api/reviews/?movie_id=${this.state.movie_id}`)
-        .then(res => res.json())
-        .then(data => {
-            data.forEach(review => {
-                console.log(review, this.state.user_id)
-                if(this.state.user_id === review[1]) {
-                    this.setState({userHasReview: true, review_id: review[0], review_body: review[3], rating: review[4]})
-                }
-            })
-            this.setState({
-                reviews: data
-            })
-        })
-    }
-    
     authenticateUser = () => {
         console.log('authenticating......')
         fetch('http://localhost:8080/login', {
@@ -187,50 +164,7 @@ export default class Homepage extends React.Component {
         }
     }
 
-    renderReviews = () => {
-        var reviews = [];
-
-        for (let i = 0; i < this.state.reviews.length; i++) {
-            console.log("Ah", this.state.reviews[i][1], this.state.review_id)
-            if(this.state.reviews[i][0] === this.state.review_id) {
-                reviews.push( 
-                    <>
-                    <div key={i}>
-                        <button onClick={this.enableEdit}>Edit Review</button>
-                        {this.state.enableEdit ? this.state.user_id : <p>User ID: {this.state.reviews[i][1]}</p>}
-
-                        {this.state.enableEdit ? <select value={this.state.rating} onChange={this.handleRating}>
-                            <option value="1">1 Star</option>
-                            <option value="2">2 Stars</option>
-                            <option value="3">3 Stars</option>
-                            <option value="4">4 Stars</option>
-                            <option value="5">5 Stars</option>
-                        </select>          : <p>Rating: {this.state.reviews[i][4]}</p>}
-                        
-                        {this.state.enableEdit ? <textarea rows="10" cols="100" value={this.state.review_body} onChange={this.handleReview} /> : <p>Review: {this.state.reviews[i][3]}</p>}
-                        <button onClick={this.editReview}>Submit</button>
-                    </div>
-                    </>
-                )
-            } else {
-                reviews.push( 
-                    <>
-                    <div key={i}>
-                        <p>User ID: {this.state.reviews[i][1]}</p>
-                        <p>Rating: {this.state.reviews[i][4]}</p>
-                        <p>Review: {this.state.reviews[i][3]}</p>
-                    </div>
-                    </>
-                )
-            }
-        }
-
-        return reviews;
-    }
-
     render() {
-        var reviews = this.renderReviews();
-
         return (
             <div>
                 <h1>Homepage</h1>
@@ -239,29 +173,7 @@ export default class Homepage extends React.Component {
                 <ReviewStars score = {3} editable={false}/>
                 <br/>
                 <br/>
-                <img style={{width: 200, height: "auto"}} src={`https://image.tmdb.org/t/p/w500/${this.state.movie.poster_path}`} alt={this.state.movie}></img>
-                <h2>{this.state.movie.original_title}</h2>
-                <br/>
-                <br/>
-                <h3>Ratings and Reviews</h3>
-                <hr/>
-                {reviews}
-                <br/>
-                <p>john.preston@tbeatty.com</p>
-                <p>ImwH@qxz56t9</p>
-                <label>Email: </label>
-                <input type="text" value={this.state.email} onChange={this.handleEmail} />
-                <br/>
-                <br/>
-                <label>Password: </label>
-                <input type="password" value={this.state.password} onChange={this.handlePassword} />
-                <br/>
-                <br/>
-                {/* <input type="submit" value="Submit"/> */}
-                <button onClick={this.authenticateUser}>Submit</button>
-                <br/>
-                <br/>
-                {this.renderRatingReview()}
+                <MovieView movie_id={550}/>
             </div>
         )
     }
