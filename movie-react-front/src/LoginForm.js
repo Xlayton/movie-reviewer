@@ -1,11 +1,21 @@
 import React from 'react';
 
+//Self contained, should have a setter for the parent for when user auths
 export default class LoginForm extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            movie: '',
+            email: '',
+            password: ''
         }
+    }
+
+    handleEmail = evt => {
+        this.setState({email: evt.target.value});
+    }
+
+    handlePassword = evt => {
+        this.setState({password: evt.target.value});
     }
 
     componentDidMount() {
@@ -15,6 +25,31 @@ export default class LoginForm extends React.Component {
             this.setState({
                 movie: data,
             })
+        })
+    }
+
+    authenticateUser = () => {
+        console.log('authenticating......')
+        fetch('http://localhost:8080/login', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
+            },
+            body: new URLSearchParams({
+                email: this.state.email,
+                password: this.state.password
+            })
+          })
+        .then(res => res.json())
+        .then(data => {
+            if(data){
+                console.log(data);
+                this.refreshReviews()
+                this.setState({
+                    renderReview: true,
+                    user_id: data.userId
+                })
+            }
         })
     }
     

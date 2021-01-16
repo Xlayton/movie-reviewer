@@ -1,4 +1,5 @@
 import React from 'react';
+import CreateReview from './CreateReview';
 import ReviewList from './ReviewList';
 
 export default class MovieView extends React.Component {
@@ -25,6 +26,7 @@ export default class MovieView extends React.Component {
             <>
                 <img style={{width: 200, height: "auto"}} src={`https://image.tmdb.org/t/p/w500/${this.state.movie.poster_path}`} alt={this.state.movie}></img>
                 <h2>{this.state.movie.original_title}</h2>
+                <CreateReview movie_id={this.props.movie_id} user_id={this.props.user_id}/>
                 <ReviewList movie_id={this.props.movie_id}/>
             </>
         )

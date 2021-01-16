@@ -1,6 +1,6 @@
 import React from 'react';
 import Review from './Review';
-
+//Requires movie id through props
 export default class ReviewList extends React.Component {
     constructor(props) {
         super(props);
