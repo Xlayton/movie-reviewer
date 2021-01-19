@@ -28,7 +28,7 @@ export default class LoginForm extends React.Component {
         })
     }
 
-    authenticateUser = () => {
+    authenticateUser() {
         console.log('authenticating......')
         fetch('http://localhost:8080/login', {
             method: 'POST',
@@ -44,7 +44,9 @@ export default class LoginForm extends React.Component {
         .then(data => {
             if(data){
                 console.log(data);
-                this.refreshReviews()
+                // this.refreshReviews()
+                //SET SESSION 
+                window.sessionStorage.setItem("currentUser", data);
                 this.setState({
                     renderReview: true,
                     user_id: data.userId
@@ -55,18 +57,20 @@ export default class LoginForm extends React.Component {
     
     render() {
         return (
-            <>
+            <div className="content">
+                <p>john.preston@tbeatty.com</p>
                 <label>Email: </label>
                 <input type="text" value={this.state.email} onChange={this.handleEmail} />
                 <br/>
                 <br/>
+                <p>ImwH@qxz56t9</p>
                 <label>Password: </label>
                 <input type="password" value={this.state.password} onChange={this.handlePassword} />
                 <br/>
                 <br/>
                 {/* <input type="submit" value="Submit"/> */}
                 <button onClick={this.authenticateUser}>Submit</button>
-            </>
+            </div>
         )
     }
 }
