@@ -9,13 +9,17 @@ export default class Homepage extends React.Component {
         
         this.state = {
             movieList: '',
+            pageNumber: 1
         }
+
+        this.incrementPage = this.incrementPage.bind(this);
+        this.decrementPage = this.decrementPage.bind(this);
     }
 
     componentDidMount() {
         //Fetch all current popular movies
         //https://api.themoviedb.org/3/movie/popular?api_key=77c34d76c76368a57135c21fcb3db278&language=en-US&page=1
-        fetch(`https://api.themoviedb.org/3/movie/popular?api_key=77c34d76c76368a57135c21fcb3db278&language=en-US&page=1`)
+        fetch(`https://api.themoviedb.org/3/movie/popular?api_key=77c34d76c76368a57135c21fcb3db278&language=en-US&page=${this.state.pageNumber}`)
         .then(res => res.json())
         .then(data => {
             this.setState({
@@ -41,6 +45,24 @@ export default class Homepage extends React.Component {
         return movieList;
     }
 
+    async incrementPage() {
+        this.setState({
+            pageNumber: this.state.pageNumber+= this.state.pageNumber
+        })
+        console.log(this.state.pageNumber);
+        await window.location.reload(false);
+    }
+
+    async decrementPage() {
+        if(this.state.pageNumber != 0){
+            this.setState({
+                pageNumber: this.state.pageNumber--
+            })
+        }
+        console.log(this.state.pageNumber);
+        await window.location.reload(false);
+    }
+
     render() {
         var movieList = this.renderAllMovies();
         return (
@@ -60,6 +82,11 @@ export default class Homepage extends React.Component {
                 <br/>
                 <br/>
                 <MovieView movie_id={this.state.movie_id}/> */}
+                <br/>
+                <div className="row">
+                    <button onClick={this.decrementPage}>Previous Page</button>
+                    <button onClick={this.incrementPage}>Next Page</button>
+                </div>
             </div>
         )
     }

@@ -41,6 +41,17 @@ a {
     margin: 10px;
 }
 
+.row {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+.row button {
+    margin-right: 25px;
+}
+
 /* MOVIE CSS */
 .MovieSet {
     display: flex;
