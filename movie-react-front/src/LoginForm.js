@@ -28,8 +28,10 @@ export default class LoginForm extends React.Component {
         })
     }
 
-    authenticateUser() {
-        console.log('authenticating......')
+    authenticateUser = () => {
+        console.log('authenticating......');
+        console.log(this.state.email);
+        console.log(this.state.password);
         fetch('http://localhost:8080/login', {
             method: 'POST',
             headers: {
