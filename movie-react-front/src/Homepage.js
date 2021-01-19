@@ -46,6 +46,7 @@ export default class Homepage extends React.Component {
         return (
             <div className="content">
                 <h1>Homepage</h1>
+                {/* TODO Let users search for movies based on the search requirements from the project document. */}
                 <div className="searchBar">
                     <input className="searchInput"/>
                     <button>Search</button>
