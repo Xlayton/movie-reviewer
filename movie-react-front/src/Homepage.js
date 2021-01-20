@@ -11,7 +11,7 @@ export default class Homepage extends React.Component {
         
         this.state = {
             movieList: '',
-            query: '',
+            query: 'title',
             searchText: '' 
         }
 
@@ -88,10 +88,30 @@ export default class Homepage extends React.Component {
 
     searchForMovie = () => {
         if(this.state.query == "title"){
+            var titleString = this.state.searchText;
+            titleString.replace(' ', '%20');
+            titleString.trim();
+            fetch(`https://api.themoviedb.org/3/search/movie?api_key=77c34d76c76368a57135c21fcb3db278&language=en-US&query=${titleString}`)
+            .then(res => res.json())
+            .then(data => {
+                console.log(data);
+                this.setState({
+                    movieList: data.results
+                })
+            })
 
         } else if(this.state.query == "person"){
             var personString = this.state.searchText;
-            // fetch(`https://api.themoviedb.org/3/search/person?api_key=77c34d76c76368a57135c21fcb3db278&query=${}Chris%20Evans`)
+            personString.replace(' ', '%20');
+            personString.trim();
+            fetch(`https://api.themoviedb.org/3/search/person?api_key=77c34d76c76368a57135c21fcb3db278&query=${personString}`)
+            .then(res => res.json())
+            .then(data => {
+                console.log(data);
+                this.setState({
+                    movieList: data.results
+                })
+            })
         }
     }
 
@@ -109,7 +129,6 @@ export default class Homepage extends React.Component {
         return (
             <div className="content">
                 <h1>Homepage</h1>
-                {/* TODO Let users search for movies based on the search requirements from the project document. */}
                 <div className="searchBar">
                     <select className="selectQuery" value={this.state.query} onChange={this.handleSearchQuery}>
                         <option value="title">Title</option>
