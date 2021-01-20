@@ -65,7 +65,8 @@ export default class Homepage extends React.Component {
     }
 
     async decrementPage() {
-        if(this.state.pageNumber > 1){
+        var pageNumber = window.sessionStorage.getItem("pageNumber"); 
+        if(pageNumber > 1){
             var pageNumber = window.sessionStorage.getItem("pageNumber"); 
             pageNumber--;
             window.sessionStorage.setItem("pageNumber", pageNumber);
