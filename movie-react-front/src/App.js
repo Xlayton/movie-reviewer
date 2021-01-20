@@ -26,11 +26,9 @@ export default class App extends React.Component {
       userID: window.sessionStorage.getItem("userID"),
       isAuthenticated: window.sessionStorage.getItem("isLoggedIn")
     })
-    console.log(this.state.userData, this.state.userID);
   }
 
   setUserID = (userID) => {
-    console.log(userID)
     this.setState({userID: userID})
   }
 

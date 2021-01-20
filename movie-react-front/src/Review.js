@@ -5,61 +5,31 @@ import ReviewStars from './components/ReviewStars';
 export default class Review extends React.Component {
     constructor(props) {
         super(props);
+        console.log(props)
         this.state = {
             movie: '',
             enableEdit: false
         }
     }
 
-    handleReview = evt => {
-        //TODO have this update through prop
-        this.setState({ review_body: evt.target.value });
-    }
-
-    handleRating = evt => {
-        //TODO have this update through prop
-        this.setState({ rating: evt});
-    }
-
     enableEdit = () => {
         this.setState({ enableEdit: true })
-    }
-
-    editReview = () => {
-        if(this.state.userHasReview && this.state.review_id) {
-        fetch('http://localhost:8080/api/reviews', {
-            method: "PUT",
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
-            },
-            body: new URLSearchParams({
-                review_id: this.state.review_id,
-                review_body: this.state.review_body,
-                rating: this.state.rating
-            })
-        }).then(res => res.json())
-        .then(data => {
-            this.setState({enableEdit: false});
-            this.props.refreshReviews();
-        })
-        .catch(console.log)
-    }
     }
 
     render() {
         return (
             this.props.isEditable ?
                 (<>
-                    <button onClick={this.enableEdit}>Edit Review</button>
                     <div key={this.props.review_id}>
+                    <button onClick={this.enableEdit}>Edit Review</button>
                         {this.state.enableEdit ? this.state.user_id : <p>User ID: {this.props.user_id}</p>}
 
                         {this.state.enableEdit ?
-                            <ReviewStars score={this.props.rating} editable={true} onChange={this.handleRating }/>
+                            <ReviewStars score={this.props.rating} editable={true} onChange={(evt) => this.props.handleRating(evt, this.props.index)}/>
                             :  <ReviewStars score={this.props.rating} editable={false} />}
 
-                        {this.state.enableEdit ? <textarea rows="10" cols="100" value={this.props.review_body} onChange={this.handleReview} /> : <p>Review: {this.props.review_body}</p>}
-                        <button onClick={this.editReview}>Submit</button>
+                        {this.state.enableEdit ? <textarea rows="10" cols="100" value={this.props.review_body} onChange={(evt) => this.props.handleReview(evt, this.props.index)} /> : <p>Review: {this.props.review_body}</p>}
+                        <button onClick={() => {this.props.editReview(this.props.index);this.setState({enableEdit: false})}}>Submit</button>
                     </div>
                 </>)
                 :
