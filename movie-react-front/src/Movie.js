@@ -22,7 +22,7 @@ export default class Movie extends React.Component {
                 <ReviewStars score = {3} editable={false}/>
                 <br/>
                 <br/>
-                <MovieView movie_id={this.props.location.movieID}/>
+                <MovieView movie_id={this.props.location.movieID} user_id={this.props.location.user_id}/>
             </div>
         )
     }

@@ -39,7 +39,7 @@ export default class Homepage extends React.Component {
                 <Link key={i} to={{
                     pathname: "/movie",
                     movieID: this.state.movieList[i].id,
-                    userID: this.props.userID
+                    user_id: this.props.userID
                 }}>
                     <span>
                         <div className="movie">
