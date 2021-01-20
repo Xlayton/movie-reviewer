@@ -10,7 +10,6 @@ export default class Homepage extends React.Component {
         
         this.state = {
             movieList: '',
-            pageNumber: 1
         }
 
         this.incrementPage = this.incrementPage.bind(this);
@@ -20,7 +19,10 @@ export default class Homepage extends React.Component {
     componentDidMount() {
         //Fetch all current popular movies
         //https://api.themoviedb.org/3/movie/popular?api_key=77c34d76c76368a57135c21fcb3db278&language=en-US&page=1
-        fetch(`https://api.themoviedb.org/3/movie/popular?api_key=77c34d76c76368a57135c21fcb3db278&language=en-US&page=${this.state.pageNumber}`)
+        if(!window.sessionStorage.getItem("pageNumber")){
+            window.sessionStorage.setItem("pageNumber", 1);
+        }
+        fetch(`https://api.themoviedb.org/3/movie/popular?api_key=77c34d76c76368a57135c21fcb3db278&language=en-US&page=${window.sessionStorage.getItem("pageNumber")}`)
         .then(res => res.json())
         .then(data => {
             this.setState({
@@ -52,22 +54,25 @@ export default class Homepage extends React.Component {
         return movieList;
     }
 
+    refreshPage() {
+        window.location.reload(false);
+    }
+
     async incrementPage() {
-        this.setState({
-            pageNumber: this.state.pageNumber+= this.state.pageNumber
-        })
-        console.log(this.state.pageNumber);
-        await window.location.reload(false);
+        var pageNumber = window.sessionStorage.getItem("pageNumber"); 
+        pageNumber++;
+        window.sessionStorage.setItem("pageNumber", pageNumber);
+        await this.refreshPage();
     }
 
     async decrementPage() {
-        if(this.state.pageNumber != 0){
-            this.setState({
-                pageNumber: this.state.pageNumber--
-            })
+        var pageNumber = window.sessionStorage.getItem("pageNumber"); 
+        if(pageNumber > 1){
+            var pageNumber = window.sessionStorage.getItem("pageNumber"); 
+            pageNumber--;
+            window.sessionStorage.setItem("pageNumber", pageNumber);
         }
-        console.log(this.state.pageNumber);
-        await window.location.reload(false);
+        await this.refreshPage();
     }
 
     render() {

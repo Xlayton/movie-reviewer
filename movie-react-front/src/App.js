@@ -6,6 +6,7 @@ import LoginForm from './LoginForm';
 import NavigationBar from './NavigationBar';
 import Register from './Register';
 import Movie from './Movie';
+import Logout from './Logout';
 
 
 export default class App extends React.Component {
@@ -47,7 +48,7 @@ export default class App extends React.Component {
               <LoginForm setUserID={this.setUserID}/>
             </Route>
             <Route exact path="/movie" component={Movie}/>
-            <Route exact path="/logout"/>
+            <Route exact path="/logout" component={Logout}/>
             <Route exact path="/register" component={Register}/>
           </section>
         </BrowserRouter>
