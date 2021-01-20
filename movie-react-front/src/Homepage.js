@@ -109,7 +109,7 @@ export default class Homepage extends React.Component {
             .then(data => {
                 console.log(data);
                 this.setState({
-                    movieList: data.results
+                    movieList: data.results[0].known_for
                 })
             })
         }
