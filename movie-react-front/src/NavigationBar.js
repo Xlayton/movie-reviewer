@@ -14,6 +14,7 @@ class NavigationBar extends React.Component {
 
   render() {
     const isLoggedIn = this.props.isLoggedIn
+    console.log(isLoggedIn);
     return (
         <nav className="navbar">
             <Link to="/">Home</Link>
