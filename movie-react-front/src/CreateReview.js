@@ -1,4 +1,5 @@
 import React from 'react';
+import ReviewStars from './components/ReviewStars';
 
 //Needs user and movie IDs through props
 export default class CreateReview extends React.Component {
@@ -15,7 +16,8 @@ export default class CreateReview extends React.Component {
     }
 
     handleRating = evt => {
-        this.setState({rating: evt.target.value});
+        this.setState({rating: evt});
+        // console.log(evt)
     }
 
     componentDidMount() {
@@ -31,6 +33,7 @@ export default class CreateReview extends React.Component {
         console.log(body.toString())
         //TODO - Page should display all current reviews for the movie 
         // - User can update their current review for the movie 
+        // console.log(this.props.user_id, this.props.movie_id,)
         fetch('http://localhost:8080/api/reviews', {
             method: 'POST',
             headers: {
@@ -53,13 +56,7 @@ export default class CreateReview extends React.Component {
             <>
                 <div>
                     <label>Rating: </label>
-                    <select value={this.state.rating} onChange={this.handleRating}>
-                        <option value="1" selected>1 Star</option>
-                        <option value="2">2 Stars</option>
-                        <option value="3">3 Stars</option>
-                        <option value="4">4 Stars</option>
-                        <option value="5">5 Stars</option>
-                    </select>                       
+                    <ReviewStars score={this.props.rating} editable={true} onChange={this.handleRating}/>                       
                     <br/>
                     <br/>
                     <label>Review: </label>

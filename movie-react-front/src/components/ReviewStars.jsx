@@ -17,17 +17,20 @@ export default class ReviewStars extends React.Component {
         }
     }
 
+    handleChange(){
+        this.props.onChange(this.state.score);
+    }
 
     setScore(score) {
         if (this.props.editable) {
             if ((score === 1) && (this.state.score === 1)) {
                 this.setState({
                     score: 0
-                })
+                }, ()=>this.handleChange())
             } else {
                 this.setState({
                     score: score
-                })
+                }, ()=>this.handleChange())
             }
         }
     }

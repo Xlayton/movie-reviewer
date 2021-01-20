@@ -18,8 +18,7 @@ export default class Movie extends React.Component {
         return (
             <div className="content">
                 {/* TODO: Put stars on ratings */}
-                <ReviewStars score = {0} editable={true}/>
-                <ReviewStars score = {3} editable={false}/>
+                <ReviewStars score = {0} editable={false}/>
                 <br/>
                 <br/>
                 <MovieView movie_id={this.props.location.movieID} user_id={this.props.location.user_id}/>
