@@ -8,6 +8,8 @@ export default class LoginForm extends React.Component {
             email: '',
             password: ''
         }
+
+        this.authenticateUser = this.authenticateUser.bind(this);
     }
 
     handleEmail = evt => {
@@ -28,11 +30,11 @@ export default class LoginForm extends React.Component {
         })
     }
 
-    authenticateUser = () => {
+    async authenticateUser() {
         console.log('authenticating......');
         console.log(this.state.email);
         console.log(this.state.password);
-        fetch('http://localhost:8080/login', {
+        await fetch('http://localhost:8080/login', {
             method: 'POST',
             headers: {
               'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
@@ -48,13 +50,15 @@ export default class LoginForm extends React.Component {
                 console.log(data);
                 // this.refreshReviews()
                 //SET SESSION 
-                window.sessionStorage.setItem("currentUser", data);
+                window.sessionStorage.setItem("currentUser", data.email);
+                window.sessionStorage.setItem("isLoggedIn", true);
                 this.setState({
                     renderReview: true,
                     user_id: data.userId
                 })
             }
         })
+        await window.location.reload(false);
     }
     
     render() {
