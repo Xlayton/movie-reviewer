@@ -1,6 +1,7 @@
 import React from 'react'
 import { Link } from 'react-router-dom';
 import ReviewStars from './components/ReviewStars'
+import GenreSelectionDropdown from './GenreSelectionDropdown';
 import MovieView from './MovieView';
 
 //Will probably end up being our spa "root"
@@ -54,6 +55,14 @@ export default class Homepage extends React.Component {
         return movieList;
     }
 
+    onGenreChange = (evt) => {
+        fetch(`https://api.themoviedb.org/3/discover/movie?api_key=77c34d76c76368a57135c21fcb3db278&language=en-US&sort_by=popularity.desc&include_adult=false&include_video=false&page=1&with_genres=${evt.target.value}`)
+        .then(res => res.json())
+        .then(data => this.setState({
+            movieList: data.results
+        }))
+    }
+
     refreshPage() {
         window.location.reload(false);
     }
@@ -82,6 +91,7 @@ export default class Homepage extends React.Component {
                 <h1>Homepage</h1>
                 {/* TODO Let users search for movies based on the search requirements from the project document. */}
                 <div className="searchBar">
+                    <GenreSelectionDropdown onGenreChange={this.onGenreChange}/>
                     <input className="searchInput"/>
                     <button>Search</button>
                 </div>
