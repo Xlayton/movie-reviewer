@@ -5,9 +5,11 @@ import ReviewList from './ReviewList';
 export default class MovieView extends React.Component {
     constructor(props) {
         super(props);
-        console.log("MovieView", props)
         this.state = {
             movie: '',
+            reviews: [],
+            user_review_id: undefined,
+            userHasReview: false
         }
     }
 
@@ -25,8 +27,7 @@ export default class MovieView extends React.Component {
         fetch(`http://localhost:8080/api/reviews/?movie_id=${this.props.movie_id}`)
         .then(res => res.json())
         .then(data => {
-            console.log(data)
-            if(typeof data === "Array") {
+            if(Array.isArray(data)) {
             data.forEach(review => {
                 console.log(review, this.state.user_id)
                 if(this.state.user_id === review[1]) {
@@ -35,7 +36,7 @@ export default class MovieView extends React.Component {
             })
             this.setState({
                 reviews: data
-            })
+            });
         }
         })
     }
@@ -46,7 +47,7 @@ export default class MovieView extends React.Component {
                 <img style={{width: 200, height: "auto"}} src={`https://image.tmdb.org/t/p/w500/${this.state.movie.poster_path}`} alt={this.state.movie}></img>
                 <h2>{this.state.movie.original_title}</h2>
                 <CreateReview refreshReviews={this.refreshReviews} movie_id={this.props.movie_id} user_id={this.props.user_id}/>
-                <ReviewList refreshReviews={this.refreshReviews} movie_id={this.props.movie_id}/>
+                <ReviewList reviews={this.state.reviews} user_review_id={this.state.user_review_id} refreshReviews={this.refreshReviews} movie_id={this.props.movie_id}/>
             </>
         )
     }
