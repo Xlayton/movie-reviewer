@@ -11,6 +11,8 @@ export default class Homepage extends React.Component {
         
         this.state = {
             movieList: '',
+            query: '',
+            searchText: '' 
         }
 
         this.incrementPage = this.incrementPage.bind(this);
@@ -84,6 +86,22 @@ export default class Homepage extends React.Component {
         await this.refreshPage();
     }
 
+    handleSearchQuery = evt => {
+        this.setState({query: evt.target.value});
+    }
+
+    handleSearchText = evt => {
+        this.setState({searchText: evt.target.value});
+    }
+
+    searchForMovie = () => {
+        if(this.state.query == "title"){
+
+        } else if(this.state.query == "person"){
+
+        }
+    }
+
     render() {
         var movieList = this.renderAllMovies();
         return (
@@ -91,9 +109,18 @@ export default class Homepage extends React.Component {
                 <h1>Homepage</h1>
                 {/* TODO Let users search for movies based on the search requirements from the project document. */}
                 <div className="searchBar">
+<<<<<<< Updated upstream
                     <GenreSelectionDropdown onGenreChange={this.onGenreChange}/>
                     <input className="searchInput"/>
                     <button>Search</button>
+=======
+                    <select className="selectQuery" value={this.state.query} onChange={this.handleSearchQuery}>
+                        <option value="title">Title</option>
+                        <option value="person">Person</option>
+                    </select>
+                    <input value={this.state.searchText} onChange={this.handleSearchText} className="searchInput"/>
+                    <button onClick={this.searchForMovie}>Search</button>
+>>>>>>> Stashed changes
                 </div>
                 <div className="MovieSet">
                     {movieList}

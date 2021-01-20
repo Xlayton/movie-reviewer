@@ -43,6 +43,10 @@ a {
     margin-bottom: 2%;
 }
 
+.selectQuery {
+    margin-right: 10px;
+}
+
 /* CONTENT */
 .content {
     margin: 10px;
