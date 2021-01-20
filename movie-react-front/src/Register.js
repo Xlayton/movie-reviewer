@@ -23,12 +23,13 @@ export default class Register extends React.Component {
     }
 
     createUser = () => {
-        
+
     }
 
     render() {
         return (
             <div className="content">
+                <h1>Register</h1>
                 <label>Email: </label>
                 <input type="text" value={this.state.email} onChange={this.handleEmail} />
                 <br/>

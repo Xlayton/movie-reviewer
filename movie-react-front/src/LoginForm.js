@@ -64,6 +64,7 @@ export default class LoginForm extends React.Component {
     render() {
         return (
             <div className="content">
+                <h1>Login</h1>
                 <p>john.preston@tbeatty.com</p>
                 <label>Email: </label>
                 <input type="text" value={this.state.email} onChange={this.handleEmail} />
