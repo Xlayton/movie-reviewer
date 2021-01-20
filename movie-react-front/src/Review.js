@@ -39,7 +39,7 @@ export default class Review extends React.Component {
         }).then(res => res.json())
         .then(data => {
             this.setState({enableEdit: false});
-            this.refreshReviews();
+            this.props.refreshReviews();
         })
         .catch(console.log)
     }

@@ -6,10 +6,8 @@ import MovieView from './MovieView';
 export default class Movie extends React.Component {
     constructor(props){
         super(props);
-        
+        console.log("Movie", props)
         this.state = {
-            // movie_id: this.props.movieID,
-            movie_id: 550,
         }
     }
 
@@ -24,7 +22,7 @@ export default class Movie extends React.Component {
                 <ReviewStars score = {3} editable={false}/>
                 <br/>
                 <br/>
-                <MovieView movie_id={this.state.movie_id}/>
+                <MovieView movie_id={this.props.location.movieID}/>
             </div>
         )
     }

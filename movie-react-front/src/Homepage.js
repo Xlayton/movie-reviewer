@@ -36,7 +36,8 @@ export default class Homepage extends React.Component {
                 //Each link needs to have the movie id passed so it can be distinguishable when viewing it on the movie page
                 <Link key={i} to={{
                     pathname: "/movie",
-                    movieID: this.state.movieList[i].id
+                    movieID: this.state.movieList[i].id,
+                    userID: this.props.userID
                 }}>
                     <span>
                         <div className="movie">

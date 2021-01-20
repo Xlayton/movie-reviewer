@@ -47,11 +47,13 @@ export default class LoginForm extends React.Component {
         .then(res => res.json())
         .then(data => {
             if(data){
-                console.log(data);
                 // this.refreshReviews()
                 //SET SESSION 
+                console.log(data)
                 window.sessionStorage.setItem("currentUser", data.email);
+                this.props.setUserID(data.id);
                 window.sessionStorage.setItem("isLoggedIn", true);
+                window.sessionStorage.setItem("userID", data.userId)
                 this.setState({
                     renderReview: true,
                     user_id: data.userId

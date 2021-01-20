@@ -14,6 +14,7 @@ export default class App extends React.Component {
     super(props);
     this.state = {
       userData: '',
+      userID: undefined,
       isAuthenticated: false
     }
   }
@@ -21,9 +22,15 @@ export default class App extends React.Component {
   componentDidMount(){
     this.setState({
       userData: window.sessionStorage.getItem("currentUser"),
+      userID: window.sessionStorage.getItem("userID"),
       isAuthenticated: window.sessionStorage.getItem("isLoggedIn")
     })
-    console.log(this.state.userData);
+    console.log(this.state.userData, this.state.userID);
+  }
+
+  setUserID = (userID) => {
+    console.log(userID)
+    this.setState({userID: userID})
   }
 
   render() {
@@ -33,8 +40,12 @@ export default class App extends React.Component {
         <BrowserRouter>
           <NavigationBar isLoggedIn={isAuthenticated} />
           <section className="content">
-            <Route exact path="/" component={Homepage}/>
-            <Route exact path="/login" component={LoginForm}/>
+            <Route exact path="/">
+              <Homepage userID={this.state.userID} />
+            </Route>
+            <Route exact path="/login">
+              <LoginForm setUserID={this.setUserID}/>
+            </Route>
             <Route exact path="/movie" component={Movie}/>
             <Route exact path="/logout"/>
             <Route exact path="/register" component={Register}/>

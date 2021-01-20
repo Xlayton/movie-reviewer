@@ -4,6 +4,7 @@ import React from 'react';
 export default class CreateReview extends React.Component {
     constructor(props) {
         super(props);
+        console.log("Create Review", props)
         this.state = {
             rating: '',
             review_body: ''
@@ -21,6 +22,13 @@ export default class CreateReview extends React.Component {
     }
 
     postReview = () => {
+        let body = new URLSearchParams({
+            user_id: this.props.user_id,
+            movie_id: this.props.movie_id,
+            review_body: this.state.review_body,
+            rating: this.state.rating
+        });
+        console.log(body.toString())
         //TODO - Page should display all current reviews for the movie 
         // - User can update their current review for the movie 
         fetch('http://localhost:8080/api/reviews', {
@@ -28,12 +36,7 @@ export default class CreateReview extends React.Component {
             headers: {
               'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
             },
-            body: new URLSearchParams({
-                user_id: this.props.user_id,
-                movie_id: this.props.movie_id,
-                review_body: this.state.review_body,
-                rating: this.state.rating
-            })
+            body: body
           })
         .then(res => res.json())
         .then(data => {
@@ -42,7 +45,7 @@ export default class CreateReview extends React.Component {
             }
         })
 
-        this.refreshReviews();
+        this.props.refreshReviews();
     }
     
     render() {
@@ -51,7 +54,7 @@ export default class CreateReview extends React.Component {
                 <div>
                     <label>Rating: </label>
                     <select value={this.state.rating} onChange={this.handleRating}>
-                        <option value="1">1 Star</option>
+                        <option value="1" selected>1 Star</option>
                         <option value="2">2 Stars</option>
                         <option value="3">3 Stars</option>
                         <option value="4">4 Stars</option>
