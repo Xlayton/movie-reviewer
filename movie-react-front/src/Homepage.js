@@ -1,4 +1,5 @@
 import React from 'react'
+import { Link } from 'react-router-dom';
 import ReviewStars from './components/ReviewStars'
 import MovieView from './MovieView';
 
@@ -33,12 +34,17 @@ export default class Homepage extends React.Component {
         for (let i = 0; i < this.state.movieList.length; i++) {
             movieList.push(
                 //Each link needs to have the movie id passed so it can be distinguishable when viewing it on the movie page
-                <a key={i} href="">
-                    <div className="movie">
-                        <img style={{width: 200, height: "auto"}} src={`https://image.tmdb.org/t/p/w500/${this.state.movieList[i].poster_path}`} alt={this.state.movieList[i]}></img>
-                        <h2>{this.state.movieList[i].original_title}</h2>
-                    </div>
-                </a>
+                <Link key={i} to={{
+                    pathname: "/movie",
+                    movieID: this.state.movieList[i].id
+                }}>
+                    <span>
+                        <div className="movie">
+                            <img style={{width: 200, height: "auto"}} src={`https://image.tmdb.org/t/p/w500/${this.state.movieList[i].poster_path}`} alt={this.state.movieList[i]}></img>
+                            <h2>{this.state.movieList[i].original_title}</h2>
+                        </div>                    
+                    </span>
+                </Link>
             )
         }
 

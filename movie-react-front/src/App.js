@@ -3,9 +3,9 @@ import React from 'react';
 import './Style.css';
 import Homepage from './Homepage';
 import LoginForm from './LoginForm';
-import MoviePage from './MoviePage';
 import NavigationBar from './NavigationBar';
 import Register from './Register';
+import Movie from './Movie';
 
 
 export default class App extends React.Component {
@@ -35,7 +35,7 @@ export default class App extends React.Component {
           <section className="content">
             <Route exact path="/" component={Homepage}/>
             <Route exact path="/login" component={LoginForm}/>
-            <Route exact path="/movie" component={MoviePage}/>
+            <Route exact path="/movie" component={Movie}/>
             <Route exact path="/logout"/>
             <Route exact path="/register" component={Register}/>
           </section>

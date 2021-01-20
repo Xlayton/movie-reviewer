@@ -48,11 +48,11 @@ export default class ReviewList extends React.Component {
             console.log("Ah", this.state.reviews[i][1], this.state.review_id)
             if(this.state.reviews[i][0] === this.state.user_review_id) {
                 reviews.push( 
-                    <Review isEdittable={true} review_body={this.state.reviews[i][3]} rating={this.state.reviews[i][4]} user_id={this.state.reviews[i][1]} review_id={this.state.reviews[i][0]}/>
+                    <Review key={i} isEdittable={true} review_body={this.state.reviews[i][3]} rating={this.state.reviews[i][4]} user_id={this.state.reviews[i][1]} review_id={this.state.reviews[i][0]}/>
                 )
             } else {
                 reviews.push( 
-                    <Review isEdittable={false} review_body={this.state.reviews[i][3]} rating={this.state.reviews[i][4]} user_id={this.state.reviews[i][1]} review_id={this.state.reviews[i][0]}/>
+                    <Review key={i} isEdittable={false} review_body={this.state.reviews[i][3]} rating={this.state.reviews[i][4]} user_id={this.state.reviews[i][1]} review_id={this.state.reviews[i][0]}/>
                 )
             }
         }
