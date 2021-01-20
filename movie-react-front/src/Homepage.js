@@ -1,6 +1,7 @@
 import React from 'react'
 import { Link } from 'react-router-dom';
 import ReviewStars from './components/ReviewStars'
+import GenreSelectionDropdown from './GenreSelectionDropdown';
 import MovieView from './MovieView';
 
 //Will probably end up being our spa "root"
@@ -116,7 +117,12 @@ export default class Homepage extends React.Component {
                     </select>
                     <input value={this.state.searchText} onChange={this.handleSearchText} className="searchInput"/>
                     <button onClick={this.searchForMovie}>Search</button>
+                </div>
+                <div className="searchBar">
+                    <label>Genre: </label>
                     <GenreSelectionDropdown onGenreChange={this.onGenreChange}/>
+                    <br/>
+                    <br/>
                 </div>
                 <div className="MovieSet">
                     {movieList}
