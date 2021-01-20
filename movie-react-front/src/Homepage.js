@@ -90,7 +90,7 @@ export default class Homepage extends React.Component {
 
         } else if(this.state.query == "person"){
             var personString = this.state.searchText;
-            fetch(`https://api.themoviedb.org/3/search/person?api_key=77c34d76c76368a57135c21fcb3db278&query=${}Chris%20Evans`)
+            // fetch(`https://api.themoviedb.org/3/search/person?api_key=77c34d76c76368a57135c21fcb3db278&query=${}Chris%20Evans`)
         }
     }
 
