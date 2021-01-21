@@ -7,6 +7,7 @@ import NavigationBar from './NavigationBar';
 import Register from './Register';
 import Movie from './Movie';
 import Logout from './Logout';
+import AdminTools from './AdminTools';
 
 
 export default class App extends React.Component {
@@ -48,6 +49,7 @@ export default class App extends React.Component {
             <Route exact path="/movie" component={Movie}/>
             <Route exact path="/logout" component={Logout}/>
             <Route exact path="/register" component={Register}/>
+            <Route exact path="/admin" component={AdminTools}/>
           </section>
         </BrowserRouter>
       </div>

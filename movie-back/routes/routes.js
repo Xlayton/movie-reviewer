@@ -141,7 +141,7 @@ const loginUser = (req, res) => {
             // userPassword = user[8].slice(2, user[8].length - 1)
 
             // console.log(userPassword);
-            bcrypt.compare(password, user[8], (err, result) => {
+            bcrypt.compare(password, user[9], (err, result) => {
                 if (err) {
                     res.send(err)
                     console.error(err)
@@ -151,14 +151,16 @@ const loginUser = (req, res) => {
                     if (result) {
                         res.json({
                             userId: user[0],
-                            fname: user[1],
-                            lname: user[2],
-                            street: user[3],
-                            city: user[4],
-                            state: user[5],
-                            zip: user[6],
-                            email: user[7],
-                            phone: user[9],
+                            username: user[1],
+                            fname: user[2],
+                            lname: user[3],
+                            street: user[4],
+                            city: user[5],
+                            state: user[6],
+                            zip: user[7],
+                            email: user[8],
+                            phone: user[10],
+                            isAdmin: user[11],
                         })
                     }
                     else {

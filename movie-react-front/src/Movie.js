@@ -15,7 +15,6 @@ export default class Movie extends React.Component {
     render() {
         return (
             <div className="content">
-                {/* TODO: Put stars on ratings */}
                 <br/>
                 <br/>
                 <MovieView movie_id={this.props.location.movieID} user_id={this.props.location.user_id}/>
