@@ -56,7 +56,7 @@ export default class CreateReview extends React.Component {
             <>
                 <div>
                     <label>Rating: </label>
-                    <ReviewStars score={this.props.rating} editable={true} onChange={this.handleRating}/>                       
+                    <ReviewStars score={this.props.rating} editable={true} onScoreChange={this.handleRating}/>                       
                     <br/>
                     <br/>
                     <label>Review: </label>

@@ -1,6 +1,8 @@
 import React from 'react';
 import CreateReview from './CreateReview';
 import ReviewList from './ReviewList';
+import ReviewStars from './components/ReviewStars'
+
 
 export default class MovieView extends React.Component {
     constructor(props) {
@@ -9,7 +11,8 @@ export default class MovieView extends React.Component {
             movie: '',
             reviews: [],
             user_review_id: undefined,
-            userHasReview: false
+            userHasReview: false,
+            averageScore:0,
         }
     }
 
@@ -31,9 +34,11 @@ export default class MovieView extends React.Component {
     }
 
     handleRating = (evt, i) => {
+        // console.log(evt,i)
         let temp_reviews = [...this.state.reviews];
         let review = temp_reviews[i];
-        review[4]= evt.target.value
+        review[4]= evt;
+        console.log("New Score" ,review[4]);
         this.setState({ reviews: temp_reviews });
     }
 
@@ -43,6 +48,7 @@ export default class MovieView extends React.Component {
             review_body: this.state.reviews[index][3],
             rating: this.state.reviews[index][4]
         });
+        
         console.log(body.toString())
         fetch('http://localhost:8080/api/reviews', {
             method: "PUT",
@@ -72,14 +78,32 @@ export default class MovieView extends React.Component {
                 reviews: data
             });
         }
+        this.getAverageScore();
         })
     }
     
+    getAverageScore(){
+        let total = 0;
+        this.state.reviews.forEach(review => {
+            total+=review[4];
+            console.log("Total", total)
+        });
+        let average = (total/this.state.reviews.length);
+        console.log("Average", average)
+        this.setState({
+            averageScore: average
+        });
+        // return average;
+    }
+
+
     render() {
         return (
             <>
                 <img style={{width: 200, height: "auto"}} src={`https://image.tmdb.org/t/p/w500/${this.state.movie.poster_path}`} alt={this.state.movie}></img>
                 <h2>{this.state.movie.original_title}</h2>
+                {/* TODO Average score for movies */}
+                <ReviewStars score={this.state.averageScore} editable={false} key={this.state.averageScore}/>
                 <CreateReview refreshReviews={this.refreshReviews} movie_id={this.props.movie_id} user_id={this.props.user_id}/>
                 <ReviewList editReview={this.editReview} handleRating={this.handleRating} handleReview={this.handleReview} reviews={this.state.reviews} user_review_id={this.state.user_review_id} refreshReviews={this.refreshReviews} movie_id={this.props.movie_id}/>
             </>

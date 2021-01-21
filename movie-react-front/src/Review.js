@@ -16,6 +16,12 @@ export default class Review extends React.Component {
         this.setState({ enableEdit: true })
     }
 
+    handleRating = (evt, i) => {
+        // console.log("Review",i);
+        this.props.handleRating(evt, i)
+    }
+
+
     render() {
         return (
             this.props.isEditable ?
@@ -25,7 +31,7 @@ export default class Review extends React.Component {
                         {this.state.enableEdit ? this.state.user_id : <p>User ID: {this.props.user_id}</p>}
 
                         {this.state.enableEdit ?
-                            <ReviewStars score={this.props.rating} editable={true} onChange={(evt) => this.props.handleRating(evt, this.props.index)}/>
+                            <ReviewStars score={this.props.rating} editable={true} onScoreChange={this.handleRating} index ={this.props.index}/>
                             :  <ReviewStars score={this.props.rating} editable={false} />}
 
                         {this.state.enableEdit ? <textarea rows="10" cols="100" value={this.props.review_body} onChange={(evt) => this.props.handleReview(evt, this.props.index)} /> : <p>Review: {this.props.review_body}</p>}
@@ -36,7 +42,7 @@ export default class Review extends React.Component {
                 (<>
                     <div key={this.props.review_id}>
                         <p>User ID: {this.props.user_id}</p>
-                        <p>Rating: {this.props.rating}</p>
+                        <ReviewStars score={this.props.rating} editable={false} size={15} />
                         <p>Review: {this.props.review_body}</p>
                     </div>
                 </>)
