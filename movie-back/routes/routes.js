@@ -38,7 +38,9 @@ const getAllUsers = (req, res) => {
 }
 
 const createUser = (req, res) => {
+    console.log(req.body);
     const {
+        username,
         fname,
         lname,
         street,
@@ -49,7 +51,7 @@ const createUser = (req, res) => {
         password,
         phone
     } = req.body;
-    if (!fname || !lname || !street || !city || !state || !zip_code || !email || !password || !phone) {
+    if (!fname || !lname || !street || !city || !state || !zip_code || !email || !password || !phone || !username) {
         res.status(400);
         res.send("Invalid parameters")
         return
@@ -57,6 +59,7 @@ const createUser = (req, res) => {
     getDbConn()
         .then(schema => schema.getTable("users"))
         .then(table => table.insert({
+            username,
             fname,
             lname,
             street,
