@@ -54,6 +54,7 @@ export default class LoginForm extends React.Component {
                 this.props.setUserID(data.id);
                 window.sessionStorage.setItem("isLoggedIn", true);
                 window.sessionStorage.setItem("userID", data.userId)
+                window.sessionStorage.setItem("isAdmin", data.isAdmin)
                 this.setState({
                     renderReview: true,
                     user_id: data.userId
@@ -68,11 +69,13 @@ export default class LoginForm extends React.Component {
             <div className="content">
                 <h1>Login</h1>
                 <p>john.preston@tbeatty.com</p>
+                <p>dominique.chaney@tbeatty.com</p>
                 <label>Email: </label>
                 <input type="text" value={this.state.email} onChange={this.handleEmail} />
                 <br/>
                 <br/>
                 <p>ImwH@qxz56t9</p>
+                <p>AZfpb+gt61Cm8</p>
                 <label>Password: </label>
                 <input type="password" value={this.state.password} onChange={this.handlePassword} />
                 <br/>

@@ -262,7 +262,24 @@ const updateReview = (req, res) => {
 }
 
 const deleteReview = (req, res) => {
-
+    const {review_id} = req.body;
+    if(!review_id) {
+        res.status(400);
+        res.send("Invalid Request Body");
+        return;
+    }
+    getDbConn()
+    .then(schema => schema.getTable("reviews"))
+    .then(table => table.delete().where(`id=${review_id}`).execute())
+    .then(result => {
+        console.log(result.getWarnings())
+        res.status(200);
+        res.send({})
+    })
+    .catch(err => {
+        console.log("err")
+        res.status(500);
+    })
 }
 
 let getDbConn = () => {
