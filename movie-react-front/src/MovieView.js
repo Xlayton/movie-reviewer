@@ -102,7 +102,6 @@ export default class MovieView extends React.Component {
             <>
                 <img style={{width: 200, height: "auto"}} src={`https://image.tmdb.org/t/p/w500/${this.state.movie.poster_path}`} alt={this.state.movie}></img>
                 <h2>{this.state.movie.original_title}</h2>
-                {/* TODO Average score for movies */}
                 <ReviewStars score={this.state.averageScore} editable={false} key={this.state.averageScore}/>
                 <CreateReview refreshReviews={this.refreshReviews} movie_id={this.props.movie_id} user_id={this.props.user_id}/>
                 <ReviewList editReview={this.editReview} handleRating={this.handleRating} handleReview={this.handleReview} reviews={this.state.reviews} user_review_id={this.state.user_review_id} refreshReviews={this.refreshReviews} movie_id={this.props.movie_id}/>
