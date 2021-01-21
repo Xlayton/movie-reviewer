@@ -45,10 +45,10 @@ export default class CreateReview extends React.Component {
         .then(data => {
             if(data){
                 console.log(data);
+                this.props.refreshReviews();
             }
         })
 
-        this.props.refreshReviews();
     }
     
     render() {
