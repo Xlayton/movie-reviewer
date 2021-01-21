@@ -13,6 +13,7 @@ export default class Logout extends React.Component {
     async componentDidMount(){
         await window.sessionStorage.removeItem("currentUser");
         await window.sessionStorage.removeItem("isLoggedIn");
+        await window.sessionStorage.removeItem("isAdmin");
         await window.location.reload(false);
     }
 
