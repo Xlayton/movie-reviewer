@@ -11,6 +11,8 @@ export default class Homepage extends React.Component {
         
         this.state = {
             movieList: '',
+            query: 'title',
+            searchText: '' 
         }
 
         this.incrementPage = this.incrementPage.bind(this);
@@ -55,14 +57,6 @@ export default class Homepage extends React.Component {
         return movieList;
     }
 
-    onGenreChange = (evt) => {
-        fetch(`https://api.themoviedb.org/3/discover/movie?api_key=77c34d76c76368a57135c21fcb3db278&language=en-US&sort_by=popularity.desc&include_adult=false&include_video=false&page=1&with_genres=${evt.target.value}`)
-        .then(res => res.json())
-        .then(data => this.setState({
-            movieList: data.results
-        }))
-    }
-
     refreshPage() {
         window.location.reload(false);
     }
@@ -84,16 +78,70 @@ export default class Homepage extends React.Component {
         await this.refreshPage();
     }
 
+    handleSearchQuery = evt => {
+        this.setState({query: evt.target.value});
+    }
+
+    handleSearchText = evt => {
+        this.setState({searchText: evt.target.value});
+    }
+
+    searchForMovie = () => {
+        if(this.state.query == "title"){
+            var titleString = this.state.searchText;
+            titleString.replace(' ', '%20');
+            titleString.trim();
+            fetch(`https://api.themoviedb.org/3/search/movie?api_key=77c34d76c76368a57135c21fcb3db278&language=en-US&query=${titleString}`)
+            .then(res => res.json())
+            .then(data => {
+                console.log(data);
+                this.setState({
+                    movieList: data.results
+                })
+            })
+
+        } else if(this.state.query == "person"){
+            var personString = this.state.searchText;
+            personString.replace(' ', '%20');
+            personString.trim();
+            fetch(`https://api.themoviedb.org/3/search/person?api_key=77c34d76c76368a57135c21fcb3db278&query=${personString}`)
+            .then(res => res.json())
+            .then(data => {
+                console.log(data);
+                this.setState({
+                    movieList: data.results[0].known_for
+                })
+            })
+        }
+    }
+
+    onGenreChange = (evt) => {
+        fetch(`https://api.themoviedb.org/3/discover/movie?api_key=77c34d76c76368a57135c21fcb3db278&language=en-US&sort_by=popularity.desc&include_adult=false&include_video=false&page=1&with_genres=${evt.target.value}`)
+        .then(res => res.json())
+        .then(data => this.setState({
+            movieList: data.results
+        }))
+    }
+
+
     render() {
         var movieList = this.renderAllMovies();
         return (
             <div className="content">
                 <h1>Homepage</h1>
-                {/* TODO Let users search for movies based on the search requirements from the project document. */}
                 <div className="searchBar">
+                    <select className="selectQuery" value={this.state.query} onChange={this.handleSearchQuery}>
+                        <option value="title">Title</option>
+                        <option value="person">Person</option>
+                    </select>
+                    <input value={this.state.searchText} onChange={this.handleSearchText} className="searchInput"/>
+                    <button onClick={this.searchForMovie}>Search</button>
+                </div>
+                <div className="searchBar">
+                    <label>Genre: </label>
                     <GenreSelectionDropdown onGenreChange={this.onGenreChange}/>
-                    <input className="searchInput"/>
-                    <button>Search</button>
+                    <br/>
+                    <br/>
                 </div>
                 <div className="MovieSet">
                     {movieList}
