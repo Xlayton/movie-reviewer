@@ -21,6 +21,7 @@ const prepopulateData = (req, res) => {
             });
             parseData.forEach((dataSet, i) => {
                 dataSet.password = bcrypt.hashSync(dataSet.password, 10);
+                dataSet.username = `${dataSet.fname.toLowerCase()}${dataSet.lname[0].toLowerCase()}`
                 table.insert(dataSet).execute()
             })
             res.send("Done :)")
