@@ -19,7 +19,7 @@ class NavigationBar extends React.Component {
         <nav className="navbar">
             <Link to="/">Home</Link>
             <div className="loginElements">
-                <p className="email">{window.sessionStorage.getItem("currentUser")}</p>
+                <p className="email"><Link to='/account'>{window.sessionStorage.getItem("currentUser")}</Link></p>
                 {isLoggedIn && (<Link to='/logout'>Logout</Link>)}
                 {!isLoggedIn && (<Link to='/login'>Login</Link>)}
                 {!isLoggedIn && (<Link to='/register'>Register</Link>)}

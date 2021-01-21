@@ -8,6 +8,7 @@ import Register from './Register';
 import Movie from './Movie';
 import Logout from './Logout';
 import AdminTools from './AdminTools';
+import Account from './Account';
 
 
 export default class App extends React.Component {
@@ -38,7 +39,7 @@ export default class App extends React.Component {
     return (
       <div className="App">
         <BrowserRouter>
-          <NavigationBar isLoggedIn={isAuthenticated} />
+          <NavigationBar isLoggedIn={isAuthenticated} user_id={this.state.userID}/>
           <section className="content">
             <Route exact path="/">
               <Homepage userID={this.state.userID} />
@@ -50,6 +51,7 @@ export default class App extends React.Component {
             <Route exact path="/logout" component={Logout}/>
             <Route exact path="/register" component={Register}/>
             <Route exact path="/admin" component={AdminTools}/>
+            <Route exact path="/account" component={Account}/>
           </section>
         </BrowserRouter>
       </div>

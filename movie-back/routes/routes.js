@@ -32,7 +32,13 @@ const prepopulateData = (req, res) => {
 const getAllUsers = (req, res) => {
     getDbConn()
         .then(schema => schema.getTable("users"))
-        .then(table => table.select().execute())
+        .then(table => {
+            if(req.query.user_id) {
+                return table.select().where(`id=='${req.query.user_id}'`).execute()
+            } else {
+                return table.select().execute()
+            }
+        })
         .then(result => res.send(result.fetchAll()))
         .catch(console.error)
 }
@@ -105,18 +111,24 @@ const updateUser = (req, res) => {
             .then(schema => schema.getTable("users"))
             .then(table => {
                 if(new_password) {
-                    table.update().where(`email=='${email}'`).set('fname', fname).set('lname', lname).set('street', street).set('zip_code', zip_code).set('phone', phone).set('username', username).set('password', bcrypt.hashSync(new_password, 10)).execute()
+                    return table.update().where(`email=='${email}'`).set('fname', fname).set('lname', lname).set('street', street).set('zip_code', zip_code).set('phone', phone).set('username', username).set('password', bcrypt.hashSync(new_password, 10)).execute()
                 } else {
-                    table.update().where(`email=='${email}'`).set('fname', fname).set('lname', lname).set('street', street).set('zip_code', zip_code).set('phone', phone).set('username', username).execute()
+                    return table.update().where(`email=='${email}'`).set('fname', fname).set('lname', lname).set('street', street).set('zip_code', zip_code).set('phone', phone).set('username', username).execute()
                 }
             })
             .then(result => {
                 res.status(200);
                 res.json(result);
             })
+            .catch(err => {
+                res.status(500);
+                res.json(err);
+            });
         })
-
-    //TODO FInish update
+        .catch(err => {
+            res.status(500);
+            res.json(err);
+        });
 }
 
 const deleteUser = (req, res) => {
@@ -182,11 +194,11 @@ const getReviews = (req, res) => {
     .then(table => {
         const {user_id, movie_id, review_id} = req.query;
         if(user_id) {
-            return table.select().where(`user_id=${user_id}`).execute()
+            return table.select().where(`id==${user_id}`).execute()
         } else if(movie_id) {
-            return table.select().where(`movie_id=${movie_id}`).execute()
+            return table.select().where(`movie_id==${movie_id}`).execute()
         } else if(review_id) {
-            return table.select().where(`id=${review_id}`).execute()
+            return table.select().where(`id==${review_id}`).execute()
         } else {
             res.status(400);
             res.send("Invalid Params")
