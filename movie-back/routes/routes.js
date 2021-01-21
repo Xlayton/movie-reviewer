@@ -74,6 +74,7 @@ const createUser = (req, res) => {
 
 const updateUser = (req, res) => {
     const {
+        username,
         fname,
         lname,
         street,
@@ -85,7 +86,7 @@ const updateUser = (req, res) => {
         phone,
         new_password
     } = req.body;
-    if (!fname || !lname || !street || !city || !state || !zip_code || !email || !old_password || !phone) {
+    if (!fname || !lname || !street || !city || !state || !zip_code || !email || !old_password || !phone || !username) {
         res.status(400);
         res.send("Invalid parameters")
         return
@@ -93,7 +94,26 @@ const updateUser = (req, res) => {
     getDbConn()
         .then(schema => schema.getTable("users"))
         .then(table => table.select("password").where(`email=='${email}'`).execute())
-        .then(result => console.log(result.fetchOne()[0]))
+        .then(result => {
+            if(!bcrypt.compareSync(old_password, result.fetchOne()[0])) {
+                res.status(400)
+                res.send("Invalid login information")
+                return;
+            }
+            getDbConn()
+            .then(schema => schema.getTable("users"))
+            .then(table => {
+                if(new_password) {
+                    table.update().where(`email=='${email}'`).set('fname', fname).set('lname', lname).set('street', street).set('zip_code', zip_code).set('phone', phone).set('username', username).set('password', bcrypt.hashSync(new_password, 10)).execute()
+                } else {
+                    table.update().where(`email=='${email}'`).set('fname', fname).set('lname', lname).set('street', street).set('zip_code', zip_code).set('phone', phone).set('username', username).execute()
+                }
+            })
+            .then(result => {
+                res.status(200);
+                res.json(result);
+            })
+        })
 
     //TODO FInish update
 }
