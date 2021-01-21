@@ -17,6 +17,7 @@ export default class GenreSelectionDropdown extends React.Component {
     render() {
         return (
             <select onChange={this.props.onGenreChange}>
+                <option selected disabled>Select a genre...</option>
                 {this.state.genres.map(genre => <option value={genre.id}>{genre.name}</option>)}
             </select>
 
