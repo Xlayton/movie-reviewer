@@ -16,7 +16,8 @@ export default class Register extends React.Component {
             password: '',
             confPassword: '',
             phone: '',
-            passwordMatch: false
+            passwordMatch: true,
+            accountCreated: false
         }
 
         // this.authenticateUser = this.authenticateUser.bind(this);
@@ -100,7 +101,10 @@ export default class Register extends React.Component {
         .then(res => res.json())
         .then(data => {
             if(data){
-                console.log(data)
+                console.log(data);
+                this.setState({
+                    accountCreated: true
+                })
             }
         })
         // await window.location.reload(false);
@@ -108,19 +112,32 @@ export default class Register extends React.Component {
 
     renderPasswordMatch = () => {
         console.log(this.state.passwordMatch);
-        if(this.state.passwordMatch){
+        if(!this.state.passwordMatch){
             return (
                 <>
+                {/* WORK ON THIS */}
+                {/* <p style={{color: "#ED4337"}}>Passwords do not match...</p> */}
                 </>
-            )
-        } else {
-            return (
-                <p style={{color: "#ED4337"}}>Passwords do not match...</p>
             )
         }
     }
 
+    renderAccountCreation = () => {
+        if(this.state.accountCreated){
+            return (
+                <>
+                <h3>Account successfully created!</h3>
+                <p className="email">Please <a href="/login">click here</a> to login in...</p>
+                </>
+            )
+        }
+    }
+
+    //TODO - Validation for form fields
+
     render() {
+        const passwordMatch = this.renderPasswordMatch();
+        const accountCreation = this.renderAccountCreation();
         return (
             <div className="content">
                 <h1>Register</h1>
@@ -164,13 +181,14 @@ export default class Register extends React.Component {
                 <input type="password" value={this.state.password} onChange={this.handlePassword} />
                 <br/>
                 <br/>
-                {this.renderPasswordMatch}
+                {passwordMatch}
                 <label>Confirm Password: </label>
                 <input type="password" value={this.state.confPassword} onChange={this.handleConfirmPassword} />
                 <br/>
                 <br/>
                 {/* <input type="submit" value="Submit"/> */}
                 <button onClick={this.createUser}>Submit</button>
+                {accountCreation}
             </div>
         )
     }
