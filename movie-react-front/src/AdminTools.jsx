@@ -16,7 +16,7 @@ class AdminTools extends React.Component {
   componentDidMount() {
     this.getUsers();
     let currentId = parseInt(window.sessionStorage.getItem("userID"));
-    console.log(currentId)
+    // console.log(currentId)
     this.setState({
       currentId: currentId
     })
@@ -41,7 +41,7 @@ class AdminTools extends React.Component {
   }
 
   deleteUser(id){
-    console.log(this.state.confirmDelete)
+    // console.log(this.state.confirmDelete)
     if(this.state.confirmDelete){
       document.getElementById(id).innerHTML="Deleted";
       this.setState({
@@ -60,7 +60,7 @@ class AdminTools extends React.Component {
       .then(res => res.json())
       .then(data => {
         if (data) {
-          console.log(data);
+          // console.log(data);
           this.getUsers();
         }
       })
