@@ -27,6 +27,7 @@ export default class Review extends React.Component {
             this.props.isEditable ?
                 (<>
                     <div key={this.props.review_id}>
+                    {this.props.movie_poster ? <img height="250" src={`https://image.tmdb.org/t/p/w500/${this.props.movie_poster}`} /> : undefined}
                     <button onClick={this.enableEdit}>Edit Review</button>
                         {this.state.enableEdit ? this.state.user_id : <p>User ID: {this.props.user_id}</p>}
 
@@ -41,6 +42,7 @@ export default class Review extends React.Component {
                 :
                 (<>
                     <div key={this.props.review_id}>
+                        {this.props.movie_poster ? <img src={`https://image.tmdb.org/t/p/w500/${this.props.movie_poster}`} /> : undefined}
                         <p>User ID: {this.props.user_id}</p>
                         <ReviewStars score={this.props.rating} editable={false} size={15} />
                         <p>Review: {this.props.review_body}</p>
