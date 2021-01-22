@@ -194,7 +194,7 @@ const getReviews = (req, res) => {
     .then(table => {
         const {user_id, movie_id, review_id} = req.query;
         if(user_id) {
-            return table.select().where(`id==${user_id}`).execute()
+            return table.select().where(`user_id==${user_id}`).execute()
         } else if(movie_id) {
             return table.select().where(`movie_id==${movie_id}`).execute()
         } else if(review_id) {
