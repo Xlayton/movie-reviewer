@@ -135,6 +135,34 @@ const updateUser = (req, res) => {
 }
 
 const deleteUser = (req, res) => {
+    const {id} = req.body;
+    if(!id) {
+        res.status(400);
+        res.send("Invalid Request Body");
+        return;
+    }
+    getDbConn()
+    .then(schema => schema.getTable("reviews"))
+    .then(table => table.delete().where(`user_id=${id}`).execute())
+    .then(result => {
+        console.log(result.getWarnings())
+        getDbConn()
+        .then(schema => schema.getTable("users"))
+        .then(table => table.delete().where(`id=${id}`).execute())
+        .then(result => {
+            console.log(result.getWarnings())
+            res.status(200);
+            res.send({})
+        })
+        .catch(err => {
+            console.log("err")
+            res.status(500);
+        })
+    })
+    .catch(err => {
+        console.log(err)
+        res.status(500);
+    })
 
 }
 
@@ -295,6 +323,34 @@ let getDbConn = () => {
         .catch(console.log)
 }
 
+const toggleAdmin = (req,res)=>{
+    let {
+        id,
+        isAdmin
+    } = req.body;
+
+    if (!id|!isAdmin) {
+        res.status(400);
+        res.send("Invalid parameters")
+        return
+    }
+
+    isAdmin = (isAdmin==="true")
+    getDbConn()
+        .then(schema => schema.getTable("users"))
+        .then(table => {
+                return table.update().where(`id=='${id}'`).set('is_admin', !isAdmin).execute()
+        })
+        .then(result => {
+            res.status(200);
+            res.json(result);
+        })
+        .catch(err => {
+            res.status(500);
+            res.json(err);
+        })
+}
+
 module.exports = {
     serveSPA: serveSPA,
     getAllUsers: getAllUsers,
@@ -306,5 +362,6 @@ module.exports = {
     getReviews: getReviews,
     createReview: createReview,
     updateReview: updateReview,
-    deleteReview: deleteReview
+    deleteReview: deleteReview,
+    toggleAdmin:toggleAdmin
 }

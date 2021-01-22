@@ -51,14 +51,14 @@ export default class ReviewList extends React.Component {
                 if (this.props.movie_posters) {
                     reviews.push(
                         <>
-                            {this.state.isAdmin ? <button onClick={() => this.handleDelete(this.props.reviews[i][0])}>Yeet Review</button> : ""}
+                            {this.state.isAdmin ? <button onClick={() => this.handleDelete(this.props.reviews[i][0])}>Remove Review</button> : ""}
                             <Review movie_poster={this.props.movie_posters[i]} key={i} editReview={this.props.editReview} index={i} handleRating={this.handleRating} handleReview={this.handleReview} refreshReviews={this.props.refreshReviews} isEditable={true} review_body={this.props.reviews[i][3]} rating={this.props.reviews[i][4]} user_id={this.props.reviews[i][1]} review_id={this.props.reviews[i][0]} />
                         </>
                     )
                 } else {
                     reviews.push(
                         <>
-                            {this.state.isAdmin ? <button onClick={() => this.handleDelete(this.props.reviews[i][0])}>Yeet Review</button> : ""}
+                            {this.state.isAdmin ? <button onClick={() => this.handleDelete(this.props.reviews[i][0])}>Remove Review</button> : ""}
                             <Review key={i} editReview={this.props.editReview} index={i} handleRating={this.handleRating} handleReview={this.handleReview} refreshReviews={this.props.refreshReviews} isEditable={true} review_body={this.props.reviews[i][3]} rating={this.props.reviews[i][4]} user_id={this.props.reviews[i][1]} review_id={this.props.reviews[i][0]} />
                         </>
                     )
@@ -67,14 +67,14 @@ export default class ReviewList extends React.Component {
                 if (this.props.movie_posters) {
                     reviews.push(
                         <>
-                            {this.state.isAdmin ? <button onClick={() => this.handleDelete(this.props.reviews[i][0])}>Yeet Review</button> : ""}
+                            {this.state.isAdmin ? <button onClick={() => this.handleDelete(this.props.reviews[i][0])}>Remove Review</button> : ""}
                             <Review movie_poster={this.props.movie_posters[i]} key={i} editReview={this.props.editReview} index={i} handleRating={this.handleRating} handleReview={this.handleReview} refreshReviews={this.props.refreshReviews} isEditable={false} review_body={this.props.reviews[i][3]} rating={this.props.reviews[i][4]} user_id={this.props.reviews[i][1]} review_id={this.props.reviews[i][0]} />
                         </>
                     )
                 } else {
                     reviews.push(
                         <>
-                            {this.state.isAdmin ? <button onClick={() => this.handleDelete(this.props.reviews[i][0])}>Yeet Review</button> : ""}
+                            {this.state.isAdmin ? <button onClick={() => this.handleDelete(this.props.reviews[i][0])}>Remove Review</button> : ""}
                             <Review key={i} editReview={this.props.editReview} index={i} handleRating={this.handleRating} handleReview={this.handleReview} refreshReviews={this.props.refreshReviews} isEditable={false} review_body={this.props.reviews[i][3]} rating={this.props.reviews[i][4]} user_id={this.props.reviews[i][1]} review_id={this.props.reviews[i][0]} />
                         </>
                     )
