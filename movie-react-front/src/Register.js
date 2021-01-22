@@ -16,12 +16,10 @@ export default class Register extends React.Component {
             password: '',
             confPassword: '',
             phone: '',
-            accountValid: true,
             accountCreated: false
         }
 
         // this.authenticateUser = this.authenticateUser.bind(this);
-        this.renderPasswordMatch = this.renderPasswordMatch.bind(this);
     }
 
     //TODO - This is just a copy from login - needs to be fleshed out later
@@ -62,17 +60,7 @@ export default class Register extends React.Component {
     }
 
     handleConfirmPassword = evt => {
-        this.setState({confPassword: evt.target.value});
-
-        if(this.state.confPassword != this.state.password){
-            this.setState({
-                passwordMatch: false
-            })
-        } else {
-            this.setState({
-                passwordMatch: true
-            })
-        }
+        this.setState({confPassword: evt.target.value})
     }
 
     handlePhone = evt => {
@@ -80,123 +68,104 @@ export default class Register extends React.Component {
     }
 
     createUser = async() => {
-        await this.validateCredentials();
-
-        await fetch('http://localhost:8080/api/users', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
-            },
-            body: new URLSearchParams({
-                username: this.state.username,
-                fname: this.state.fname,
-                lname: this.state.lname,
-                street: this.state.street,
-                city: this.state.city,
-                state: this.state.state,
-                zip_code: this.state.zip_code,                
-                email: this.state.email,
-                password: this.state.password,
-                phone: this.state.phone
-            })
-          })
-        .then(res => res.json())
-        .then(data => {
-            if(data){
-                console.log(data);
-                this.setState({
-                    accountCreated: true
-                })
+        if(this.validateCredentials().length == 0){
+            let tempState = {...this.state};
+            for (let i = 0; i < Object.keys(this.state).length; i++) {
+                if(Object.keys(tempState)[i].includes("Error")){
+                    tempState[Object.keys(tempState)[i]] = undefined;
+                }
             }
-        })
+            this.setState(tempState);
+
+            await fetch('http://localhost:8080/api/users', {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
+                },
+                body: new URLSearchParams({
+                    username: this.state.username,
+                    fname: this.state.fname,
+                    lname: this.state.lname,
+                    street: this.state.street,
+                    city: this.state.city,
+                    state: this.state.state,
+                    zip_code: this.state.zip_code,                
+                    email: this.state.email,
+                    password: this.state.password,
+                    phone: this.state.phone
+                })
+              })
+            .then(res => res.json())
+            .then(data => {
+                if(data){
+                    console.log(data);
+                    this.setState({
+                        accountCreated: true
+                    })
+                }
+            })
+        } else {
+            this.renderValidation(this.validateCredentials());
+        }
         // await window.location.reload(false);
     }
 
     validateCredentials = () => {
+        var validations = [];
         //STREET
         let streetReg = /^[ \w]{3,}([A-Za-z]\.?)/;
         if(!streetReg.test(this.state.street)){
-            this.setState({
-                accountValid: false
-            })
+            validations.push({field: "street", message: "The Street is invalid"})
         }
 
         //STATE
         let stateReg = /^(?:(A[KLRZ]|C[AOT]|D[CE]|FL|GA|HI|I[ADLN]|K[SY]|LA|M[ADEINOST]|N[CDEHJMVY]|O[HKR]|P[AR]|RI|S[CD]|T[NX]|UT|V[AIT]|W[AIVY]))$/;
         if(!stateReg.test(this.state.state)){
-            this.setState({
-                accountValid: false
-            })
+            validations.push({field: "state", message: "The State is invalid"})
         }
 
         //ZIP CODE
         let zipCodeReg = /^\d{5}$/;
         if(!zipCodeReg.test(this.state.zip_code)){
-            this.setState({
-                accountValid: false
-            })
+            validations.push({field: "zip_code", message: "The Zip Code is invalid"})
         }
         //PHONE
         let phoneReg = /^\D?(\d{3})\D?\D?(\d{3})\D?(\d{4})$/;
         if(!phoneReg.test(this.state.phone)){
-            this.setState({
-                accountValid: false
-            })
+            validations.push({field: "phone", message: "The Phone number is invalid"})
         }
         //EMAIL
         let emailReg = /^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$/;
         if(!emailReg.test(this.state.email)){
-            this.setState({
-                accountValid: false
-            })
+            validations.push({field: "email", message: "The Email is invalid"})
         }
 
-    }
-
-    renderInvalidCredential = credential => {
-        if(!this.state.accountValid){
-            return (
-                <>
-                <p style={{color: "#ED4337"}}>{credential} is not valid...</p>
-                </>
-            )
+        if(this.state.password != this.state.confPassword){
+            validations.push({field: "password", message: "Passwords do not match"})
         }
+
+        return validations;
     }
 
-    renderPasswordMatch = () => {
-        console.log(this.state.passwordMatch);
-        if(!this.state.passwordMatch){
-            return (
-                <>
-                {/* WORK ON THIS */}
-                {/* <p style={{color: "#ED4337"}}>Passwords do not match...</p> */}
-                </>
-            )
-        }
-    }
+    renderValidation = valArr => {
+        let tempState = {...this.state};
+            for (let i = 0; i < Object.keys(this.state).length; i++) {
+                if(Object.keys(tempState)[i].includes("Error")){
+                    tempState[Object.keys(tempState)[i]] = undefined;
+                }
+            }
+        this.setState(tempState);
 
-    renderAccountCreation = () => {
-        if(this.state.accountCreated){
-            return (
-                <>
-                <h3>Account successfully created!</h3>
-                <p className="email">Please <a href="/login">click here</a> to login in...</p>
-                </>
-            )
+        for (let i = 0; i < valArr.length; i++) {
+            let newState = {};
+            newState[`${valArr[i].field}Error`] = valArr[i].message;
+            this.setState(newState);
         }
     }
 
     //TODO - Validation for form fields
 
     render() {
-        const passwordMatch = this.renderPasswordMatch();
-        const accountCreation = this.renderAccountCreation();
-        const validStreet = this.renderInvalidCredential("Street");
-        const validState = this.renderInvalidCredential("State");
-        const validZipCode = this.renderInvalidCredential("Zip Code");
-        const validPhone = this.renderInvalidCredential("Phone");
-        const validEmail = this.renderInvalidCredential("Email");
-
         return (
             <div className="content">
                 <h1>Register</h1>
@@ -212,7 +181,7 @@ export default class Register extends React.Component {
                 <input type="text" value={this.state.lname} onChange={this.handleLastName} />
                 <br/>
                 <br/>
-                {validStreet}
+                {this.state.streetError ? <p style={{color: "#ED4337"}}>{this.state.streetError}</p> : undefined}
                 <label>Street: </label>
                 <input type="text" value={this.state.street} onChange={this.handleStreet} />
                 <br/>
@@ -221,27 +190,27 @@ export default class Register extends React.Component {
                 <input type="text" value={this.state.city} onChange={this.handleCity} />
                 <br/>
                 <br/>
-                {validState}
+                {this.state.stateError ? <p style={{color: "#ED4337"}}>{this.state.stateError}</p> : undefined}
                 <label>State: </label>
                 <input type="text" value={this.state.state} onChange={this.handleState} />
                 <br/>
                 <br/>
-                {validZipCode}
+                {this.state.zip_codeError ? <p style={{color: "#ED4337"}}>{this.state.zip_codeError}</p> : undefined}
                 <label>Zip Code: </label>
                 <input type="number" value={this.state.zip_code} onChange={this.handleZipCode} />
                 <br/>
                 <br/>
-                {validPhone}
+                {this.state.phoneError ? <p style={{color: "#ED4337"}}>{this.state.phoneError}</p> : undefined}
                 <label>Phone: </label>
                 <input type="text" value={this.state.phone} onChange={this.handlePhone} />
                 <br/>
                 <br/>
-                {validEmail}
+                {this.state.emailError ? <p style={{color: "#ED4337"}}>{this.state.emailError}</p> : undefined}
                 <label>Email: </label>
                 <input type="text" value={this.state.email} onChange={this.handleEmail} />
                 <br/>
                 <br/>
-                {passwordMatch}
+                {this.state.passwordError ? <p style={{color: "#ED4337"}}>{this.state.passwordError}</p> : undefined}
                 <label>Password: </label>
                 <input type="password" value={this.state.password} onChange={this.handlePassword} />
                 <br/>
@@ -252,7 +221,12 @@ export default class Register extends React.Component {
                 <br/>
                 {/* <input type="submit" value="Submit"/> */}
                 <button onClick={this.createUser}>Submit</button>
-                {accountCreation}
+                {this.state.accountCreated ? (
+                <div>
+                    <h3>Account successfully created!</h3>
+                    <p className="email">Please <a href="/login">click here</a> to login in...</p>
+                </div>
+                ) : undefined}
             </div>
         )
     }
