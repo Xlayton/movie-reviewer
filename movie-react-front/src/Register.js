@@ -16,7 +16,7 @@ export default class Register extends React.Component {
             password: '',
             confPassword: '',
             phone: '',
-            passwordMatch: true,
+            accountValid: true,
             accountCreated: false
         }
 
@@ -80,6 +80,8 @@ export default class Register extends React.Component {
     }
 
     createUser = async() => {
+        await this.validateCredentials();
+
         await fetch('http://localhost:8080/api/users', {
             method: 'POST',
             headers: {
@@ -110,6 +112,57 @@ export default class Register extends React.Component {
         // await window.location.reload(false);
     }
 
+    validateCredentials = () => {
+        //STREET
+        let streetReg = /^[ \w]{3,}([A-Za-z]\.?)/;
+        if(!streetReg.test(this.state.street)){
+            this.setState({
+                accountValid: false
+            })
+        }
+
+        //STATE
+        let stateReg = /^(?:(A[KLRZ]|C[AOT]|D[CE]|FL|GA|HI|I[ADLN]|K[SY]|LA|M[ADEINOST]|N[CDEHJMVY]|O[HKR]|P[AR]|RI|S[CD]|T[NX]|UT|V[AIT]|W[AIVY]))$/;
+        if(!stateReg.test(this.state.state)){
+            this.setState({
+                accountValid: false
+            })
+        }
+
+        //ZIP CODE
+        let zipCodeReg = /^\d{5}$/;
+        if(!zipCodeReg.test(this.state.zip_code)){
+            this.setState({
+                accountValid: false
+            })
+        }
+        //PHONE
+        let phoneReg = /^\D?(\d{3})\D?\D?(\d{3})\D?(\d{4})$/;
+        if(!phoneReg.test(this.state.phone)){
+            this.setState({
+                accountValid: false
+            })
+        }
+        //EMAIL
+        let emailReg = /^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$/;
+        if(!emailReg.test(this.state.email)){
+            this.setState({
+                accountValid: false
+            })
+        }
+
+    }
+
+    renderInvalidCredential = credential => {
+        if(!this.state.accountValid){
+            return (
+                <>
+                <p style={{color: "#ED4337"}}>{credential} is not valid...</p>
+                </>
+            )
+        }
+    }
+
     renderPasswordMatch = () => {
         console.log(this.state.passwordMatch);
         if(!this.state.passwordMatch){
@@ -138,6 +191,12 @@ export default class Register extends React.Component {
     render() {
         const passwordMatch = this.renderPasswordMatch();
         const accountCreation = this.renderAccountCreation();
+        const validStreet = this.renderInvalidCredential("Street");
+        const validState = this.renderInvalidCredential("State");
+        const validZipCode = this.renderInvalidCredential("Zip Code");
+        const validPhone = this.renderInvalidCredential("Phone");
+        const validEmail = this.renderInvalidCredential("Email");
+
         return (
             <div className="content">
                 <h1>Register</h1>
@@ -153,6 +212,7 @@ export default class Register extends React.Component {
                 <input type="text" value={this.state.lname} onChange={this.handleLastName} />
                 <br/>
                 <br/>
+                {validStreet}
                 <label>Street: </label>
                 <input type="text" value={this.state.street} onChange={this.handleStreet} />
                 <br/>
@@ -161,27 +221,31 @@ export default class Register extends React.Component {
                 <input type="text" value={this.state.city} onChange={this.handleCity} />
                 <br/>
                 <br/>
+                {validState}
                 <label>State: </label>
                 <input type="text" value={this.state.state} onChange={this.handleState} />
                 <br/>
                 <br/>
+                {validZipCode}
                 <label>Zip Code: </label>
                 <input type="number" value={this.state.zip_code} onChange={this.handleZipCode} />
                 <br/>
                 <br/>
+                {validPhone}
                 <label>Phone: </label>
                 <input type="text" value={this.state.phone} onChange={this.handlePhone} />
                 <br/>
                 <br/>
+                {validEmail}
                 <label>Email: </label>
                 <input type="text" value={this.state.email} onChange={this.handleEmail} />
                 <br/>
                 <br/>
+                {passwordMatch}
                 <label>Password: </label>
                 <input type="password" value={this.state.password} onChange={this.handlePassword} />
                 <br/>
                 <br/>
-                {passwordMatch}
                 <label>Confirm Password: </label>
                 <input type="password" value={this.state.confPassword} onChange={this.handleConfirmPassword} />
                 <br/>
