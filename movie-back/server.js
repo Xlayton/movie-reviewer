@@ -19,6 +19,9 @@ app.route("/api/users")
 .put(routes.updateUser)
 .delete(routes.deleteUser)
 
+app.route("/api/admin")
+.post(routes.toggleAdmin)
+
 app.route("/api/reviews")
 .get(routes.getReviews)
 .post(routes.createReview)

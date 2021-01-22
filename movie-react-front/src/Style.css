@@ -82,3 +82,18 @@ a {
     height: 375px;
     color: #333;
 }
+
+
+/* Admin Tools */
+/* .userList{
+    width: 100%;
+} */
+.userAttribute{
+    width:12%;
+    /* padding-left: 10px; */
+}
+.userRow{
+    display: flex;
+    flex-direction: row;
+    /* justify-content: space-between; */
+}
