@@ -121,7 +121,8 @@ class AdminTools extends React.Component {
               <p className="userAttribute">{user[8]}</p>
               <p className="userAttribute">{user[10]}</p>
               {user[11] === 1 ? (<p className="userAttribute">Admin</p>) : (<p className="userAttribute">User</p>)}
-              {this.state.currentId !== user[0] ?
+              {/* Ignore user one because this is the common test user */}
+              {this.state.currentId !== user[0] && user[0]!==1?
                 <>
                   <button id={user[0]} onClick={()=>this.deleteUser(user[0])}>Delete User</button>
                   <button onClick={() => { this.makeAdmin(user[0], (user[11] === 1)) }}>Toggle Admin</button>
