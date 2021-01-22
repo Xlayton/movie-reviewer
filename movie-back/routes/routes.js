@@ -44,7 +44,9 @@ const getAllUsers = (req, res) => {
 }
 
 const createUser = (req, res) => {
+    console.log(req.body);
     const {
+        username,
         fname,
         lname,
         street,
@@ -55,7 +57,7 @@ const createUser = (req, res) => {
         password,
         phone
     } = req.body;
-    if (!fname || !lname || !street || !city || !state || !zip_code || !email || !password || !phone) {
+    if (!fname || !lname || !street || !city || !state || !zip_code || !email || !password || !phone || !username) {
         res.status(400);
         res.send("Invalid parameters")
         return
@@ -63,6 +65,7 @@ const createUser = (req, res) => {
     getDbConn()
         .then(schema => schema.getTable("users"))
         .then(table => table.insert({
+            username,
             fname,
             lname,
             street,
@@ -259,7 +262,24 @@ const updateReview = (req, res) => {
 }
 
 const deleteReview = (req, res) => {
-
+    const {review_id} = req.body;
+    if(!review_id) {
+        res.status(400);
+        res.send("Invalid Request Body");
+        return;
+    }
+    getDbConn()
+    .then(schema => schema.getTable("reviews"))
+    .then(table => table.delete().where(`id=${review_id}`).execute())
+    .then(result => {
+        console.log(result.getWarnings())
+        res.status(200);
+        res.send({})
+    })
+    .catch(err => {
+        console.log("err")
+        res.status(500);
+    })
 }
 
 let getDbConn = () => {
