@@ -57,7 +57,7 @@ export default class Account extends React.Component {
                                     .then(data => {
                                         console.log(data)
                                         let temp_posters;
-                                        if(this.state.movie_posters) {
+                                        if (this.state.movie_posters) {
                                             temp_posters = [...this.state.movie_posters];
                                         } else {
                                             temp_posters = []
@@ -130,17 +130,73 @@ export default class Account extends React.Component {
         temp_user_data.username = evt.target.value
         this.setState({ user_data: temp_user_data })
     }
+
+    validateCredentials = () => {
+        var validations = [];
+        //STREET
+        let streetReg = /^[ \w]{3,}([A-Za-z]\.?)/;
+        if (!streetReg.test(this.state.user_data.street)) {
+            validations.push({ field: "street", message: "The Street is invalid" })
+        }
+
+        //STATE
+        let stateReg = /^(?:(A[KLRZ]|C[AOT]|D[CE]|FL|GA|HI|I[ADLN]|K[SY]|LA|M[ADEINOST]|N[CDEHJMVY]|O[HKR]|P[AR]|RI|S[CD]|T[NX]|UT|V[AIT]|W[AIVY]))$/;
+        if (!stateReg.test(this.state.user_data.state)) {
+            validations.push({ field: "state", message: "The State is invalid" })
+        }
+
+        //ZIP CODE
+        let zipCodeReg = /^\d{5}$/;
+        if (!zipCodeReg.test(this.state.user_data.zip_code)) {
+            validations.push({ field: "zip_code", message: "The Zip Code is invalid" })
+        }
+        //PHONE
+        let phoneReg = /^\D?(\d{3})\D?\D?(\d{3})\D?(\d{4})$/;
+        if (!phoneReg.test(this.state.user_data.phone)) {
+            validations.push({ field: "phone", message: "The Phone number is invalid" })
+        }
+        //EMAIL
+        let emailReg = /^(?:[A-Za-z0-9!#$%&'*+\-/=?^_`{|}~])(?:\.?[A-Za-z0-9!#$%&'*+\-/=?^_`{|}~]+)+\@(?:[A-Za-z0-9!#$%&'*+\-/=?^_`{|}~]+(?=\.))(?:\.?[A-Za-z0-9!#$%&'*+\-/=?^_`{|}~])+/
+        console.log(this.state.user_data.email)
+        if (!emailReg.test(this.state.user_data.email)) {
+            validations.push({ field: "email", message: "The Email is invalid" })
+        }
+
+        return validations;
+    }
+
+    renderValidation = valArr => {
+        let tempState = { ...this.state };
+        for (let i = 0; i < Object.keys(this.state).length; i++) {
+            if (Object.keys(tempState)[i].includes("Error")) {
+                tempState[Object.keys(tempState)[i]] = undefined;
+            }
+        }
+        this.setState(tempState);
+
+        for (let i = 0; i < valArr.length; i++) {
+            let newState = {};
+            newState[`${valArr[i].field}Error`] = valArr[i].message;
+            this.setState(newState);
+        }
+    }
     onUpdateUser = () => {
-        let body = new URLSearchParams({ ...this.state.user_data });
-        fetch(`http://localhost:8080/api/users`, {
-            method: "PUT",
-            body: body
-        }).then(res => res.json())
-            .then(data => console.log(data))
-            .catch(err => {
-                console.log(err)
-                console.log("OHNO")
-            })
+        const errors = this.validateCredentials()
+        if(errors.length === 0) {
+            this.renderValidation(errors)
+            let body = new URLSearchParams({ ...this.state.user_data });
+            fetch(`http://localhost:8080/api/users`, {
+                method: "PUT",
+                body: body
+            }).then(res => res.json())
+                .then(data => console.log(data))
+                .catch(err => {
+                    console.log(err)
+                    console.log("OHNO")
+                })
+        } else {
+            this.renderValidation(errors)
+        }
     }
 
     handleReview = (evt, i) => {
@@ -203,6 +259,7 @@ export default class Account extends React.Component {
         return (
             <>
                 <div>
+                    {this.state.emailError ? <p style={{ color: "#ED4337" }}>{this.state.emailError}</p> : undefined}
                     <label><span style={{ color: "#f00" }}>*</span>Email: </label>
                     <input disabled type="email" value={this.state.user_data.email} onChange={this.onEmailChange} />
                 </div>
@@ -219,6 +276,7 @@ export default class Account extends React.Component {
                     <input type="text" value={this.state.user_data.lname} onChange={this.onLNameChange} />
                 </div>
                 <div>
+                    {this.state.streetError ? <p style={{ color: "#ED4337" }}>{this.state.streetError}</p> : undefined}
                     <label><span style={{ color: "#f00" }}>*</span>Street: </label>
                     <input type="text" value={this.state.user_data.street} onChange={this.onStreetChange} />
                 </div>
@@ -227,14 +285,17 @@ export default class Account extends React.Component {
                     <input type="text" value={this.state.user_data.city} onChange={this.onCityChange} />
                 </div>
                 <div>
+                    {this.state.stateError ? <p style={{ color: "#ED4337" }}>{this.state.stateError}</p> : undefined}
                     <label><span style={{ color: "#f00" }}>*</span>State: </label>
                     <input type="text" value={this.state.user_data.state} onChange={this.onStateChange} />
                 </div>
                 <div>
+                    {this.state.zip_codeError ? <p style={{ color: "#ED4337" }}>{this.state.zip_codeError}</p> : undefined}
                     <label><span style={{ color: "#f00" }}>*</span>Zip Code: </label>
                     <input type="text" value={this.state.user_data.zip_code} onChange={this.onZipCodeChange} />
                 </div>
                 <div>
+                    {this.state.phoneError ? <p style={{ color: "#ED4337" }}>{this.state.phoneError}</p> : undefined}
                     <label><span style={{ color: "#f00" }}>*</span>Phone: </label>
                     <input type="phone" value={this.state.user_data.phone} onChange={this.onPhoneChange} />
                 </div>

@@ -135,7 +135,7 @@ export default class Register extends React.Component {
             validations.push({field: "phone", message: "The Phone number is invalid"})
         }
         //EMAIL
-        let emailReg = /^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$/;
+        let emailReg = /^(?:[A-Za-z0-9!#$%&'*+\-/=?^_`{|}~])(?:\.?[A-Za-z0-9!#$%&'*+\-/=?^_`{|}~]+)+\@(?:[A-Za-z0-9!#$%&'*+\-/=?^_`{|}~]+(?=\.))(?:\.?[A-Za-z0-9!#$%&'*+\-/=?^_`{|}~])+/;
         if(!emailReg.test(this.state.email)){
             validations.push({field: "email", message: "The Email is invalid"})
         }
