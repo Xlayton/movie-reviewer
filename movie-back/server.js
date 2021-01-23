@@ -13,6 +13,9 @@ app.use(bodyParser.urlencoded({extended: true}))
 app.route("/api/test/populate")
 .get(routes.prepopulateData)
 
+app.route("/api/recaptcha")
+.post(routes.validateRecaptchaToken)
+
 app.route("/api/users")
 .get(routes.getAllUsers)
 .post(routes.createUser)

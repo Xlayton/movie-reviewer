@@ -23,10 +23,6 @@ export default class Register extends React.Component {
         // this.authenticateUser = this.authenticateUser.bind(this);
     }
 
-    handleRecaptcha = value => {
-        console.log("Captcha value:", this.recaptchaRef.current.props.grecaptcha.execute());
-    }
-
     //TODO - This is just a copy from login - needs to be fleshed out later
     handleUsername = evt => {
         this.setState({username: evt.target.value});
@@ -75,47 +71,64 @@ export default class Register extends React.Component {
     recaptchaRef = React.createRef();
 
     createUser = async() => {
-        if(this.validateCredentials().length == 0){
-            let tempState = {...this.state};
-            for (let i = 0; i < Object.keys(this.state).length; i++) {
-                if(Object.keys(tempState)[i].includes("Error")){
-                    tempState[Object.keys(tempState)[i]] = undefined;
+        fetch(`http://localhost:8080/api/recaptcha`, {
+            method: "POST",
+            body: new URLSearchParams({
+                recaptcha_token: this.recaptchaRef.current.props.grecaptcha.getResponse()
+            })
+        })
+        .then(res => res.json())
+        .then(data => {
+            if(data.success === false) {
+                this.recaptchaRef.current.props.grecaptcha.reset();
+                this.setState({recaptchaError: "Invalid Recaptcha Attempt... Please Try Again!"})
+            } else {
+                this.setState({recaptchaError: undefined})
+                if(this.validateCredentials().length == 0){
+                    let tempState = {...this.state};
+                    for (let i = 0; i < Object.keys(this.state).length; i++) {
+                        if(Object.keys(tempState)[i].includes("Error")){
+                            tempState[Object.keys(tempState)[i]] = undefined;
+                        }
+                    }
+                    this.setState(tempState);
+        
+                fetch('http://localhost:8080/api/users', {
+                        method: 'POST',
+                        headers: {
+                          'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
+                        },
+                        body: new URLSearchParams({
+                            username: this.state.username,
+                            fname: this.state.fname,
+                            lname: this.state.lname,
+                            street: this.state.street,
+                            city: this.state.city,
+                            state: this.state.state,
+                            zip_code: this.state.zip_code,                
+                            email: this.state.email,
+                            password: this.state.password,
+                            phone: this.state.phone
+                        })
+                      })
+                    .then(res => res.json())
+                    .then(data => {
+                        if(data){
+                            console.log(data);
+                            this.setState({
+                                accountCreated: true
+                            })
+                        }
+                    })
+                } else {
+                    this.recaptchaRef.current.props.grecaptcha.reset();
+
+                    this.renderValidation(this.validateCredentials());
                 }
             }
-            this.setState(tempState);
-
-            await fetch('http://localhost:8080/api/users', {
-                method: 'POST',
-                headers: {
-                  'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
-                },
-                body: new URLSearchParams({
-                    username: this.state.username,
-                    fname: this.state.fname,
-                    lname: this.state.lname,
-                    street: this.state.street,
-                    city: this.state.city,
-                    state: this.state.state,
-                    zip_code: this.state.zip_code,                
-                    email: this.state.email,
-                    password: this.state.password,
-                    phone: this.state.phone
-                })
-              })
-            .then(res => res.json())
-            .then(data => {
-                if(data){
-                    console.log(data);
-                    this.setState({
-                        accountCreated: true
-                    })
-                }
-            })
-        } else {
-            this.renderValidation(this.validateCredentials());
-        }
-        // await window.location.reload(false);
-    }
+        })
+        .catch(err => console.log(err))
+            }
 
     validateCredentials = () => {
         var validations = [];
@@ -227,7 +240,8 @@ export default class Register extends React.Component {
                 <br/>
                 <br/>
                 {/* <input type="submit" value="Submit"/> */}
-                <ReCAPTCHA ref={this.recaptchaRef} sitekey="6LcrQjgaAAAAAKfTtfCgsyCTKIdXra4rnkVIz91R" onChange={this.handleRecaptcha} />
+                {this.state.recaptchaError ? <p style={{color: "#ED4337"}}>{this.state.recaptchaError}</p> : undefined}
+                <ReCAPTCHA ref={this.recaptchaRef} sitekey="6LcrQjgaAAAAAKfTtfCgsyCTKIdXra4rnkVIz91R" />
                 <button onClick={this.createUser}>Submit</button>
                 {this.state.accountCreated ? (
                 <div>

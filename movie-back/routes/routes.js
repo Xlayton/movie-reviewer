@@ -6,6 +6,7 @@ const bcrypt = require("bcrypt");
 const fs = require("fs");
 const csvParse = require("csv-parse/lib/sync");
 const frontEndFolderRelativePath = "../movie-react-front/build";
+const fetch = require("node-fetch")
 
 const serveSPA = (req, res) => {
     res.sendFile(path.resolve(`${frontEndFolderRelativePath}`));
@@ -133,6 +134,20 @@ const updateUser = (req, res) => {
             res.status(500);
             res.json(err);
         });
+}
+
+const validateRecaptchaToken = (req, res) => {
+    let {recaptcha_token} = req.body;
+    fetch(`https://www.google.com/recaptcha/api/siteverify`, {
+            method: "POST",
+            body: new URLSearchParams({
+                secret: process.env.RECAPTCHASECRET,
+                response: recaptcha_token
+            })
+        })
+        .then(res => res.json())
+        .then(data => res.json(data))
+        .catch(err => res.json(err))
 }
 
 const deleteUser = (req, res) => {
@@ -364,5 +379,6 @@ module.exports = {
     createReview: createReview,
     updateReview: updateReview,
     deleteReview: deleteReview,
-    toggleAdmin:toggleAdmin
+    toggleAdmin:toggleAdmin,
+    validateRecaptchaToken: validateRecaptchaToken
 }
