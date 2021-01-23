@@ -84,6 +84,7 @@ const createUser = (req, res) => {
 
 const updateUser = (req, res) => {
     const {
+        user_id,
         username,
         fname,
         lname,
@@ -96,14 +97,14 @@ const updateUser = (req, res) => {
         phone,
         new_password
     } = req.body;
-    if (!fname || !lname || !street || !city || !state || !zip_code || !email || !old_password || !phone || !username) {
+    if (!user_id || !fname || !lname || !street || !city || !state || !zip_code || !email || !old_password || !phone || !username) {
         res.status(400);
         res.send("Invalid parameters")
         return
     }
     getDbConn()
         .then(schema => schema.getTable("users"))
-        .then(table => table.select("password").where(`email=='${email}'`).execute())
+        .then(table => table.select("password").where(`id=='${user_id}'`).execute())
         .then(result => {
             if(!bcrypt.compareSync(old_password, result.fetchOne()[0])) {
                 res.status(400)
@@ -114,9 +115,9 @@ const updateUser = (req, res) => {
             .then(schema => schema.getTable("users"))
             .then(table => {
                 if(new_password) {
-                    return table.update().where(`email=='${email}'`).set('fname', fname).set('lname', lname).set('street', street).set('zip_code', zip_code).set('phone', phone).set('username', username).set('password', bcrypt.hashSync(new_password, 10)).execute()
+                    return table.update().where(`id=='${user_id}'`).set('fname', fname).set('lname', lname).set('street', street).set('zip_code', zip_code).set('phone', phone).set('username', username).set('password', bcrypt.hashSync(new_password, 10)).set('email', email).execute()
                 } else {
-                    return table.update().where(`email=='${email}'`).set('fname', fname).set('lname', lname).set('street', street).set('zip_code', zip_code).set('phone', phone).set('username', username).execute()
+                    return table.update().where(`id=='${user_id}'`).set('fname', fname).set('lname', lname).set('street', street).set('zip_code', zip_code).set('phone', phone).set('username', username).set('email', email).execute()
                 }
             })
             .then(result => {

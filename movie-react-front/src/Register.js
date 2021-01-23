@@ -1,4 +1,5 @@
 import React from 'react';
+import ReCAPTCHA from "react-google-recaptcha";
 
 //Self contained, should have a setter for the parent for when user auths
 export default class Register extends React.Component {
@@ -20,6 +21,10 @@ export default class Register extends React.Component {
         }
 
         // this.authenticateUser = this.authenticateUser.bind(this);
+    }
+
+    handleRecaptcha = value => {
+        console.log("Captcha value:", this.recaptchaRef.current.props.grecaptcha.execute());
     }
 
     //TODO - This is just a copy from login - needs to be fleshed out later
@@ -66,6 +71,8 @@ export default class Register extends React.Component {
     handlePhone = evt => {
         this.setState({phone: evt.target.value});
     }
+
+    recaptchaRef = React.createRef();
 
     createUser = async() => {
         if(this.validateCredentials().length == 0){
@@ -220,6 +227,7 @@ export default class Register extends React.Component {
                 <br/>
                 <br/>
                 {/* <input type="submit" value="Submit"/> */}
+                <ReCAPTCHA ref={this.recaptchaRef} sitekey="6LcrQjgaAAAAAKfTtfCgsyCTKIdXra4rnkVIz91R" onChange={this.handleRecaptcha} />
                 <button onClick={this.createUser}>Submit</button>
                 {this.state.accountCreated ? (
                 <div>

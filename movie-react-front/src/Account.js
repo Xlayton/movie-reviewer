@@ -261,7 +261,7 @@ export default class Account extends React.Component {
                 <div>
                     {this.state.emailError ? <p style={{ color: "#ED4337" }}>{this.state.emailError}</p> : undefined}
                     <label><span style={{ color: "#f00" }}>*</span>Email: </label>
-                    <input disabled type="email" value={this.state.user_data.email} onChange={this.onEmailChange} />
+                    <input type="email" value={this.state.user_data.email} onChange={this.onEmailChange} />
                 </div>
                 <div>
                     <label><span style={{ color: "#f00" }}>*</span>Username: </label>
