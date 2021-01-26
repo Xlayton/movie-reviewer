@@ -38,7 +38,7 @@ app.route("/login")
 .post(routes.loginUser)
 
 app.route("/email")
-.get(routes.resetPassword)
+.post(routes.resetPassword)
 
 app.get("*", routes.serveSPA)
 

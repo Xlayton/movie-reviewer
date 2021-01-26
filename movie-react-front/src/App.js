@@ -9,6 +9,7 @@ import Movie from './Movie';
 import Logout from './Logout';
 import AdminTools from './AdminTools';
 import Account from './Account';
+import ResetPassword from './ResetPassword';
 
 
 export default class App extends React.Component {
@@ -51,6 +52,7 @@ export default class App extends React.Component {
             </Route>
             <Route exact path="/movie" component={Movie}/>
             <Route exact path="/logout" component={Logout}/>
+            <Route exact path="/resetpassword" component={ResetPassword}/>
             <Route exact path="/register" component={Register}/>
             <Route exact path="/admin" component={AdminTools}/>
             <Route exact path="/account" component={Account}/>

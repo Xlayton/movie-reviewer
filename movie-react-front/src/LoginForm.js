@@ -21,8 +21,16 @@ export default class LoginForm extends React.Component {
     }
 
     resetPassword = () => {
-        fetch('http://localhost:8080/email')
-        .then(res => res.json());
+        fetch('http://localhost:8080/email', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
+            },
+            body: new URLSearchParams({
+                email: this.state.email,
+            })
+          })
+        .then(res => res.json())
     }
 
     componentDidMount() {
@@ -89,7 +97,7 @@ export default class LoginForm extends React.Component {
                 {/* <input type="submit" value="Submit"/> */}
                 <br/>
                 <br/>
-                <button onClick={this.resetPassword}>Forgot your Password?</button>
+                <a href="/resetpassword">Forgot your Password?</a>
             </div>
         )
     }
