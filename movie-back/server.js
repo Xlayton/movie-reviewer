@@ -38,6 +38,9 @@ app.route("/login")
 .post(routes.loginUser)
 
 app.route("/email")
+.post(routes.sendResetEmail)
+
+app.route("/user/:hashUsername")
 .post(routes.resetPassword)
 
 app.get("*", routes.serveSPA)

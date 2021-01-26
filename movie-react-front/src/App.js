@@ -10,7 +10,7 @@ import Logout from './Logout';
 import AdminTools from './AdminTools';
 import Account from './Account';
 import EmailConfirmation from './EmailConfirmation';
-import PasswordReset from './PasswordReset';
+import ResetPage from './ResetPage';
 
 
 export default class App extends React.Component {
@@ -54,10 +54,10 @@ export default class App extends React.Component {
             <Route exact path="/movie" component={Movie}/>
             <Route exact path="/logout" component={Logout}/>
             <Route exact path="/emailconfirmation" component={EmailConfirmation}/>
-            <Route exact path="/passwordreset" component={PasswordReset}/>
             <Route exact path="/register" component={Register}/>
             <Route exact path="/admin" component={AdminTools}/>
             <Route exact path="/account" component={Account}/>
+            <Route exact path="/user/:whatever" component={ResetPage}/>
           </section>
         </BrowserRouter>
       </div>

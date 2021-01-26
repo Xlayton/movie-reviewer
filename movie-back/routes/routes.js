@@ -35,7 +35,7 @@ const getAllUsers = (req, res) => {
     getDbConn()
         .then(schema => schema.getTable("users"))
         .then(table => {
-            if(req.query.user_id) {
+            if (req.query.user_id) {
                 return table.select().where(`id=='${req.query.user_id}'`).execute()
             } else {
                 return table.select().execute()
@@ -108,28 +108,28 @@ const updateUser = (req, res) => {
         .then(schema => schema.getTable("users"))
         .then(table => table.select("password").where(`id=='${user_id}'`).execute())
         .then(result => {
-            if(!bcrypt.compareSync(old_password, result.fetchOne()[0])) {
+            if (!bcrypt.compareSync(old_password, result.fetchOne()[0])) {
                 res.status(400)
                 res.send("Invalid login information")
                 return;
             }
             getDbConn()
-            .then(schema => schema.getTable("users"))
-            .then(table => {
-                if(new_password) {
-                    return table.update().where(`id=='${user_id}'`).set('fname', fname).set('lname', lname).set('street', street).set('zip_code', zip_code).set('phone', phone).set('username', username).set('password', bcrypt.hashSync(new_password, 10)).set('email', email).execute()
-                } else {
-                    return table.update().where(`id=='${user_id}'`).set('fname', fname).set('lname', lname).set('street', street).set('zip_code', zip_code).set('phone', phone).set('username', username).set('email', email).execute()
-                }
-            })
-            .then(result => {
-                res.status(200);
-                res.json(result);
-            })
-            .catch(err => {
-                res.status(500);
-                res.json(err);
-            });
+                .then(schema => schema.getTable("users"))
+                .then(table => {
+                    if (new_password) {
+                        return table.update().where(`id=='${user_id}'`).set('fname', fname).set('lname', lname).set('street', street).set('zip_code', zip_code).set('phone', phone).set('username', username).set('password', bcrypt.hashSync(new_password, 10)).set('email', email).execute()
+                    } else {
+                        return table.update().where(`id=='${user_id}'`).set('fname', fname).set('lname', lname).set('street', street).set('zip_code', zip_code).set('phone', phone).set('username', username).set('email', email).execute()
+                    }
+                })
+                .then(result => {
+                    res.status(200);
+                    res.json(result);
+                })
+                .catch(err => {
+                    res.status(500);
+                    res.json(err);
+                });
         })
         .catch(err => {
             res.status(500);
@@ -138,7 +138,9 @@ const updateUser = (req, res) => {
 }
 
 const validateRecaptchaToken = (req, res) => {
-    let {recaptcha_token} = req.body;
+    let {
+        recaptcha_token
+    } = req.body;
     fetch(`https://www.google.com/recaptcha/api/siteverify`, {
             method: "POST",
             body: new URLSearchParams({
@@ -152,34 +154,36 @@ const validateRecaptchaToken = (req, res) => {
 }
 
 const deleteUser = (req, res) => {
-    const {id} = req.body;
-    if(!id) {
+    const {
+        id
+    } = req.body;
+    if (!id) {
         res.status(400);
         res.send("Invalid Request Body");
         return;
     }
     getDbConn()
-    .then(schema => schema.getTable("reviews"))
-    .then(table => table.delete().where(`user_id=${id}`).execute())
-    .then(result => {
-        console.log(result.getWarnings())
-        getDbConn()
-        .then(schema => schema.getTable("users"))
-        .then(table => table.delete().where(`id=${id}`).execute())
+        .then(schema => schema.getTable("reviews"))
+        .then(table => table.delete().where(`user_id=${id}`).execute())
         .then(result => {
             console.log(result.getWarnings())
-            res.status(200);
-            res.send({})
+            getDbConn()
+                .then(schema => schema.getTable("users"))
+                .then(table => table.delete().where(`id=${id}`).execute())
+                .then(result => {
+                    console.log(result.getWarnings())
+                    res.status(200);
+                    res.send({})
+                })
+                .catch(err => {
+                    console.log("err")
+                    res.status(500);
+                })
         })
         .catch(err => {
-            console.log("err")
+            console.log(err)
             res.status(500);
         })
-    })
-    .catch(err => {
-        console.log(err)
-        res.status(500);
-    })
 
 }
 
@@ -222,14 +226,13 @@ const loginUser = (req, res) => {
                             phone: user[10],
                             isAdmin: user[11],
                         })
-                    }
-                    else {
+                    } else {
                         res.json(false)
                     }
                 }
             })
         })
-        .catch(err=>{
+        .catch(err => {
             console.log("email not exist")
             res.json(false);
         })
@@ -238,148 +241,163 @@ const loginUser = (req, res) => {
 
 const getReviews = (req, res) => {
     getDbConn()
-    .then(schema => schema.getTable("reviews"))
-    .then(table => {
-        const {user_id, movie_id, review_id} = req.query;
-        if(user_id) {
-            return table.select().where(`user_id==${user_id}`).execute()
-        } else if(movie_id) {
-            return table.select().where(`movie_id==${movie_id}`).execute()
-        } else if(review_id) {
-            return table.select().where(`id==${review_id}`).execute()
-        } else {
-            res.status(400);
-            res.send("Invalid Params")
-        }
-    })
-    .then(result => {
-        if(result) {
-            res.status(200);
-            res.json(result.fetchAll());
-        }
-    })
-    .catch(err => {
-        res.status(500);
-        res.json(err);
-    });
-}
-
-const getReviewsByName = (req, res) => {
-    let movie = req.params.movie
-    // console.log(req.params.movie)
- 
-    if(!movie){
-            res.status(400);
-            res.send("Invalid Params")
-        }
-
-    fetch(`https://api.themoviedb.org/3/search/movie?api_key=77c34d76c76368a57135c21fcb3db278&language=en-US&query=${movie}`)
-    .then(res => res.json())
-    .then(data => {
-        console.log(data.results[0].id)
-        let movie_id = data.results[0].id
-        getDbConn()
         .then(schema => schema.getTable("reviews"))
         .then(table => {
-            return table.select().where(`movie_id==${movie_id}`).execute()
+            const {
+                user_id,
+                movie_id,
+                review_id
+            } = req.query;
+            if (user_id) {
+                return table.select().where(`user_id==${user_id}`).execute()
+            } else if (movie_id) {
+                return table.select().where(`movie_id==${movie_id}`).execute()
+            } else if (review_id) {
+                return table.select().where(`id==${review_id}`).execute()
+            } else {
+                res.status(400);
+                res.send("Invalid Params")
+            }
         })
         .then(result => {
-            if(result) {
-                let JSONResults = {
-                    average_score:0,
-                    reviews:[]
-                };
-                let scoreTotal = 0;
-                let reviewsList = result.fetchAll();
-                reviewsList.forEach(review => {
-                    JSONResults.reviews.push({
-                        review_id:review[0],
-                        user_id:review[1],
-                        movie_id:review[2],
-                        movie_rating:review[4],
-                        review_body:review[3],
-                    })
-                    scoreTotal+=review[4];
-                    // console.log(scoreTotal)
-                });
-
-                JSONResults.average_score = scoreTotal/reviewsList.length;
-
+            if (result) {
                 res.status(200);
-                res.json(JSONResults);
+                res.json(result.fetchAll());
             }
         })
         .catch(err => {
             res.status(500);
             res.json(err);
         });
-    }).catch(err => {
-        res.status(500);
-        res.json(err);
-    });
+}
+
+const getReviewsByName = (req, res) => {
+    let movie = req.params.movie
+    // console.log(req.params.movie)
+
+    if (!movie) {
+        res.status(400);
+        res.send("Invalid Params")
+    }
+
+    fetch(`https://api.themoviedb.org/3/search/movie?api_key=77c34d76c76368a57135c21fcb3db278&language=en-US&query=${movie}`)
+        .then(res => res.json())
+        .then(data => {
+            console.log(data.results[0].id)
+            let movie_id = data.results[0].id
+            getDbConn()
+                .then(schema => schema.getTable("reviews"))
+                .then(table => {
+                    return table.select().where(`movie_id==${movie_id}`).execute()
+                })
+                .then(result => {
+                    if (result) {
+                        let JSONResults = {
+                            average_score: 0,
+                            reviews: []
+                        };
+                        let scoreTotal = 0;
+                        let reviewsList = result.fetchAll();
+                        reviewsList.forEach(review => {
+                            JSONResults.reviews.push({
+                                review_id: review[0],
+                                user_id: review[1],
+                                movie_id: review[2],
+                                movie_rating: review[4],
+                                review_body: review[3],
+                            })
+                            scoreTotal += review[4];
+                            // console.log(scoreTotal)
+                        });
+
+                        JSONResults.average_score = scoreTotal / reviewsList.length;
+
+                        res.status(200);
+                        res.json(JSONResults);
+                    }
+                })
+                .catch(err => {
+                    res.status(500);
+                    res.json(err);
+                });
+        }).catch(err => {
+            res.status(500);
+            res.json(err);
+        });
 }
 
 const createReview = (req, res) => {
-    const {user_id, movie_id, review_body, rating} = req.body;
-    if(!user_id || !movie_id || !review_body || !rating) {
+    const {
+        user_id,
+        movie_id,
+        review_body,
+        rating
+    } = req.body;
+    if (!user_id || !movie_id || !review_body || !rating) {
         res.status(400);
         res.send("Invalid Request Body")
         return;
     }
     getDbConn()
-    .then(schema => schema.getTable("reviews"))
-    .then(table => table.insert("user_id", "movie_id", "review_body", "movie_rating").values(user_id, movie_id, review_body, rating).execute())
-    .then(() => {
-        res.status(200);
-        res.send({})
-    })
-    .catch(err => {
-        console.log(err)
-        res.status(500);
-        res.send("Server Error");
-    })
+        .then(schema => schema.getTable("reviews"))
+        .then(table => table.insert("user_id", "movie_id", "review_body", "movie_rating").values(user_id, movie_id, review_body, rating).execute())
+        .then(() => {
+            res.status(200);
+            res.send({})
+        })
+        .catch(err => {
+            console.log(err)
+            res.status(500);
+            res.send("Server Error");
+        })
 }
 
 const updateReview = (req, res) => {
-    const {review_id, review_body, rating} = req.body;
-    if(!review_id || !review_body || !rating) {
+    const {
+        review_id,
+        review_body,
+        rating
+    } = req.body;
+    if (!review_id || !review_body || !rating) {
         res.status(400);
         res.send("Invalid Request Body");
         return;
     }
     getDbConn()
-    .then(schema => schema.getTable("reviews"))
-    .then(table => table.update().set("review_body", review_body).set("movie_rating", rating).where(`id=${review_id}`).execute())
-    .then(result => {
-        console.log(result.getWarnings())
-        res.status(200);
-        res.send({})
-    })
-    .catch(err => {
-        console.log("err")
-        res.status(500);
-    })
+        .then(schema => schema.getTable("reviews"))
+        .then(table => table.update().set("review_body", review_body).set("movie_rating", rating).where(`id=${review_id}`).execute())
+        .then(result => {
+            console.log(result.getWarnings())
+            res.status(200);
+            res.send({})
+        })
+        .catch(err => {
+            console.log("err")
+            res.status(500);
+        })
 }
 
 const deleteReview = (req, res) => {
-    const {review_id} = req.body;
-    if(!review_id) {
+    const {
+        review_id
+    } = req.body;
+    if (!review_id) {
         res.status(400);
         res.send("Invalid Request Body");
         return;
     }
     getDbConn()
-    .then(schema => schema.getTable("reviews"))
-    .then(table => table.delete().where(`id=${review_id}`).execute())
-    .then(result => {
-        console.log(result.getWarnings())
-        res.status(200);
-        res.send({})
-    })
-    .catch(err => {
-        console.log("err")
-        res.status(500);
-    })
+        .then(schema => schema.getTable("reviews"))
+        .then(table => table.delete().where(`id=${review_id}`).execute())
+        .then(result => {
+            console.log(result.getWarnings())
+            res.status(200);
+            res.send({})
+        })
+        .catch(err => {
+            console.log("err")
+            res.status(500);
+        })
 }
 
 let getDbConn = () => {
@@ -395,23 +413,23 @@ let getDbConn = () => {
         .catch(console.log)
 }
 
-const toggleAdmin = (req,res)=>{
+const toggleAdmin = (req, res) => {
     let {
         id,
         isAdmin
     } = req.body;
 
-    if (!id|!isAdmin) {
+    if (!id | !isAdmin) {
         res.status(400);
         res.send("Invalid parameters")
         return
     }
 
-    isAdmin = (isAdmin==="true")
+    isAdmin = (isAdmin === "true")
     getDbConn()
         .then(schema => schema.getTable("users"))
         .then(table => {
-                return table.update().where(`id=='${id}'`).set('is_admin', !isAdmin).execute()
+            return table.update().where(`id=='${id}'`).set('is_admin', !isAdmin).execute()
         })
         .then(result => {
             res.status(200);
@@ -423,36 +441,68 @@ const toggleAdmin = (req,res)=>{
         })
 }
 
-const resetPassword = (req, res) => {
+const sendResetEmail = (req, res) => {
 
-    let { email } = req.body;
+    let {
+        email
+    } = req.body;
 
     var transport = nodemailer.createTransport({
         // host: "smtp.mailtrap.io",
         // port: 2525,
-        host:'smtp.office365.com',
+        host: 'smtp.office365.com',
         port: 587,
         auth: {
-          user: process.env.EMAILUSER,
-          pass: process.env.EMAILPASS
+            user: process.env.EMAILUSER,
+            pass: process.env.EMAILPASS
         }
     });
+    console.log(email)
+    getDbConn()
+    .then(schema => schema.getTable("users"))
+    .then(table => table.select().where(`email=='${email}'`).execute())
+    .then(result => {
+        let user = result.fetchOne()
+        const message = {
+            from: process.env.EMAILUSER, // Sender address
+            to: email, // List of recipients
+            subject: 'Reset your password', // Subject line
+            html: `<h1>Please reset your password</h1><br/><br/><a href="http://localhost:3000/user/${Buffer.from(bcrypt.hashSync(user[1], 10)).toString('base64')}">Reset Your Password</a>` // HTML text body
+        };
+        transport.sendMail(message, function (err, info) {
+            if (err) {
+                console.log(err)
+            } else {
+                console.log(info);
+            }
+            res.send({});
+        });
+    })
+}
 
-    const message = {
-        from: process.env.EMAILUSER, // Sender address
-        to: email,         // List of recipients
-        subject: 'Reset your password', // Subject line
-        html: '<h1>Please reset your password</h1><br/><br/><a href="http://localhost:3000/passwordreset">Reset Your Password</a>' // HTML text body
-    };
-    transport.sendMail(message, function(err, info) {
-        if (err) {
-          console.log(err)
-        } else {
-          console.log(info);
-        }
-        res.send({});
-    });
+const resetPassword = (req, res) => {
+    let {hashUsername} = req.params;
+    hashUsername = Buffer.from(hashUsername, "base64").toString("utf-8")
+    const {password} = req.body;
 
+    getDbConn()
+    .then(schema => schema.getTable("users"))
+    .then(table => table.select().execute())
+    .then(result => {
+        let users = result.fetchAll();
+        users.forEach(user => {
+            bcrypt.compare(user[1], hashUsername)
+            .then(isValid => {
+                if(isValid) {
+                    console.log(user)
+                    getDbConn()
+                    .then(schema => schema.getTable("users"))
+                    .then(table => table.update().where(`id==${user[0]}`).set("password", bcrypt.hashSync(password, 10)).execute())
+                    .then(() => res.json({}))
+                }
+            })
+        });
+    })
 }
 
 module.exports = {
@@ -467,8 +517,9 @@ module.exports = {
     createReview: createReview,
     updateReview: updateReview,
     deleteReview: deleteReview,
-    toggleAdmin:toggleAdmin,
+    toggleAdmin: toggleAdmin,
+    sendResetEmail: sendResetEmail,
     resetPassword: resetPassword,
-    getReviewsByName:getReviewsByName,
+    getReviewsByName: getReviewsByName,
     validateRecaptchaToken: validateRecaptchaToken
 }
