@@ -263,6 +263,61 @@ const getReviews = (req, res) => {
     });
 }
 
+const getReviewsByName = (req, res) => {
+    let movie = req.params.movie
+    // console.log(req.params.movie)
+ 
+    if(!movie){
+            res.status(400);
+            res.send("Invalid Params")
+        }
+
+    fetch(`https://api.themoviedb.org/3/search/movie?api_key=77c34d76c76368a57135c21fcb3db278&language=en-US&query=${movie}`)
+    .then(res => res.json())
+    .then(data => {
+        console.log(data.results[0].id)
+        let movie_id = data.results[0].id
+        getDbConn()
+        .then(schema => schema.getTable("reviews"))
+        .then(table => {
+            return table.select().where(`movie_id==${movie_id}`).execute()
+        })
+        .then(result => {
+            if(result) {
+                let JSONResults = {
+                    average_score:0,
+                    reviews:[]
+                };
+                let scoreTotal = 0;
+                let reviewsList = result.fetchAll();
+                reviewsList.forEach(review => {
+                    JSONResults.reviews.push({
+                        review_id:review[0],
+                        user_id:review[1],
+                        movie_id:review[2],
+                        movie_rating:review[4],
+                        review_body:review[3],
+                    })
+                    scoreTotal+=review[4];
+                    // console.log(scoreTotal)
+                });
+
+                JSONResults.average_score = scoreTotal/reviewsList.length;
+
+                res.status(200);
+                res.json(JSONResults);
+            }
+        })
+        .catch(err => {
+            res.status(500);
+            res.json(err);
+        });
+    }).catch(err => {
+        res.status(500);
+        res.json(err);
+    });
+}
+
 const createReview = (req, res) => {
     const {user_id, movie_id, review_body, rating} = req.body;
     if(!user_id || !movie_id || !review_body || !rating) {
@@ -380,5 +435,6 @@ module.exports = {
     updateReview: updateReview,
     deleteReview: deleteReview,
     toggleAdmin:toggleAdmin,
+    getReviewsByName:getReviewsByName,
     validateRecaptchaToken: validateRecaptchaToken
 }
