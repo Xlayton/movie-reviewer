@@ -31,6 +31,9 @@ app.route("/api/reviews")
 app.route("/login")
 .post(routes.loginUser)
 
+app.route("/email")
+.get(routes.resetPassword)
+
 app.get("*", routes.serveSPA)
 
 app.listen(process.env.PORT)

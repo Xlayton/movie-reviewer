@@ -6,6 +6,7 @@ const bcrypt = require("bcrypt");
 const fs = require("fs");
 const csvParse = require("csv-parse/lib/sync");
 const frontEndFolderRelativePath = "../movie-react-front/build";
+const nodemailer = require('nodemailer');
 
 const serveSPA = (req, res) => {
     res.sendFile(path.resolve(`${frontEndFolderRelativePath}`));
@@ -351,6 +352,34 @@ const toggleAdmin = (req,res)=>{
         })
 }
 
+const resetPassword = (req, res) => {
+
+    var transport = nodemailer.createTransport({
+        host: "smtp.mailtrap.io",
+        port: 2525,
+        auth: {
+          user: "57492ac92757dc",
+          pass: "d8849475fb2064"
+        }
+    });
+
+    const message = {
+        from: 'chrisdazley@gmail.com', // Sender address
+        to: 'chrisdazley@gmail.com',         // List of recipients
+        subject: 'Reset your password', // Subject line
+        html: '<h1>This is a test to see if it works</h1>' // HTML text body
+    };
+    transport.sendMail(message, function(err, info) {
+        if (err) {
+          console.log(err)
+        } else {
+          console.log(info);
+        }
+        res.send({});
+    });
+
+}
+
 module.exports = {
     serveSPA: serveSPA,
     getAllUsers: getAllUsers,
@@ -363,5 +392,6 @@ module.exports = {
     createReview: createReview,
     updateReview: updateReview,
     deleteReview: deleteReview,
-    toggleAdmin:toggleAdmin
+    toggleAdmin:toggleAdmin,
+    resetPassword: resetPassword
 }

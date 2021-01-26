@@ -20,6 +20,11 @@ export default class LoginForm extends React.Component {
         this.setState({password: evt.target.value});
     }
 
+    resetPassword = () => {
+        fetch('http://localhost:8080/email')
+        .then(res => res.json());
+    }
+
     componentDidMount() {
         fetch(`https://api.themoviedb.org/3/movie/${this.props.movie_id}?api_key=77c34d76c76368a57135c21fcb3db278`)
         .then(res => res.json())
@@ -80,8 +85,11 @@ export default class LoginForm extends React.Component {
                 <input type="password" value={this.state.password} onChange={this.handlePassword} />
                 <br/>
                 <br/>
-                {/* <input type="submit" value="Submit"/> */}
                 <button onClick={this.authenticateUser}>Submit</button>
+                {/* <input type="submit" value="Submit"/> */}
+                <br/>
+                <br/>
+                <button onClick={this.resetPassword}>Forgot your Password?</button>
             </div>
         )
     }
