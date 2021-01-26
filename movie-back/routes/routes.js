@@ -430,8 +430,8 @@ const resetPassword = (req, res) => {
     var transport = nodemailer.createTransport({
         // host: "smtp.mailtrap.io",
         // port: 2525,
-        service:'smtp.office365.com',
-        port: 25,
+        host:'smtp.office365.com',
+        port: 587,
         auth: {
           user: process.env.EMAILUSER,
           pass: process.env.EMAILPASS
