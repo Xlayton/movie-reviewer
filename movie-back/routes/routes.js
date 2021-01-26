@@ -442,7 +442,7 @@ const resetPassword = (req, res) => {
         from: process.env.EMAILUSER, // Sender address
         to: email,         // List of recipients
         subject: 'Reset your password', // Subject line
-        html: '<h1>This is a test to see if it works</h1>' // HTML text body
+        html: '<h1>Please reset your password</h1><br/><br/><a href="http://localhost:3000/passwordreset">Reset Your Password</a>' // HTML text body
     };
     transport.sendMail(message, function(err, info) {
         if (err) {
