@@ -426,16 +426,17 @@ const toggleAdmin = (req,res)=>{
 const resetPassword = (req, res) => {
 
     var transport = nodemailer.createTransport({
-        host: "smtp.mailtrap.io",
-        port: 2525,
+        // host: "smtp.mailtrap.io",
+        // port: 2525,
+        service:'gmail',
         auth: {
-          user: "57492ac92757dc",
-          pass: "d8849475fb2064"
+          user: "acornfairnostrils@gmail.com",
+          pass: "tradeaccount"
         }
     });
 
     const message = {
-        from: 'chrisdazley@gmail.com', // Sender address
+        from: 'acornfairnostrils@gmail.com', // Sender address
         to: 'chrisdazley@gmail.com',         // List of recipients
         subject: 'Reset your password', // Subject line
         html: '<h1>This is a test to see if it works</h1>' // HTML text body
