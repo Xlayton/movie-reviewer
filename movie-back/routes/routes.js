@@ -7,6 +7,7 @@ const fs = require("fs");
 const csvParse = require("csv-parse/lib/sync");
 const frontEndFolderRelativePath = "../movie-react-front/build";
 const nodemailer = require('nodemailer');
+const fetch = require("node-fetch");
 
 const serveSPA = (req, res) => {
     res.sendFile(path.resolve(`${frontEndFolderRelativePath}`));
@@ -85,6 +86,7 @@ const createUser = (req, res) => {
 
 const updateUser = (req, res) => {
     const {
+        user_id,
         username,
         fname,
         lname,
@@ -97,14 +99,14 @@ const updateUser = (req, res) => {
         phone,
         new_password
     } = req.body;
-    if (!fname || !lname || !street || !city || !state || !zip_code || !email || !old_password || !phone || !username) {
+    if (!user_id || !fname || !lname || !street || !city || !state || !zip_code || !email || !old_password || !phone || !username) {
         res.status(400);
         res.send("Invalid parameters")
         return
     }
     getDbConn()
         .then(schema => schema.getTable("users"))
-        .then(table => table.select("password").where(`email=='${email}'`).execute())
+        .then(table => table.select("password").where(`id=='${user_id}'`).execute())
         .then(result => {
             if(!bcrypt.compareSync(old_password, result.fetchOne()[0])) {
                 res.status(400)
@@ -115,9 +117,9 @@ const updateUser = (req, res) => {
             .then(schema => schema.getTable("users"))
             .then(table => {
                 if(new_password) {
-                    return table.update().where(`email=='${email}'`).set('fname', fname).set('lname', lname).set('street', street).set('zip_code', zip_code).set('phone', phone).set('username', username).set('password', bcrypt.hashSync(new_password, 10)).execute()
+                    return table.update().where(`id=='${user_id}'`).set('fname', fname).set('lname', lname).set('street', street).set('zip_code', zip_code).set('phone', phone).set('username', username).set('password', bcrypt.hashSync(new_password, 10)).set('email', email).execute()
                 } else {
-                    return table.update().where(`email=='${email}'`).set('fname', fname).set('lname', lname).set('street', street).set('zip_code', zip_code).set('phone', phone).set('username', username).execute()
+                    return table.update().where(`id=='${user_id}'`).set('fname', fname).set('lname', lname).set('street', street).set('zip_code', zip_code).set('phone', phone).set('username', username).set('email', email).execute()
                 }
             })
             .then(result => {
@@ -133,6 +135,20 @@ const updateUser = (req, res) => {
             res.status(500);
             res.json(err);
         });
+}
+
+const validateRecaptchaToken = (req, res) => {
+    let {recaptcha_token} = req.body;
+    fetch(`https://www.google.com/recaptcha/api/siteverify`, {
+            method: "POST",
+            body: new URLSearchParams({
+                secret: process.env.RECAPTCHASECRET,
+                response: recaptcha_token
+            })
+        })
+        .then(res => res.json())
+        .then(data => res.json(data))
+        .catch(err => res.json(err))
 }
 
 const deleteUser = (req, res) => {
@@ -243,6 +259,61 @@ const getReviews = (req, res) => {
         }
     })
     .catch(err => {
+        res.status(500);
+        res.json(err);
+    });
+}
+
+const getReviewsByName = (req, res) => {
+    let movie = req.params.movie
+    // console.log(req.params.movie)
+ 
+    if(!movie){
+            res.status(400);
+            res.send("Invalid Params")
+        }
+
+    fetch(`https://api.themoviedb.org/3/search/movie?api_key=77c34d76c76368a57135c21fcb3db278&language=en-US&query=${movie}`)
+    .then(res => res.json())
+    .then(data => {
+        console.log(data.results[0].id)
+        let movie_id = data.results[0].id
+        getDbConn()
+        .then(schema => schema.getTable("reviews"))
+        .then(table => {
+            return table.select().where(`movie_id==${movie_id}`).execute()
+        })
+        .then(result => {
+            if(result) {
+                let JSONResults = {
+                    average_score:0,
+                    reviews:[]
+                };
+                let scoreTotal = 0;
+                let reviewsList = result.fetchAll();
+                reviewsList.forEach(review => {
+                    JSONResults.reviews.push({
+                        review_id:review[0],
+                        user_id:review[1],
+                        movie_id:review[2],
+                        movie_rating:review[4],
+                        review_body:review[3],
+                    })
+                    scoreTotal+=review[4];
+                    // console.log(scoreTotal)
+                });
+
+                JSONResults.average_score = scoreTotal/reviewsList.length;
+
+                res.status(200);
+                res.json(JSONResults);
+            }
+        })
+        .catch(err => {
+            res.status(500);
+            res.json(err);
+        });
+    }).catch(err => {
         res.status(500);
         res.json(err);
     });
@@ -393,5 +464,7 @@ module.exports = {
     updateReview: updateReview,
     deleteReview: deleteReview,
     toggleAdmin:toggleAdmin,
-    resetPassword: resetPassword
+    resetPassword: resetPassword,
+    getReviewsByName:getReviewsByName,
+    validateRecaptchaToken: validateRecaptchaToken
 }

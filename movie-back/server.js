@@ -13,6 +13,9 @@ app.use(bodyParser.urlencoded({extended: true}))
 app.route("/api/test/populate")
 .get(routes.prepopulateData)
 
+app.route("/api/recaptcha")
+.post(routes.validateRecaptchaToken)
+
 app.route("/api/users")
 .get(routes.getAllUsers)
 .post(routes.createUser)
@@ -27,6 +30,9 @@ app.route("/api/reviews")
 .post(routes.createReview)
 .put(routes.updateReview)
 .delete(routes.deleteReview)
+
+app.route("/api/reviews/:movie")
+.get(routes.getReviewsByName)
 
 app.route("/login")
 .post(routes.loginUser)
