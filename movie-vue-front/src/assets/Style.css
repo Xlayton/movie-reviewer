@@ -1,0 +1,99 @@
+html body {
+    margin: 0;
+}
+
+a {
+    text-decoration: none;
+}
+
+/* NAVBAR */
+.navbar {
+    background-color: #333;
+    padding: 15px;
+}
+
+.navbar a {
+    color: #fff;
+    font-size: 14pt;
+    padding-right: 10px;
+    text-decoration: none;
+}
+
+.loginElements {
+    display: flex;
+    float: right;
+    flex-direction: row;
+}
+
+.email {
+    font-size: 14pt;
+    padding-right: 10px;
+    margin: 0;
+}
+
+.email a {
+    color: rgb(0, 162, 255);
+}
+
+/* Search Bar */
+.searchBar {
+    text-align: center;
+}
+
+.searchInput {
+    width: 60%;
+    margin-right: 10px;
+    margin-bottom: 2%;
+}
+
+.selectQuery {
+    margin-right: 10px;
+}
+
+/* CONTENT */
+.content {
+    margin: 10px;
+}
+
+.row {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+.row button {
+    margin-right: 25px;
+}
+
+/* MOVIE CSS */
+.MovieSet {
+    display: flex;
+    justify-content: center;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+
+.movie {
+    background-color: #eee;
+    padding: 10px 20px;
+    margin: 10px;
+    width: 200px;
+    height: 375px;
+    color: #333;
+}
+
+
+/* Admin Tools */
+/* .userList{
+    width: 100%;
+} */
+.userAttribute{
+    width:12%;
+    /* padding-left: 10px; */
+}
+.userRow{
+    display: flex;
+    flex-direction: row;
+    /* justify-content: space-between; */
+}
