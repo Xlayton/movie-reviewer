@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <router-link to="/">Home</router-link>
+    <NavigationBar :isLoggedIn="isAuthenticated" :isAdmin="isAdmin" :user_id="userID" />
 
     <router-view></router-view>
   </div>
@@ -8,18 +8,27 @@
 
 <script>
 import "./assets/Style.css"
+import NavigationBar from "./components/NavigationBar"
 export default {
-  name: 'App'
-}
+  name: 'App',
+  data() {
+    return {
+      userData: '',
+      userID: undefined,
+      isAuthenticated: false,
+      isAdmin: false,
+    }
+  },
+  components: {NavigationBar},
+  created() {
+    this.userData = window.sessionStorage.getItem("currentUser");
+    this.userID = window.sessionStorage.getItem("userID");
+    this.isAuthenticated = window.sessionStorage.getItem("isLoggedIn");
+    this.isAdmin = window.sessionStorage.getItem("isAdmin");
+  },
+};
 </script>
 
 <style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
+/* @import './assets/Style.css'; */
 </style>
