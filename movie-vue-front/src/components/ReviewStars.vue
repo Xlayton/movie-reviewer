@@ -25,7 +25,7 @@
 <script>
 export default {
   name: "reviewstars",
-  props: ["score", "size", "index", "enableEdit"],
+  props: ["score", "size", "index", "enableEdit", "onScoreChange"],
   data() {
     return {
       editScore: 0,
@@ -37,7 +37,9 @@ export default {
     },
     setScore(score) {
       this.editScore = score;
-      console.log(score)
+      if(this.onScoreChange) {
+        this.onScoreChange(score);
+      }
     },
   },
   created() {

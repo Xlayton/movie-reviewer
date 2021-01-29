@@ -4,31 +4,41 @@
       v-bind:src="'https://image.tmdb.org/t/p/w500/' + this.movie.poster_path"
       v-bind:alt="this.movie"
     />
+    <ReviewStars v-bind:score="averageScore" :size="50" />
     <h2>{{ this.movie.original_title }}</h2>
+    <CreateReview
+      v-if="user_id"
+      v-bind:refreshReviews="refreshReviews"
+      v-bind:movie_id="id"
+      v-bind:user_id="user_id"
+    />
     <ReviewList
-      :editReview="editReview"
-      :handleRating="handleRating"
-      :handleReview="handleReview"
-      :reviews="reviews"
-      :user_review_id="user_review_id"
-      :refreshReviews="refreshReviews"
-      :movie_id="id"
+      v-bind:editReview="editReview"
+      v-bind:handleRating="handleRating"
+      v-bind:handleReview="handleReview"
+      v-bind:reviews="reviews"
+      v-bind:user_review_id="user_review_id"
+      v-bind:refreshReviews="refreshReviews"
+      v-bind:movie_id="id"
     />
   </div>
 </template>
 
 <script>
+import CreateReview from "./CreateReview.vue";
 import ReviewList from "./ReviewList";
+import ReviewStars from "./ReviewStars.vue";
 export default {
   name: "movieview",
   props: ["id", "user_id"],
-  components: { ReviewList },
+  components: { ReviewList, ReviewStars, CreateReview },
   data() {
     return {
       movie: {},
       userHasReview: false,
       user_review_id: "",
       reviews: [],
+      averageScore: 0,
     };
   },
   created() {
@@ -37,9 +47,9 @@ export default {
     )
       .then((res) => res.json())
       .then((data) => {
-        this.movie = data
+        this.movie = data;
       });
-      this.refreshReviews();
+    this.refreshReviews();
   },
   methods: {
     refreshReviews() {
@@ -53,10 +63,10 @@ export default {
                 this.user_review_id = review[1];
               }
             });
-            console.log(data)
+            console.log(data);
             this.reviews = data;
           }
-          // this.getAverageScore();
+          this.getAverageScore();
         });
     },
     editReview(index) {
@@ -89,11 +99,21 @@ export default {
       this.reviews = temp_reviews;
     },
     handleReview(evt, i) {
-        let temp_reviews = [...this.reviews];
-        let review = temp_reviews[i];
-        review[3] = evt.target.value
-        this.reviews = temp_reviews;
-    }
+      let temp_reviews = [...this.reviews];
+      let review = temp_reviews[i];
+      review[3] = evt.target.value;
+      this.reviews = temp_reviews;
+    },
+    getAverageScore() {
+      let total = 0;
+      this.reviews.forEach((review) => {
+        total += review[4];
+        console.log("Total", total);
+      });
+      let average = total / this.reviews.length;
+      console.log("Average", average);
+      this.averageScore = average;
+    },
   },
 };
 </script>
