@@ -58,7 +58,7 @@ export default {
         .then((data) => {
           if (data) {
             console.log(data);
-            this.props.refreshReviews();
+            this.refreshReviews();
           }
         });
     },

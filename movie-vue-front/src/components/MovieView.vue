@@ -7,7 +7,7 @@
     <ReviewStars v-bind:score="averageScore" :size="50" />
     <h2>{{ this.movie.original_title }}</h2>
     <CreateReview
-      v-if="user_id"
+      v-if="user_id && !userHasReview"
       v-bind:refreshReviews="refreshReviews"
       v-bind:movie_id="id"
       v-bind:user_id="user_id"
@@ -30,7 +30,7 @@ import ReviewList from "./ReviewList";
 import ReviewStars from "./ReviewStars.vue";
 export default {
   name: "movieview",
-  props: ["id", "user_id"],
+  props: ["id"],
   components: { ReviewList, ReviewStars, CreateReview },
   data() {
     return {
@@ -39,9 +39,11 @@ export default {
       user_review_id: "",
       reviews: [],
       averageScore: 0,
+      user_id: undefined
     };
   },
   created() {
+    this.user_id = window.sessionStorage.getItem("userID");
     fetch(
       `https://api.themoviedb.org/3/movie/${this.id}?api_key=77c34d76c76368a57135c21fcb3db278`
     )
@@ -99,6 +101,7 @@ export default {
       this.reviews = temp_reviews;
     },
     handleReview(evt, i) {
+      console.log(evt.target.value, i)
       let temp_reviews = [...this.reviews];
       let review = temp_reviews[i];
       review[3] = evt.target.value;

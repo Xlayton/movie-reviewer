@@ -1,7 +1,7 @@
 <template>
   <div class="ReviewList">
     <div class="review-container" v-for="(review, index) in reviews" v-bind:key="review.id">
-       <button v-if="isAdmin" v-on:click="() => this.handleDelete(reviews[index][0])">Remove Review</button>
+       <button v-if="isAdmin" v-on:click="() => {handleDelete(reviews[index][0])}">Remove Review</button>
        <Review v-bind:editReview="editReview" v-bind:index="index" v-bind:handleRating="handleRating" v-bind:handleReview="handleReview" v-bind:refreshReviews="refreshReviews" v-bind:isEditable="reviews[index][1] === user_review_id" v-bind:review_body="reviews[index][3]" v-bind:rating="reviews[index][4]" v-bind:user_id="reviews[index][1]" v-bind:review_id="reviews[index][0]"/>
     </div>
   </div>
