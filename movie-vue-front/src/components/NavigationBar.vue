@@ -3,7 +3,7 @@
         <router-link to="/">Home</router-link>
         <div class="loginElements">
             <!-- <p class="email"><router-link to='/account'>{{window.sessionStorage.getItem("currentUser")}}</router-link></p> -->
-            <router-link v-if="isAdmin === 1" to='/admin'>Admin Tools</router-link>
+            <router-link v-if="isAdmin === '1'" to='/admin'>Admin Tools</router-link>
             <router-link v-if="isLoggedIn" to='/logout'>Logout</router-link>
             <router-link v-if="!isLoggedIn" to='/login'>Login</router-link>
             <router-link v-if="!isLoggedIn" to='/register'>Register</router-link>

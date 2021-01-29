@@ -4,6 +4,7 @@ import Router from 'vue-router';
 import Homepage from './components/Homepage.vue';
 import Register from './components/Register.vue';
 import Login from './components/Login.vue';
+import Logout from './components/Logout.vue';
 import MovieView from './components/MovieView.vue';
 
 Vue.use(Router);
@@ -18,6 +19,10 @@ const router = new Router({
     path: "/login",
     name: "login",
     component: Login
+  },{
+    path: "/logout",
+    name: "logout",
+    component: Logout
   },
   {
     path: "/register",

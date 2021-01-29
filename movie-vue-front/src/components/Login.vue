@@ -35,7 +35,7 @@ export default {
     async authenticateUser() {
       console.log("authenticating......");
       console.log(this.email);
-      console.log(this.password);
+    //   console.log(this.password);
       await fetch("http://localhost:8080/login", {
         method: "POST",
         headers: {
