@@ -6,6 +6,7 @@ import Register from './components/Register.vue';
 import Login from './components/Login.vue';
 import Logout from './components/Logout.vue';
 import MovieView from './components/MovieView.vue';
+import AdminTools from './components/AdminTools.vue';
 
 Vue.use(Router);
 
@@ -34,7 +35,11 @@ const router = new Router({
     name: "movieview",
     component: MovieView,
     props: route => ({ id: route.query.id, user_id: route.query.user_id })
-  }
+  },{
+    path: "/admin",
+    name: "admin",
+    component: AdminTools
+  },
   ]
 })
 

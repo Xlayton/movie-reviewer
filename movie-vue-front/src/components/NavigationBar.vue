@@ -30,8 +30,8 @@ export default {
         }
     },
     created(){
-        console.log("Created")
-        console.log(this.isLoggedIn,  window.sessionStorage.getItem("isLoggedIn"))
+        // console.log("Created")
+        // console.log(this.isLoggedIn,  window.sessionStorage.getItem("isLoggedIn"))
         }
 
 }
