@@ -3,7 +3,7 @@
         <router-link to="/">Home</router-link>
         <div class="loginElements">
             <!-- <p class="email"><router-link to='/account'>{{window.sessionStorage.getItem("currentUser")}}</router-link></p> -->
-            <router-link v-if="isAdmin" to='/admin'>Admin Tools</router-link>
+            <router-link v-if="isAdmin === 1" to='/admin'>Admin Tools</router-link>
             <router-link v-if="isLoggedIn" to='/logout'>Logout</router-link>
             <router-link v-if="!isLoggedIn" to='/login'>Login</router-link>
             <router-link v-if="!isLoggedIn" to='/register'>Register</router-link>
@@ -19,11 +19,20 @@
 <script>
 export default {
     name: "navigationbar",
+    props:[
+        'isLoggedIn',
+        'isAdmin',
+        'user_id',
+    ],
     data() {
         return {
-            isLoggedIn: ""
+            // isLoggedIn: ""
         }
-    }
+    },
+    created(){
+        console.log("Created")
+        console.log(this.isLoggedIn,  window.sessionStorage.getItem("isLoggedIn"))
+        }
 
 }
 </script>
