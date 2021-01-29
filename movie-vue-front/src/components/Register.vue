@@ -14,7 +14,7 @@
         <br/>
         <br/>
         <!-- DISPLAY ERROR -->
-        <!-- {this.state.streetError ? <p style={{color: "#ED4337"}}>{this.state.streetError}</p> : undefined} -->
+        <p v-if="streetError" class="error">{{this.streetError}}</p>
         <label>Street: </label>
         <input type="text" v-model="street" />
         <br/>
@@ -89,6 +89,115 @@ export default {
         };
     },
     methods: {
+        createUser() {
+            fetch(`http://localhost:8080/api/recaptcha`, {
+                method: "POST",
+                body: new URLSearchParams({
+                    recaptcha_token: this.recaptchaRef.current.props.grecaptcha.getResponse()
+                })
+            })
+            .then(res => res.json())
+            .then(data => {
+                if(data.success === false) {
+                    // this.recaptchaRef.current.props.grecaptcha.reset();
+                    // this.setState({recaptchaError: "Invalid Recaptcha Attempt... Please Try Again!"})
+                } else {
+                    // this.setState({recaptchaError: undefined})
+                    if(this.validateCredentials().length == 0){
+                        let tempData = {...this.data};
+                        for (let i = 0; i < Object.keys(this.data).length; i++) {
+                            if(Object.keys(tempData)[i].includes("Error")){
+                                tempData[Object.keys(tempData)[i]] = undefined;
+                            }
+                        }
+                        this.data = tempData;
+            
+                        fetch('http://localhost:8080/api/users', {
+                            method: 'POST',
+                            headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
+                            },
+                            body: new URLSearchParams({
+                                username: this.username,
+                                fname: this.fname,
+                                lname: this.lname,
+                                street: this.street,
+                                city: this.city,
+                                state: this.state,
+                                zip_code: this.zip_code,                
+                                email: this.email,
+                                password: this.password,
+                                phone: this.phone
+                            })
+                        })
+                        .then(res => res.json())
+                        .then(data => {
+                            if(data){
+                                console.log(data);
+                                this.accountCreated = true
+                            }
+                        })
+                    } else {
+                        this.recaptchaRef.current.props.grecaptcha.reset();
+
+                        this.renderValidation(this.validateCredentials());
+                    }
+                }
+            })
+            .catch(err => console.log(err))
+        },
+        validateCredentials() {
+            var validations = [];
+            //STREET
+            let streetReg = /^[ \w]{3,}([A-Za-z]\.?)/;
+            if(!streetReg.test(this.street)){
+                validations.push({field: "street", message: "The Street is invalid"})
+            }
+
+            //STATE
+            let stateReg = /^(?:(A[KLRZ]|C[AOT]|D[CE]|FL|GA|HI|I[ADLN]|K[SY]|LA|M[ADEINOST]|N[CDEHJMVY]|O[HKR]|P[AR]|RI|S[CD]|T[NX]|UT|V[AIT]|W[AIVY]))$/;
+            if(!stateReg.test(this.state)){
+                validations.push({field: "state", message: "The State is invalid"})
+            }
+
+            //ZIP CODE
+            let zipCodeReg = /^\d{5}$/;
+            if(!zipCodeReg.test(this.zip_code)){
+                validations.push({field: "zip_code", message: "The Zip Code is invalid"})
+            }
+            //PHONE
+            let phoneReg = /^\D?(\d{3})\D?\D?(\d{3})\D?(\d{4})$/;
+            if(!phoneReg.test(this.phone)){
+                validations.push({field: "phone", message: "The Phone number is invalid"})
+            }
+            //EMAIL
+            let emailReg = /^(?:[A-Za-z0-9!#$%&'*+\-/=?^_`{|}~])(?:\.?[A-Za-z0-9!#$%&'*+\-/=?^_`{|}~]+)+@(?:[A-Za-z0-9!#$%&'*+\-/=?^_`{|}~]+(?=\.))(?:\.?[A-Za-z0-9!#$%&'*+\-/=?^_`{|}~])+/;
+            if(!emailReg.test(this.email)){
+                validations.push({field: "email", message: "The Email is invalid"})
+            }
+
+            if(this.state.password != this.confPassword){
+                validations.push({field: "password", message: "Passwords do not match"})
+            }
+
+            return validations;
+        },
+            
+        renderValidation(valArr) {
+            let tempData = {...this.data};
+                for (let i = 0; i < Object.keys(this.data).length; i++) {
+                    if(Object.keys(tempData)[i].includes("Error")){
+                        tempData[Object.keys(tempData)[i]] = undefined;
+                    }
+                }
+            this.data = tempData;
+
+            for (let i = 0; i < valArr.length; i++) {
+                let newData = {};
+                newData[`${valArr[i].field}Error`] = valArr[i].message;
+                this.setState(newData);
+            }
+        }
     }
 }
 </script>

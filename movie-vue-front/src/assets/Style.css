@@ -83,6 +83,9 @@ a {
     color: #333;
 }
 
+.error {
+    color: "#ED4337"
+}
 
 /* Admin Tools */
 /* .userList{
