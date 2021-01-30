@@ -53,21 +53,23 @@
     </div>
     <button v-on:click="onUpdateUser">Update</button>
 
-    <!-- <ReviewList
-      editReview="{this.editReview}"
-      handleRating="{this.handleRating}"
-      handleReview="{this.handleReview}"
-      reviews="{this.state.user_reviews}"
-      user_review_id="{this.state.user_data.user_id}"
-      refreshReviews="{this.refreshReviews}"
-    /> -->
+    <ReviewList
+      :editReview="editReview"
+      :handleRating="handleRating"
+      :handleReview="handleReview"
+      :reviews="user_reviews"
+      :user_review_id="user_id"
+      :refreshReviews="refreshReviews"
+    />
   </div>
 </template>
 
 <script>
+import ReviewList from "./ReviewList.vue";
 export default {
   name: "account",
   props: ["user_id"],
+  components: { ReviewList },
   data() {
     return {
       email: "",
@@ -86,6 +88,7 @@ export default {
       stateError: "",
       phoneError: "",
       zip_codeError: "",
+      user_reviews: [],
     };
   },
   methods: {
@@ -175,9 +178,50 @@ export default {
         this[`${valArr[i].field}Error`] = valArr[i].message;
       }
     },
+    refreshReviews() {
+      if (this.user_id) {
+        fetch(
+          `http://localhost:8080/api/reviews/?user_id=${this.user_id}`
+        )
+          .then((res) => res.json())
+          .then((data) => {
+            if (Array.isArray(data)) {
+                this.user_reviews= data;
+            }
+          });
+      }
+    },
+    editReview(index) {
+      let body = new URLSearchParams({
+        review_id: this.user_reviews[index][0],
+        review_body: this.user_reviews[index][3],
+        rating: this.user_reviews[index][4],
+      });
+
+      console.log(body.toString());
+      fetch("http://localhost:8080/api/reviews", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8",
+        },
+        body: body,
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          console.log(data);
+          this.refreshReviews();
+        })
+        .catch(console.log);
+    },
+    handleRating(evt, i) {
+      this.user_reviews[i][4] = evt;
+      console.log("New Score", this.user_reviews[i][4]);
+    },
+    handleReview(evt, i) {
+      this.user_reviews[i][3] = evt.target.value;
+    },
   },
   created() {
-    console.log(this);
     fetch(`http://localhost:8080/api/users?user_id=${this.user_id}`)
       .then((res) => res.json())
       .then((data) => {
@@ -193,6 +237,33 @@ export default {
         this.phone = data[0][10];
         this.old_password = "";
         this.new_password = "";
+      });
+    fetch(`http://localhost:8080/api/reviews/?user_id=${this.user_id}`)
+      .then((res) => res.json())
+      .then((data) => {
+        if (Array.isArray(data)) {
+          this.user_reviews = data;
+          //   this.user_reviews.forEach((review) => {
+          //     fetch(
+          //       `https://api.themoviedb.org/3/movie/${review[2]}?api_key=77c34d76c76368a57135c21fcb3db278`
+          //     )
+          //       .then((res) => res.json())
+          //       .then((data) => {
+          //         console.log(data);
+          //         let temp_posters;
+          //         if (this.movie_posters) {
+          //           temp_posters = [...this.state.movie_posters];
+          //         } else {
+          //           temp_posters = [];
+          //         }
+          //         temp_posters.push(data.poster_path);
+          //         console.log(temp_posters);
+          //         this.setState({
+          //           movie_posters: temp_posters,
+          //         });
+          //   });
+          //   });
+        }
       });
   },
 };

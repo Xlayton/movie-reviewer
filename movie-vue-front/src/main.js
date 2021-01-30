@@ -54,7 +54,7 @@ const router = new Router({
     path: "/account",
     name: "account",
     component: Account,
-    props: route => ({user_id: route.query.user_id})
+    props: route => ({user_id: parseInt(route.query.user_id, 10)})
   }
   ]
 })
