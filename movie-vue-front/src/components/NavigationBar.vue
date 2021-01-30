@@ -2,7 +2,7 @@
     <nav class="navbar">
         <router-link to="/">Home</router-link>
         <div class="loginElements">
-            <!-- <p class="email"><router-link to='/account'>{{window.sessionStorage.getItem("currentUser")}}</router-link></p> -->
+            <p class="email" v-if="isLoggedIn"><router-link v-bind:to="'/account?user_id='+user_id">{{this.email}}</router-link></p>
             <router-link v-if="isAdmin === '1'" to='/admin'>Admin Tools</router-link>
             <router-link v-if="isLoggedIn" to='/logout'>Logout</router-link>
             <router-link v-if="!isLoggedIn" to='/login'>Login</router-link>
@@ -23,6 +23,7 @@ export default {
         'isLoggedIn',
         'isAdmin',
         'user_id',
+        'email'
     ],
     data() {
         return {

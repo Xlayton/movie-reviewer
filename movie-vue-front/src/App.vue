@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <NavigationBar :isLoggedIn="isAuthenticated" :isAdmin="isAdmin" :user_id="userID" />
+    <NavigationBar :isLoggedIn="isAuthenticated" :isAdmin="isAdmin" :user_id="userID" :email="userData" />
     <router-view></router-view>
   </div>
 </template>
