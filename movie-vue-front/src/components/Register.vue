@@ -24,30 +24,35 @@
         <br/>
         <br/>
         <!-- DISPLAY ERROR -->
+        <p v-if="stateError" class="error">{{this.stateError}}</p>
         <!-- {this.state.stateError ? <p style={{color: "#ED4337"}}>{this.state.stateError}</p> : undefined} -->
         <label>State: </label>
         <input type="text" v-model="state" />
         <br/>
         <br/>
         <!-- DISPLAY ERROR -->
+        <p v-if="zip_codeError" class="error">{{this.zip_codeError}}</p>
         <!-- {this.state.zip_codeError ? <p style={{color: "#ED4337"}}>{this.state.zip_codeError}</p> : undefined} -->
         <label>Zip Code: </label>
         <input type="number" v-model="zip_code" />
         <br/>
         <br/>
         <!-- DISPLAY ERROR -->
+        <p v-if="phoneError" class="error">{{this.phoneError}}</p>
         <!-- {this.state.phoneError ? <p style={{color: "#ED4337"}}>{this.state.phoneError}</p> : undefined} -->
         <label>Phone: </label>
         <input type="text" v-model="phone" />
         <br/>
         <br/>
         <!-- DISPLAY ERROR -->
+        <p v-if="emailError" class="error">{{this.emailError}}</p>
         <!-- {this.state.emailError ? <p style={{color: "#ED4337"}}>{this.state.emailError}</p> : undefined} -->
         <label>Email: </label>
         <input type="text" v-model="email" />
         <br/>
         <br/>
         <!-- DISPLAY ERROR -->
+        <p v-if="passwordError" class="error">{{this.passwordError}}</p>
         <!-- {this.state.passwordError ? <p style={{color: "#ED4337"}}>{this.state.passwordError}</p> : undefined} -->
         <label>Password: </label>
         <input type="password" v-model="password" />
@@ -57,19 +62,18 @@
         <input type="password" v-model="confPassword" />
         <br/>
         <br/>
-        <!-- {this.state.recaptchaError ? <p style={{color: "#ED4337"}}>{this.state.recaptchaError}</p> : undefined} -->
-        <!-- <ReCAPTCHA ref={this.recaptchaRef} sitekey="6LcrQjgaAAAAAKfTtfCgsyCTKIdXra4rnkVIz91R" /> -->
+        <p v-if="recaptchaError" class="error">{{this.recaptchaError}}</p>
+        <vue-recaptcha ref={this.recaptchaRef} sitekey="6LcrQjgaAAAAAKfTtfCgsyCTKIdXra4rnkVIz91R"></vue-recaptcha>
         <button onClick={this.createUser}>Submit</button>
-        <!-- {this.state.accountCreated ? (
-        <div>
+        <div v-if="accountCreated">
             <h3>Account successfully created!</h3>
             <p className="email">Please <a href="/login">click here</a> to login in...</p>
         </div>
-        ) : undefined} -->
     </div>  
 </template>
 
 <script>
+import VueRecaptcha from 'vue-recaptcha';
 export default {
     name: "register",
     data() {
@@ -88,6 +92,7 @@ export default {
             accountCreated: false
         };
     },
+    components: { VueRecaptcha },
     methods: {
         createUser() {
             fetch(`http://localhost:8080/api/recaptcha`, {
