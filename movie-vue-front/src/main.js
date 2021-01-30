@@ -7,6 +7,7 @@ import Login from './components/Login.vue';
 import Logout from './components/Logout.vue';
 import MovieView from './components/MovieView.vue';
 import AdminTools from './components/AdminTools.vue';
+import Account from './components/Account.vue';
 
 Vue.use(Router);
 
@@ -39,7 +40,12 @@ const router = new Router({
     path: "/admin",
     name: "admin",
     component: AdminTools
-  },
+  },{
+    path: "/account",
+    name: "account",
+    component: Account,
+    props: route => ({user_id: route.query.user_id})
+  }
   ]
 })
 

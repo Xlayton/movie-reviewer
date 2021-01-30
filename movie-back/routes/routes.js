@@ -124,7 +124,7 @@ const updateUser = (req, res) => {
                 })
                 .then(result => {
                     res.status(200);
-                    res.json(result);
+                    res.json({});
                 })
                 .catch(err => {
                     res.status(500);
@@ -459,50 +459,54 @@ const sendResetEmail = (req, res) => {
     });
     console.log(email)
     getDbConn()
-    .then(schema => schema.getTable("users"))
-    .then(table => table.select().where(`email=='${email}'`).execute())
-    .then(result => {
-        let user = result.fetchOne()
-        const message = {
-            from: process.env.EMAILUSER, // Sender address
-            to: email, // List of recipients
-            subject: 'Reset your password', // Subject line
-            html: `<h1>Please reset your password</h1><br/><br/><a href="http://localhost:3000/user/${Buffer.from(bcrypt.hashSync(user[1], 10)).toString('base64')}">Reset Your Password</a>` // HTML text body
-        };
-        transport.sendMail(message, function (err, info) {
-            if (err) {
-                console.log(err)
-            } else {
-                console.log(info);
-            }
-            res.send({});
-        });
-    })
+        .then(schema => schema.getTable("users"))
+        .then(table => table.select().where(`email=='${email}'`).execute())
+        .then(result => {
+            let user = result.fetchOne()
+            const message = {
+                from: process.env.EMAILUSER, // Sender address
+                to: email, // List of recipients
+                subject: 'Reset your password', // Subject line
+                html: `<h1>Please reset your password</h1><br/><br/><a href="http://localhost:3000/user/${Buffer.from(bcrypt.hashSync(user[1], 10)).toString('base64')}">Reset Your Password</a>` // HTML text body
+            };
+            transport.sendMail(message, function (err, info) {
+                if (err) {
+                    console.log(err)
+                } else {
+                    console.log(info);
+                }
+                res.send({});
+            });
+        })
 }
 
 const resetPassword = (req, res) => {
-    let {hashUsername} = req.params;
+    let {
+        hashUsername
+    } = req.params;
     hashUsername = Buffer.from(hashUsername, "base64").toString("utf-8")
-    const {password} = req.body;
+    const {
+        password
+    } = req.body;
 
     getDbConn()
-    .then(schema => schema.getTable("users"))
-    .then(table => table.select().execute())
-    .then(result => {
-        let users = result.fetchAll();
-        users.forEach(user => {
-            bcrypt.compare(user[1], hashUsername)
-            .then(isValid => {
-                if(isValid) {
-                    console.log(user)
-                    getDbConn()
-                    .then(schema => schema.getTable("users"))
-                    .then(table => table.update().where(`id==${user[0]}`).set("password", bcrypt.hashSync(password, 10)).execute())
-                    .then(() => res.json({}))
-                }
-            })
-        });
-    })
+        .then(schema => schema.getTable("users"))
+        .then(table => table.select().execute())
+        .then(result => {
+            let users = result.fetchAll();
+            users.forEach(user => {
+                bcrypt.compare(user[1], hashUsername)
+                    .then(isValid => {
+                        if (isValid) {
+                            console.log(user)
+                            getDbConn()
+                                .then(schema => schema.getTable("users"))
+                                .then(table => table.update().where(`id==${user[0]}`).set("password", bcrypt.hashSync(password, 10)).execute())
+                                .then(() => res.json({}))
+                        }
+                    })
+            });
+        })
 }
 
 module.exports = {
