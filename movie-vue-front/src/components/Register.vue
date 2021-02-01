@@ -109,9 +109,10 @@ export default {
                 // this.recaptchaRef.current.props.grecaptcha.reset();
                 // this.setState({recaptchaError: "Invalid Recaptcha Attempt... Please Try Again!"})
             } else {
-                console.log(this.recaptchaVerified);
                 // this.setState({recaptchaError: undefined})
+                console.log(this.validateCredentials());
                 if(this.validateCredentials().length == 0){
+                    console.log(this.recaptchaVerified);
                     let tempData = {...this.data};
                     for (let i = 0; i < Object.keys(this.data).length; i++) {
                         if(Object.keys(tempData)[i].includes("Error")){
