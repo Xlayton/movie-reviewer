@@ -1,5 +1,6 @@
 <template>
     <div className="content">
+        <!-- <script src="https://www.google.com/recaptcha/api.js?onload=vueRecaptchaApiLoaded&render=explicit" async defer></script>  -->
         <h1>Register</h1>
         <label>Username: </label>
         <input type="text" v-model="username" />
@@ -89,6 +90,13 @@ export default {
             password: '',
             confPassword: '',
             phone: '',
+            streetError: false,
+            stateError: false,
+            zip_codeError: false,
+            phoneError: false,
+            emailError: false,
+            passwordError: false,
+            recaptchaError: false,
             accountCreated: false
         };
     },
