@@ -1,3 +1,4 @@
+<script src="https://www.google.com/recaptcha/api.js?onload=vueRecaptchaApiLoaded&render=explicit" async defer></script> 
 <template>
     <div className="content">
         <!-- <script src="https://www.google.com/recaptcha/api.js?onload=vueRecaptchaApiLoaded&render=explicit" async defer></script>  -->
@@ -64,8 +65,8 @@
         <br/>
         <br/>
         <p v-if="recaptchaError" class="error">{{this.recaptchaError}}</p>
-        <vue-recaptcha ref={this.recaptchaRef} sitekey="6LcrQjgaAAAAAKfTtfCgsyCTKIdXra4rnkVIz91R"></vue-recaptcha>
-        <button onClick={this.createUser}>Submit</button>
+        <vue-recaptcha :loadRecaptchaScript="true" @verify="markRecaptchaAsVerified" sitekey="6LcrQjgaAAAAAKfTtfCgsyCTKIdXra4rnkVIz91R"></vue-recaptcha>
+        <button v-on:click="createUser">Submit</button>
         <div v-if="accountCreated">
             <h3>Account successfully created!</h3>
             <p className="email">Please <a href="/login">click here</a> to login in...</p>
@@ -97,67 +98,70 @@ export default {
             emailError: false,
             passwordError: false,
             recaptchaError: false,
-            accountCreated: false
+            accountCreated: false,
+            recaptchaVerified: false,
         };
     },
     components: { VueRecaptcha },
     methods: {
         createUser() {
-            fetch(`http://localhost:8080/api/recaptcha`, {
-                method: "POST",
-                body: new URLSearchParams({
-                    recaptcha_token: this.recaptchaRef.current.props.grecaptcha.getResponse()
-                })
-            })
-            .then(res => res.json())
-            .then(data => {
-                if(data.success === false) {
-                    // this.recaptchaRef.current.props.grecaptcha.reset();
-                    // this.setState({recaptchaError: "Invalid Recaptcha Attempt... Please Try Again!"})
-                } else {
-                    // this.setState({recaptchaError: undefined})
-                    if(this.validateCredentials().length == 0){
-                        let tempData = {...this.data};
-                        for (let i = 0; i < Object.keys(this.data).length; i++) {
-                            if(Object.keys(tempData)[i].includes("Error")){
-                                tempData[Object.keys(tempData)[i]] = undefined;
-                            }
+            if(this.recaptchaVerified === false) {
+                // this.recaptchaRef.current.props.grecaptcha.reset();
+                // this.setState({recaptchaError: "Invalid Recaptcha Attempt... Please Try Again!"})
+            } else {
+                console.log(this.recaptchaVerified);
+                // this.setState({recaptchaError: undefined})
+                if(this.validateCredentials().length == 0){
+                    let tempData = {...this.data};
+                    for (let i = 0; i < Object.keys(this.data).length; i++) {
+                        if(Object.keys(tempData)[i].includes("Error")){
+                            tempData[Object.keys(tempData)[i]] = undefined;
                         }
-                        this.data = tempData;
-            
-                        fetch('http://localhost:8080/api/users', {
-                            method: 'POST',
-                            headers: {
-                            'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
-                            },
-                            body: new URLSearchParams({
-                                username: this.username,
-                                fname: this.fname,
-                                lname: this.lname,
-                                street: this.street,
-                                city: this.city,
-                                state: this.state,
-                                zip_code: this.zip_code,                
-                                email: this.email,
-                                password: this.password,
-                                phone: this.phone
-                            })
-                        })
-                        .then(res => res.json())
-                        .then(data => {
-                            if(data){
-                                console.log(data);
-                                this.accountCreated = true
-                            }
-                        })
-                    } else {
-                        this.recaptchaRef.current.props.grecaptcha.reset();
-
-                        this.renderValidation(this.validateCredentials());
                     }
-                }
-            })
-            .catch(err => console.log(err))
+                    this.data = tempData;
+        
+                    fetch('http://localhost:8080/api/users', {
+                        method: 'POST',
+                        headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
+                        },
+                        body: new URLSearchParams({
+                            username: this.username,
+                            fname: this.fname,
+                            lname: this.lname,
+                            street: this.street,
+                            city: this.city,
+                            state: this.state,
+                            zip_code: this.zip_code,                
+                            email: this.email,
+                            password: this.password,
+                            phone: this.phone
+                        })
+                    })
+                    .then(res => res.json())
+                    .then(data => {
+                        if(data){
+                            console.log(data);
+                            this.accountCreated = true
+                        }
+                    })
+                } 
+                // else {
+                //     this.recaptchaRef.current.props.grecaptcha.reset();
+
+                //     this.renderValidation(this.validateCredentials());
+                // }
+            }
+            // fetch(`http://localhost:8080/api/recaptcha`, {
+            //     method: "POST",
+            //     body: new URLSearchParams({
+            //         recaptcha_token: this.recaptchaVerified
+            //     })
+            // })
+            // .then(res => res.json())
+            // .then(data => {
+            // })
+            // .catch(err => console.log(err))
         },
         validateCredentials() {
             var validations = [];
@@ -210,6 +214,14 @@ export default {
                 newData[`${valArr[i].field}Error`] = valArr[i].message;
                 this.setState(newData);
             }
+        },
+
+        markRecaptchaAsVerified(response) {
+            this.recaptchaVerified = true;
+            console.log(this.recaptchaVerified);
+        },
+        checkIfRecaptchaVerified() {
+            return this.recaptchaVerified;
         }
     }
 }
