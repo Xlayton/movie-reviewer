@@ -91,13 +91,13 @@ export default {
             password: '',
             confPassword: '',
             phone: '',
-            streetError: false,
-            stateError: false,
-            zip_codeError: false,
-            phoneError: false,
-            emailError: false,
-            passwordError: false,
-            recaptchaError: false,
+            streetError: '',
+            stateError: '',
+            zip_codeError: '',
+            phoneError: '',
+            emailError: '',
+            passwordError: '',
+            recaptchaError: '',
             accountCreated: false,
             recaptchaVerified: false,
         };
@@ -113,13 +113,11 @@ export default {
                 console.log(this.validateCredentials());
                 if(this.validateCredentials().length == 0){
                     console.log(this.recaptchaVerified);
-                    let tempData = {...this.data};
-                    for (let i = 0; i < Object.keys(this.data).length; i++) {
-                        if(Object.keys(tempData)[i].includes("Error")){
-                            tempData[Object.keys(tempData)[i]] = undefined;
+                    for (let i = 0; i < Object.keys(this).length; i++) {
+                        if(Object.keys(this)[i].includes("Error")){
+                            this[Object.keys(this)[i]] = '';
                         }
                     }
-                    this.data = tempData;
         
                     fetch('http://localhost:8080/api/users', {
                         method: 'POST',
@@ -146,12 +144,11 @@ export default {
                             this.accountCreated = true
                         }
                     })
-                } 
-                // else {
-                //     this.recaptchaRef.current.props.grecaptcha.reset();
+                } else {
+                    // this.recaptchaRef.current.props.grecaptcha.reset();
 
-                //     this.renderValidation(this.validateCredentials());
-                // }
+                    this.renderValidation(this.validateCredentials());
+                }
             }
             // fetch(`http://localhost:8080/api/recaptcha`, {
             //     method: "POST",
@@ -194,7 +191,7 @@ export default {
                 validations.push({field: "email", message: "The Email is invalid"})
             }
 
-            if(this.state.password != this.confPassword){
+            if(this.password != this.confPassword){
                 validations.push({field: "password", message: "Passwords do not match"})
             }
 
@@ -202,18 +199,15 @@ export default {
         },
             
         renderValidation(valArr) {
-            let tempData = {...this.data};
-                for (let i = 0; i < Object.keys(this.data).length; i++) {
-                    if(Object.keys(tempData)[i].includes("Error")){
-                        tempData[Object.keys(tempData)[i]] = undefined;
-                    }
+            for (let i = 0; i < Object.keys(this).length; i++) {
+                if(Object.keys(this)[i].includes("Error")){
+                    this[Object.keys(this)[i]] = '';
                 }
-            this.data = tempData;
+            }
 
             for (let i = 0; i < valArr.length; i++) {
-                let newData = {};
-                newData[`${valArr[i].field}Error`] = valArr[i].message;
-                this.setState(newData);
+                console.log(this);
+                this[`${valArr[i].field}Error`] = valArr[i].message;
             }
         },
 
@@ -229,5 +223,7 @@ export default {
 </script>
 
 <style>
-
+.error {
+    color: #ED4337
+}
 </style>
