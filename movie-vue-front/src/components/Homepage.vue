@@ -11,7 +11,7 @@
         <option value="person">Person</option>
       </select>
       <input v-model="searchText" class="searchInput" />
-      <button v-on:click="handleSearchQuery">Search</button>
+      <button class="button" v-on:click="handleSearchQuery">Search</button>
     </div>
     <div class="searchBar">
       <label>Genre: </label>
@@ -34,8 +34,8 @@
     <br />
     <br />
     <div class="row">
-      <button v-on:click="decrementPage">Previous Page</button>
-      <button v-on:click="incrementPage">Next Page</button>
+      <button class="button" v-on:click="decrementPage">Previous Page</button>
+      <button class="button" v-on:click="incrementPage">Next Page</button>
     </div>
   </div>
 </template>
@@ -190,6 +190,21 @@ img {
 
 .movie:hover {
   background-color: rgb(221, 221, 221);
+  cursor: pointer;
+}
+
+.button {
+  color: rgb(0, 162, 255);
+  border: solid 2px;
+  border-color: rgb(0, 162, 255);
+  padding: 5px 10px;
+  border-radius: 8px;
+  font-size: 14px;
+}
+
+.button:hover {
+  background-color: rgb(0, 162, 255);
+  color: #eee;
   cursor: pointer;
 }
 </style>
