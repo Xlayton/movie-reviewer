@@ -1,5 +1,5 @@
 <template>
-  <div class="ReviewStars" v-if="!enableEdit">
+  <div class="review-stars" v-if="!enableEdit">
     <img
       v-for="index in 5"
       v-bind:key="index"
@@ -9,7 +9,7 @@
       v-bind:width="size"
     />
   </div>
-  <div class="ReviewStars" v-else>
+  <div class="review-stars" v-else>
     <img
       v-for="index in 5"
       v-bind:key="index"
@@ -49,4 +49,5 @@ export default {
 </script>
 
 <style>
+
 </style>
