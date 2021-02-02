@@ -1,7 +1,11 @@
 <template>
   <div class="content">
-    <h1>Homepage</h1>
+    <br/>
+    <br/>
     <div class="searchBar">
+      <!-- <button v-on:click="selectTitle">Title</button>
+      <button v-on:click="selectPerson">Person</button> -->
+      <br/>
       <select class="selectQuery" v-model="query">
         <option value="title" selected>Title</option>
         <option value="person">Person</option>
@@ -30,8 +34,8 @@
     <br />
     <br />
     <div class="row">
-      <button onClick="{this.decrementPage}">Previous Page</button>
-      <button onClick="{this.incrementPage}">Next Page</button>
+      <button v-on:click="decrementPage">Previous Page</button>
+      <button v-on:click="incrementPage">Next Page</button>
     </div>
   </div>
 </template>
@@ -100,11 +104,36 @@ export default {
         console.log(this.movies);
       });
   },
+  incrementPage() {
+    var pageNumber = window.sessionStorage.getItem("pageNumber"); 
+    pageNumber++;
+    window.sessionStorage.setItem("pageNumber", pageNumber);
+    this.refreshPage();
+  },
+  decrementPage() {
+    var pageNumber = window.sessionStorage.getItem("pageNumber"); 
+    if(pageNumber > 1){
+      pageNumber--;
+      window.sessionStorage.setItem("pageNumber", pageNumber);
+    }
+    this.refreshPage();
+  },  
+  refreshPage() {
+    window.location.reload(false);
+  },
+  selectTitle() {
+    this.query = "title";
+  },
+  selectPerson() {
+    this.query = "person";
+  }
 };
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+@import url('https://fonts.googleapis.com/css2?family=Merriweather:wght@700&display=swap');
+
 img {
   width: 100%;
   height: auto;
@@ -144,11 +173,23 @@ img {
 }
 
 .movie {
-  background-color: #eee;
+  border: solid;
+  text-align: center;
+  border-color: #333;
+  border-radius: 8px;
   padding: 10px 20px;
   margin: 10px;
-  width: 200px;
-  height: 375px;
+  width: 250px;
+  height: 420px;
+  white-space: pre-wrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-family: 'Merriweather', serif;
   color: #333;
+}
+
+.movie:hover {
+  background-color: rgb(221, 221, 221);
+  cursor: pointer;
 }
 </style>
