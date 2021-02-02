@@ -54,6 +54,7 @@
     <button v-on:click="onUpdateUser">Update</button>
 
     <ReviewList
+      :should_show_poster="true"
       :editReview="editReview"
       :handleRating="handleRating"
       :handleReview="handleReview"
