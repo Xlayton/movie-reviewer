@@ -195,7 +195,8 @@ img {
 
 .button {
   color: rgb(0, 162, 255);
-  border: solid 2px;
+  background-color: #fff;
+  border: solid 3px;
   border-color: rgb(0, 162, 255);
   padding: 5px 10px;
   border-radius: 8px;
