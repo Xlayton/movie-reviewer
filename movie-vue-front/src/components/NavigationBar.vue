@@ -52,6 +52,7 @@ export default {
 }
 
 .loginElements {
+    padding-top: 5px;
     display: flex;
     float: right;
     flex-direction: row;
