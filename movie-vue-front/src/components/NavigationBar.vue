@@ -1,6 +1,6 @@
 <template>
     <nav class="navbar">
-        <router-link to="/">Home</router-link>
+        <router-link class="heading" to="/">Movie Reviewer</router-link>
         <div class="loginElements">
             <p class="email" v-if="isLoggedIn"><router-link v-bind:to="'/account?user_id='+user_id">{{this.email}}</router-link></p>
             <router-link v-if="isAdmin === '1'" to='/admin'>Admin Tools</router-link>
@@ -39,7 +39,7 @@ export default {
 </script>
 
 <style>
-/* .navbar {
+.navbar {
     background-color: #333;
     padding: 15px;
 }
@@ -61,10 +61,15 @@ export default {
     font-size: 14pt;
     padding-right: 10px;
     margin: 0;
+    color: rgb(0, 162, 255);
+}
+
+.home {
+    color: rgb(0, 162, 255);
 }
 
 .email a {
     color: rgb(0, 162, 255);
-} */
+}
 
 </style>
