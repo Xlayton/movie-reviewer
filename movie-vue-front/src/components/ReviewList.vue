@@ -16,6 +16,7 @@
       >
         Remove Review
       </div>
+      <img class="poster" v-bind:src="'https://image.tmdb.org/t/p/w500/' + movies[index]" />
       <Review
         v-bind:editReview="editReview"
         v-bind:index="index"
@@ -84,6 +85,7 @@ export default {
     },
   },
   created() {
+    console.log(this.movies)
     this.reviews.forEach((review) => this.getMoviePoster(review[2]));
   },
   watch: {
@@ -103,45 +105,16 @@ export default {
   position: relative;
   margin: 1vh 0;
 }
-.review-container:nth-child(even) > .review {
-  flex-direction: row-reverse;
-}
-
-.review-container:nth-child(odd) > .review > .content-container {
-  border-bottom-right-radius: 50px;
-  border-top-right-radius: 50px;
-  border-bottom-left-radius: 2px;
-  border-top-left-radius: 2px;
-}
-.review-container:nth-child(even) > .review > .content-container {
-  border-bottom-left-radius: 50px;
-  border-top-left-radius: 50px;
-  border-bottom-right-radius: 2px;
-  border-top-right-radius: 2px;
-}
-
-.review-container:nth-child(even)
-  > .review
-  > .content-container
-  > .review-data
-  > .edit-button {
-  top: 0;
-  right: 0;
-}
-.review-container:nth-child(odd)
-  > .review
-  > .content-container
-  > .review-data
-  > .edit-button {
-  top: 0;
-  left: 0;
-}
 
 .review-container {
   width: 100%;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   align-items: center;
+}
+
+.review-container .poster {
+  width: 25%;
 }
 
 .movie-poster {
