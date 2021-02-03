@@ -1,23 +1,23 @@
 <template>
   <div class="review-stars" v-if="!enableEdit">
     <img
-      v-for="index in 5"
+      v-for="index in 10"
       v-bind:key="index"
       v-bind:src="
-        index <= score ? getImgUrl('fullStar.png') : getImgUrl('emptyStar.png')
+        index <= score ? ((index%2)==0 ?  getImgUrl('halfStarR.png') : getImgUrl('halfStarL.png')) : ((index%2)==0 ?  getImgUrl('emptyHalfStarR.png'): getImgUrl('emptyHalfStarL.png'))
       "
-      v-bind:width="size"
+      class="star"
+      :style="userStyle"
     />
   </div>
   <div class="review-stars" v-else>
     <img
-      v-for="index in 5"
+      v-for="index in 10"
       v-bind:key="index"
-      v-bind:src="
-        index <= editScore ? getImgUrl('fullStar.png') : getImgUrl('emptyStar.png')
-      "
-      v-bind:width="size"
+      v-bind:src="index <= editScore? ((index%2)==0 ?  getImgUrl('halfStarR.png') : getImgUrl('halfStarL.png')) : ((index%2)==0 ?  getImgUrl('emptyHalfStarR.png'): getImgUrl('emptyHalfStarL.png'))"
       v-on:click="() => setScore(index)"
+      class="star"
+      :style="userStyle"
     />
   </div>
 </template>
@@ -37,17 +37,32 @@ export default {
     },
     setScore(score) {
       this.editScore = score;
-      if(this.onScoreChange) {
+      if (this.onScoreChange) {
         this.onScoreChange(score);
       }
     },
   },
   created() {
-      this.editScore = this.score;
-  }
+    this.editScore = this.score;
+  },
+  computed: {
+    userStyle() {
+      return {
+        '--width': this.size + "px",
+      };
+    },
+  },
 };
 </script>
 
-<style>
-
+<style scoped>
+.review-stars{
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+ min-width: var(--width)*5;
+}
+.star {
+  height: var(--width);
+}
 </style>

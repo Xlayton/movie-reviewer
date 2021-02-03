@@ -1,18 +1,10 @@
 <template>
   <div
-    class="review-data"
+    class="review"
     @mouseover="isHovering = true"
     @mouseout="isHovering = false"
   >
-    <button
-      v-if="isEditable && !enableEdit"
-      :class="{ hovered: isHovering }"
-      v-on:click="() => (this.enableEdit = true)"
-      class="review-button edit-button"
-    >
-      Edit Review
-    </button>
-    <h1>{{ user }}</h1>
+    <h1>{{ user_id }}</h1>
     <ReviewStars
       v-bind:score="rating"
       :size="20"
@@ -28,15 +20,18 @@
       v-on:change="(evt) => handleReview(evt, index)"
     />
     <h2 v-else>{{ review_body }}</h2>
+    <button
+      v-if="isEditable && !enableEdit"
+      :class="{ hovered: isHovering }"
+      v-on:click="() => (this.enableEdit = true)"
+      class="button edit-button"
+    >
+      Edit Review
+    </button>
     <div
-      class="review-button"
+      class="button"
       v-if="enableEdit"
-      v-on:click="
-        () => {
-          editReview(index);
-          this.enableEdit = false;
-        }
-      "
+      v-on:click="() => {editReview(index);this.enableEdit = false; }"
     >
       Update
     </div>
@@ -75,11 +70,11 @@ export default {
 };
 </script>
 
-<style>
-.review-data > h1 {
+<style scoped>
+.review> h1 {
   font-size: 2em;
 }
-.review-data > p {
+.review > p {
   font-size: 1.25em;
 }
 textarea {
@@ -87,5 +82,34 @@ textarea {
   background-color: #fff;
   font-family: "Roboto";
   box-sizing: border-box;
+}
+.review {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+}
+/* .edit-button {
+  bottom: 0;
+}
+.edit-button.hovered {
+  display: block;
+} */
+.button {
+  /* position: absolute; */
+  /* display: none; */
+  align-self: flex-end;
+  color: rgb(0, 162, 255);
+  background-color: #fff;
+  border: solid 3px;
+  border-color: rgb(0, 162, 255);
+  padding: 5px 10px;
+  border-radius: 8px;
+  font-size: 14px;
+}
+
+.button:hover {
+  background-color: rgb(0, 162, 255);
+  color: #eee;
+  cursor: pointer;
 }
 </style>
