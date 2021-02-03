@@ -32,7 +32,8 @@
             v-bind:alt="{ movie }"
           />
         </router-link>
-        <h2>{{ movie.original_title }}</h2>
+        <h3 class="title">{{ movie.original_title }}</h3>
+        <p class="release">Released On: {{ movie.release_date }}</p>
       </div>
     </div>
     <div v-if="renderSecondHalf" class="MovieSet">
@@ -43,7 +44,8 @@
             v-bind:alt="{ movie }"
           />
         </router-link>
-        <h2>{{ movie.original_title }}</h2>
+        <h3 class="title">{{ movie.original_title }}</h3>
+        <p class="release">Released On: {{ movie.release_date }}</p>
       </div>
     </div>
     <br />
@@ -166,6 +168,7 @@ export default {
       var half = data.results.length / 2; 
       this.moviesFirstHalf = data.results.splice(0, half);
       this.moviesSecondHalf = data.results.splice(-half);
+      console.log(this.moviesFirstHalf);
     });
   },
 };
@@ -231,8 +234,8 @@ img {
   border-radius: 8px;
   padding: 10px 20px 42px 20px;
   margin: 10px;
-  width: 200px;
-  height: 370px;
+  width: 225px;
+  height: 415px;
   white-space: pre-wrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -243,6 +246,17 @@ img {
 .movie:hover {
   background-color: rgb(221, 221, 221);
   cursor: pointer;
+}
+
+.title {
+  font-weight: bold;
+  margin: 15px 0px;
+  font-size: 15pt;
+}
+
+.release {
+  color: #333;
+  font-size: 10pt;
 }
 
 .button {

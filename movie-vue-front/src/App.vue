@@ -35,6 +35,28 @@ export default {
 
 <style>
 /* @import './assets/Style.css'; */
+/* CSS RESET */
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed, 
+figure, figcaption, footer, header, hgroup, 
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	font-size: 100%;
+	font: inherit;
+	vertical-align: baseline;
+}
+
 /* Heading */
 @import url('https://fonts.googleapis.com/css2?family=Merriweather:wght@700&display=swap');
 /* Body */
@@ -46,8 +68,13 @@ html, body {
   font-family: 'Roboto', sans-serif;
 }
 
-h1 h2 h3 h4 h5 h6 {
+h1, h2, h3, h4, h5, h6 {
   font-family: 'Merriweather', serif;
+  margin: 15px 0px;
+}
+
+p {
+  margin: 15px 0px;
 }
 
 #app {
