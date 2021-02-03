@@ -1,9 +1,9 @@
 <template>
   <div id="app">
-    <div class="header">
+    <!-- <div class="header">
       <h1 class="heading">Movie Reviewer</h1>
       <h3>Your one and only stop to all thing's movie reviews!</h3>
-    </div>
+    </div> -->
     <NavigationBar :isLoggedIn="isAuthenticated" :isAdmin="isAdmin" :user_id="userID" :email="userData" />
     <router-view></router-view>
   </div>
@@ -66,5 +66,9 @@ h1 {
 .heading {
   color: rgb(0, 162, 255);
   text-transform: uppercase;
+}
+
+.heading a {
+  color: rgb(0, 162, 255);
 }
 </style>

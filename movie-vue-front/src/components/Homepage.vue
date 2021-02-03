@@ -3,16 +3,19 @@
     <br/>
     <br/>
     <div class="searchBar">
-      <!-- <button v-on:click="selectTitle">Title</button>
-      <button v-on:click="selectPerson">Person</button> -->
+      <div class="row">
+        <button id="title" class="query button" v-on:click="selectTitle">Title</button>
+        <button id="person" class="query button" v-on:click="selectPerson">Person</button>
+      </div>
       <br/>
-      <select class="selectQuery" v-model="query">
+      <!-- <select class="selectQuery" v-model="query">
         <option value="title" selected>Title</option>
         <option value="person">Person</option>
-      </select>
+      </select> -->
       <input v-model="searchText" class="searchInput" />
       <button class="button" v-on:click="handleSearchQuery">Search</button>
     </div>
+    <br/>
     <div class="searchBar">
       <label>Genre: </label>
       <GenreSelectionDropdown :onGenreChange="onGenreChange" />
@@ -34,8 +37,8 @@
     <br />
     <br />
     <div class="row">
-      <button class="button" v-on:click="decrementPage">Previous Page</button>
-      <button class="button" v-on:click="incrementPage">Next Page</button>
+      <button class="button" v-on:click="decrementPage">Previous</button>
+      <button class="button" v-on:click="incrementPage">Next</button>
     </div>
   </div>
 </template>
@@ -88,6 +91,33 @@ export default {
         .then((res) => res.json())
         .then((data) => (this.movies = data.results));
     },
+    incrementPage() {
+      var pageNumber = window.sessionStorage.getItem("pageNumber"); 
+      pageNumber++;
+      window.sessionStorage.setItem("pageNumber", pageNumber);
+      this.refreshPage();
+    },
+    decrementPage() {
+      var pageNumber = window.sessionStorage.getItem("pageNumber"); 
+      if(pageNumber > 1){
+        pageNumber--;
+        window.sessionStorage.setItem("pageNumber", pageNumber);
+      }
+      this.refreshPage();
+    },  
+    refreshPage() {
+      window.location.reload(false);
+    },
+    selectTitle() {
+      this.query = "title";
+      document.getElementById('title').classList.add("selected");
+      document.getElementById('person').classList.remove("selected");
+    },
+    selectPerson() {
+      this.query = "person";
+      document.getElementById('person').classList.add("selected");
+      document.getElementById('title').classList.remove("selected");
+    }
   },
   created() {
     if (!window.sessionStorage.getItem("pageNumber")) {
@@ -98,35 +128,12 @@ export default {
         "pageNumber"
       )}`
     )
-      .then((res) => res.json())
-      .then((data) => {
-        this.movies = data.results;
-        console.log(this.movies);
-      });
+    .then((res) => res.json())
+    .then((data) => {
+      this.movies = data.results;
+      console.log(this.movies);
+    });
   },
-  incrementPage() {
-    var pageNumber = window.sessionStorage.getItem("pageNumber"); 
-    pageNumber++;
-    window.sessionStorage.setItem("pageNumber", pageNumber);
-    this.refreshPage();
-  },
-  decrementPage() {
-    var pageNumber = window.sessionStorage.getItem("pageNumber"); 
-    if(pageNumber > 1){
-      pageNumber--;
-      window.sessionStorage.setItem("pageNumber", pageNumber);
-    }
-    this.refreshPage();
-  },  
-  refreshPage() {
-    window.location.reload(false);
-  },
-  selectTitle() {
-    this.query = "title";
-  },
-  selectPerson() {
-    this.query = "person";
-  }
 };
 </script>
 
@@ -177,7 +184,7 @@ img {
   text-align: center;
   border-color: #333;
   border-radius: 8px;
-  padding: 10px 20px;
+  padding: 10px 20px 42px 20px;
   margin: 10px;
   width: 250px;
   height: 420px;
@@ -207,5 +214,30 @@ img {
   background-color: rgb(0, 162, 255);
   color: #eee;
   cursor: pointer;
+}
+
+.query{
+  color: rgb(41, 41, 41);
+  background-color: #fff;
+  border: solid 3px;
+  border-color: rgb(41, 41, 41);
+  padding: 5px 10px;
+  font-size: 12pt;
+}
+
+.query:hover {
+  background-color: rgb(41, 41, 41);
+  color: #eee;
+  cursor: pointer;
+}
+
+.selected {
+  background-color: rgb(41, 41, 41);
+  color: #eee;
+}
+
+#title {
+  padding: 5px 20px;
+  margin-left: 15px;
 }
 </style>
