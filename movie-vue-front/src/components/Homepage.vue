@@ -187,8 +187,13 @@ img {
   text-align: center;
 }
 
+input {
+  width: 50%;
+  height: 20px;
+}
+
 .searchInput {
-  width: 60%;
+
   margin-left: 10px;
   margin-right: 10px;
   margin-bottom: 2%;

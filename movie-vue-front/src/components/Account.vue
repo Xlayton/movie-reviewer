@@ -279,7 +279,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .error-text {
   color: #ed4337;
 }

@@ -227,7 +227,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .error {
   color: #ed4337;
   margin:0;
