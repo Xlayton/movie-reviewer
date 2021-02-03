@@ -1,23 +1,18 @@
 <template>
   <div>
-    <div className="content">
+    <div class="content">
       <h1>Login</h1>
-      <p>john.preston@tbeatty.com</p>
-      <p>dominique.chaney@tbeatty.com</p>
-      <label>Email: </label>
-      <input v-model="email" class="email" />
-      <br />
-      <br />
-      <p>ImwH@qxz56t9</p>
-      <p>AZfpb+gt61Cm8</p>
+      <div>
+        <label>Email: </label>
+        <input v-model="email" />
+      </div>
+      <div>
       <label>Password: </label>
-      <input v-model="password" class="password" type="password" />
-      <br />
-      <br />
-      <button v-on:click="authenticateUser" >Submit</button>
-      <br />
-      <br />
-      <a href="/emailconfirmation">Forgot your Password?</a>
+      <input v-model="password" type="password" />
+      </div>
+      <button v-on:click="authenticateUser" class="button">Submit</button>
+      <a href="/register">Don't have an account?&nbsp;<span>Register!</span></a>
+      <a href="/emailconfirmation">Forgot your Password?&nbsp;<span>Reset it here!</span></a>
     </div>
   </div>
 </template>
@@ -35,7 +30,7 @@ export default {
     async authenticateUser() {
       console.log("authenticating......");
       console.log(this.email);
-    //   console.log(this.password);
+      //   console.log(this.password);
       await fetch("http://localhost:8080/login", {
         method: "POST",
         headers: {
@@ -61,14 +56,57 @@ export default {
             //   renderReview: true,
             //   user_id: data.userId,
             // });
-            window.location.href = "/"
+            window.location.href = "/";
           }
         });
-      
     },
   },
 };
 </script>
 
-<style>
+<style scoped>
+label {
+  font-weight: bold;
+}
+input {
+  border: none;
+  border-bottom: 1px solid #000;
+}
+input:focus {
+  background-color: #efefef;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.content > div {
+  margin: 7px 0;
+}
+
+a {
+  color: #000;
+}
+
+a span {
+  color: #44f;
+}
+
+.button {
+  color: rgb(0, 162, 255);
+  background-color: #fff;
+  border: solid 3px;
+  border-color: rgb(0, 162, 255);
+  padding: 5px 10px;
+  border-radius: 8px;
+  font-size: 14px;
+}
+
+.button:hover {
+  background-color: rgb(0, 162, 255);
+  color: #eee;
+  cursor: pointer;
+}
 </style>
