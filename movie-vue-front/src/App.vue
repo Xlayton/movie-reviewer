@@ -39,6 +39,8 @@ export default {
 @import url('https://fonts.googleapis.com/css2?family=Merriweather:wght@700&display=swap');
 /* Body */
 @import url('https://fonts.googleapis.com/css?family=Roboto+Condensed');
+/* HOME BUTTON */
+@import url('https://fonts.googleapis.com/css2?family=Abril+Fatface&display=swap');
 
 html, body {
   font-family: 'Roboto', sans-serif;
@@ -66,6 +68,7 @@ h1 {
 .heading {
   color: rgb(0, 162, 255);
   text-transform: uppercase;
+  font-family: 'Abril Fatface', cursive;
 }
 
 .heading a {
