@@ -1,67 +1,96 @@
 <template>
   <div>
-    <div>
-      <p v-if="emailError" class="error-text">{{ this.emailError }}</p>
-      <label><span class="required-marker">*</span>Email: </label>
-      <input type="email" v-model="email" />
-    </div>
-    <div>
-      <label><span class="required-marker">*</span>Username: </label>
-      <input type="text" v-model="username" />
-    </div>
-    <div>
-      <label><span class="required-marker">*</span>First Name: </label>
-      <input type="text" v-model="fname" />
-    </div>
-    <div>
-      <label><span class="required-marker">*</span>Last Name: </label>
-      <input type="text" v-model="lname" />
-    </div>
-    <div>
-      <p v-if="streetError" class="error-text">{{ this.streetError }}</p>
-      <label><span class="required-marker">*</span>Street: </label>
-      <input type="text" v-model="street" />
-    </div>
-    <div>
-      <label><span class="required-marker">*</span>City: </label>
-      <input type="text" v-model="city" />
-    </div>
-    <div>
-      <p v-if="stateError" class="error-text">{{ this.stateError }}</p>
-      <label><span class="required-marker">*</span>State: </label>
-      <input type="text" v-model="state" />
-    </div>
-    <div>
-      <p v-if="zip_codeError" class="error-text">
-        {{ this.zip_codeError }}
-      </p>
-      <label><span class="required-marker">*</span>Zip Code: </label>
-      <input type="text" v-model="zip_code" />
-    </div>
-    <div>
-      <p v-if="phoneError" class="error-text">{{ this.phoneError }}</p>
-      <label><span class="required-marker">*</span>Phone: </label>
-      <input type="phone" v-model="phone" />
-    </div>
-    <div>
-      <label><span class="required-marker">*</span>Current Password: </label>
-      <input type="password" v-model="old_password" />
-    </div>
-    <div>
-      <label>New Password: </label>
-      <input type="password" v-model="new_password" />
-    </div>
-    <button v-on:click="onUpdateUser">Update</button>
-
-    <ReviewList
-      :should_show_poster="true"
-      :editReview="editReview"
-      :handleRating="handleRating"
-      :handleReview="handleReview"
-      :reviews="user_reviews"
-      :user_review_id="user_id"
-      :refreshReviews="refreshReviews"
-    />
+    <section class="account-data">
+      <input
+        type="checkbox"
+        class="hidden-input"
+        v-model="show_account_data"
+        id="openData"
+      />
+      <label for="openData" v-if="!show_account_data" class="dropdown-header"
+        ><span>&#8594;</span>&nbsp;Account Data</label
+      >
+      <label for="openData" v-if="show_account_data" class="dropdown-header"
+        ><span>&#8595;</span>&nbsp;Account Data</label
+      >
+      <div>
+        <p v-if="emailError" class="error-text">{{ this.emailError }}</p>
+        <label><span class="required-marker">*</span>Email: </label>
+        <input type="email" v-model="email" />
+      </div>
+      <div>
+        <label><span class="required-marker">*</span>Username: </label>
+        <input type="text" v-model="username" />
+      </div>
+      <div>
+        <label><span class="required-marker">*</span>First Name: </label>
+        <input type="text" v-model="fname" />
+      </div>
+      <div>
+        <label><span class="required-marker">*</span>Last Name: </label>
+        <input type="text" v-model="lname" />
+      </div>
+      <div>
+        <p v-if="streetError" class="error-text">{{ this.streetError }}</p>
+        <label><span class="required-marker">*</span>Street: </label>
+        <input type="text" v-model="street" />
+      </div>
+      <div>
+        <label><span class="required-marker">*</span>City: </label>
+        <input type="text" v-model="city" />
+      </div>
+      <div>
+        <p v-if="stateError" class="error-text">{{ this.stateError }}</p>
+        <label><span class="required-marker">*</span>State: </label>
+        <input type="text" v-model="state" />
+      </div>
+      <div>
+        <p v-if="zip_codeError" class="error-text">
+          {{ this.zip_codeError }}
+        </p>
+        <label><span class="required-marker">*</span>Zip Code: </label>
+        <input type="text" v-model="zip_code" />
+      </div>
+      <div>
+        <p v-if="phoneError" class="error-text">{{ this.phoneError }}</p>
+        <label><span class="required-marker">*</span>Phone: </label>
+        <input type="phone" v-model="phone" />
+      </div>
+      <div>
+        <label><span class="required-marker">*</span>Current Password: </label>
+        <input type="password" v-model="old_password" />
+      </div>
+      <div>
+        <label><span class="optional">(Optional)New Password: </span></label>
+        <input type="password" v-model="new_password" />
+      </div>
+      <div>
+        <button class="button" v-on:click="onUpdateUser">Update</button>
+      </div>
+    </section>
+    <section class="reviews">
+      <input
+        type="checkbox"
+        class="hidden-input"
+        v-model="show_reviews"
+        id="openReviews"
+      />
+      <label for="openReviews" v-if="!show_reviews" class="dropdown-header"
+        ><span>&#8594;</span>&nbsp;Reviews</label
+      >
+      <label for="openReviews" v-if="show_reviews" class="dropdown-header"
+        ><span>&#8595;</span>&nbsp;Reviews</label
+      >
+      <ReviewList
+        :should_show_poster="true"
+        :editReview="editReview"
+        :handleRating="handleRating"
+        :handleReview="handleReview"
+        :reviews="user_reviews"
+        :user_review_id="user_id"
+        :refreshReviews="refreshReviews"
+      />
+    </section>
   </div>
 </template>
 
@@ -90,6 +119,8 @@ export default {
       phoneError: "",
       zip_codeError: "",
       user_reviews: [],
+      show_account_data: false,
+      show_reviews: true
     };
   },
   methods: {
@@ -181,13 +212,11 @@ export default {
     },
     refreshReviews() {
       if (this.user_id) {
-        fetch(
-          `http://localhost:8080/api/reviews/?user_id=${this.user_id}`
-        )
+        fetch(`http://localhost:8080/api/reviews/?user_id=${this.user_id}`)
           .then((res) => res.json())
           .then((data) => {
             if (Array.isArray(data)) {
-                this.user_reviews= data;
+              this.user_reviews = data;
             }
           });
       }
@@ -244,26 +273,6 @@ export default {
       .then((data) => {
         if (Array.isArray(data)) {
           this.user_reviews = data;
-          //   this.user_reviews.forEach((review) => {
-          //     fetch(
-          //       `https://api.themoviedb.org/3/movie/${review[2]}?api_key=77c34d76c76368a57135c21fcb3db278`
-          //     )
-          //       .then((res) => res.json())
-          //       .then((data) => {
-          //         console.log(data);
-          //         let temp_posters;
-          //         if (this.movie_posters) {
-          //           temp_posters = [...this.state.movie_posters];
-          //         } else {
-          //           temp_posters = [];
-          //         }
-          //         temp_posters.push(data.poster_path);
-          //         console.log(temp_posters);
-          //         this.setState({
-          //           movie_posters: temp_posters,
-          //         });
-          //   });
-          //   });
         }
       });
   },
@@ -277,5 +286,52 @@ export default {
 
 .required-marker {
   color: #f00;
+}
+
+.hidden-input {
+  display: none;
+}
+
+.dropdown-header {
+  display: block;
+  font-weight: 250;
+  padding: 15px 0;
+  background-color: #efefef;
+  border-radius: 5px;
+  user-select: none;
+}
+
+.dropdown-header span {
+  font-weight: bold;
+  margin-left: 5px;
+}
+
+.hidden-input ~ div {
+  display: none;
+  margin: 0.5% 5%;
+}
+
+.hidden-input ~ div > label {
+  font-weight: bold;
+}
+.hidden-input ~ div > input {
+  border: none;
+  border-bottom: 1px solid #000;
+}
+.hidden-input ~ div > input:focus {
+  background-color: #efefef;
+}
+
+.optional {
+  font-weight: normal;
+}
+
+.hidden-input:checked ~ div {
+  display: block;
+}
+
+section {
+  border: 1px solid #000;
+  border-radius: 5px;
 }
 </style>

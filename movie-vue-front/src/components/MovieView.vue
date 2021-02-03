@@ -1,26 +1,40 @@
 <template>
-  <div class="MovieView">
+  <div class="movie-view">
     <img
-      v-bind:src="'https://image.tmdb.org/t/p/w500/' + this.movie.poster_path"
+      v-bind:src="'https://image.tmdb.org/t/p/w500/' + this.movie.backdrop_path"
       v-bind:alt="this.movie"
+      class="movie-back"
     />
-    <ReviewStars v-bind:score="averageScore" :size="50" />
-    <h2>{{ this.movie.original_title }}</h2>
-    <CreateReview
-      v-if="user_id && !userHasReview"
-      v-bind:refreshReviews="refreshReviews"
-      v-bind:movie_id="id"
-      v-bind:user_id="user_id"
-    />
-    <ReviewList
-      v-bind:editReview="editReview"
-      v-bind:handleRating="handleRating"
-      v-bind:handleReview="handleReview"
-      v-bind:reviews="reviews"
-      v-bind:user_review_id="user_review_id"
-      v-bind:refreshReviews="refreshReviews"
-      v-bind:movie_id="id"
-    />
+    <div class="movie-view-content">
+      <div class="movie-header">
+        <img
+          v-bind:src="
+            'https://image.tmdb.org/t/p/w500/' + this.movie.poster_path
+          "
+          v-bind:alt="this.movie"
+          class="movie-image"
+        />
+        <div class="movie-header-content">
+          <p class="movie-title">{{ this.movie.original_title }}</p>
+          <ReviewStars v-bind:score="averageScore" :size="50" />
+          <CreateReview
+            v-if="user_id && !userHasReview"
+            v-bind:refreshReviews="refreshReviews"
+            v-bind:movie_id="id"
+            v-bind:user_id="user_id"
+          />
+          <ReviewList
+            v-bind:editReview="editReview"
+            v-bind:handleRating="handleRating"
+            v-bind:handleReview="handleReview"
+            v-bind:reviews="reviews"
+            v-bind:user_review_id="user_review_id"
+            v-bind:refreshReviews="refreshReviews"
+            v-bind:movie_id="id"
+          />
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -39,7 +53,7 @@ export default {
       user_review_id: "",
       reviews: [],
       averageScore: 0,
-      user_id: undefined
+      user_id: undefined,
     };
   },
   created() {
@@ -50,6 +64,7 @@ export default {
       .then((res) => res.json())
       .then((data) => {
         this.movie = data;
+        // console.log(this.movie)
       });
     this.refreshReviews();
   },
@@ -101,7 +116,7 @@ export default {
       this.reviews = temp_reviews;
     },
     handleReview(evt, i) {
-      console.log(evt.target.value, i)
+      console.log(evt.target.value, i);
       let temp_reviews = [...this.reviews];
       let review = temp_reviews[i];
       review[3] = evt.target.value;
@@ -122,8 +137,70 @@ export default {
 </script>
 
 <style scoped>
-img {
-  width: 200px;
-  height: auto;
+.movie-back {
+  width: 100%;
+  position: fixed;
+  z-index: -1;
+  top: 0;
+  filter: blur(3px);
+}
+.movie-view-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: white;
+  margin-top: 25%;
+}
+.movie-header {
+  width: 100%;
+  margin: -20% 0 0% 0;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+.movie-header-content {
+  width: 50%;
+  min-height: 700px;
+  padding: 0 2%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: rgba(255, 255, 255, 0.8);
+  border-top-right-radius: 7px;
+  padding: 1%;
+}
+.movie-image {
+  max-height: 70vh;
+}
+.movie-title {
+  font-size: 3em;
+  /* color: white; */
+  /* width: 100%; */
+  text-align: center;
+}
+
+.blur {
+  filter: blur(3px);
+}
+
+@media screen and (max-width: 850px) {
+  .movie-image {
+    max-height: 45vh;
+  }
+}
+@media screen and (max-width: 686px) {
+  .movie-view-content {
+    margin-top: 45%;
+  }
+  .movie-header {
+    margin: -40% 0 5% 0;
+  }
+  /* .movie-image {
+    max-height: 40vh;
+  } */
+}
+.review-data {
+  border-radius: 5px;
 }
 </style>

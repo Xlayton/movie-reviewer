@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="create-review">
     <label>Rating: </label>
     <ReviewStars
       v-bind:score="rating"
@@ -11,8 +11,10 @@
     <br />
     <label>Review: </label>
     <textarea
+    class="create-review-text"
       rows="10"
-      cols="100"
+      cols="50"
+      maxlength="250"
       v-bind:value="review_body"
       v-on:change="
         (evt) => {
@@ -66,5 +68,17 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
+  .create-review{
+    width: 100%;
+    margin-top: 20%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .create-review-text{
+    width: 70%;
+  }
+
+
 </style>
