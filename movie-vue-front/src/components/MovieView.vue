@@ -5,6 +5,7 @@
       v-bind:alt="this.movie"
       class="movie-back"
     />
+    <div class="gradient-back" />
     <div class="movie-view-content">
       <div class="movie-header">
         <img
@@ -140,9 +141,17 @@ export default {
 .movie-back {
   width: 100%;
   position: fixed;
-  z-index: -1;
+  z-index: -2;
   top: 0;
   filter: blur(3px);
+}
+.gradient-back{
+  width: 100%;
+  height: 100vh;
+  position: fixed;
+  background-color: white;
+  background: linear-gradient(0deg, rgba(255,255,255,1) 0%, rgba(255,255,255,1) 40%, rgba(255, 255, 255, 0) 100%);
+  z-index: -1;
 }
 .movie-view-content {
   min-height: 100vh;
@@ -150,9 +159,6 @@ export default {
   display: flex;
   flex-direction: column;
   align-items: center;
-  /* TODO MAKE SEPARATE BACKGROUND GRADIENT DIV */
-  background-color: white;
-  background: linear-gradient(0deg, rgba(255,255,255,1) 30%, rgba(255,255,255,.5) 50%, rgba(255, 255, 255, 0) 100%);
   margin-top: 1%;
 }
 .movie-header {
