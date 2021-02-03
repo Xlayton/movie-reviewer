@@ -5,7 +5,8 @@
       v-for="(review, index) in reviews"
       v-bind:key="review.id"
     >
-      <button
+      <div
+      class="review-button"
         v-if="isAdmin"
         v-on:click="
           () => {
@@ -14,29 +15,19 @@
         "
       >
         Remove Review
-      </button>
-      <div class="review">
-        <div v-if="should_show_poster" class="poster-container">
-          <img
-            v-bind:src="'https://image.tmdb.org/t/p/w500/' + movies[index]"
-            class="movie-poster"
-          />
-        </div>
-        <div class="content-container">
-          <Review
-            v-bind:editReview="editReview"
-            v-bind:index="index"
-            v-bind:handleRating="handleRating"
-            v-bind:handleReview="handleReview"
-            v-bind:refreshReviews="refreshReviews"
-            v-bind:isEditable="reviews[index][1] === user_review_id"
-            v-bind:review_body="reviews[index][3]"
-            v-bind:rating="reviews[index][4]"
-            v-bind:user_id="reviews[index][1]"
-            v-bind:review_id="reviews[index][0]"
-          />
-        </div>
       </div>
+      <Review
+        v-bind:editReview="editReview"
+        v-bind:index="index"
+        v-bind:handleRating="handleRating"
+        v-bind:handleReview="handleReview"
+        v-bind:refreshReviews="refreshReviews"
+        v-bind:isEditable="reviews[index][1] === user_review_id"
+        v-bind:review_body="reviews[index][3]"
+        v-bind:rating="reviews[index][4]"
+        v-bind:user_id="reviews[index][1]"
+        v-bind:review_id="reviews[index][0]"
+      />
     </div>
   </div>
 </template>
@@ -189,20 +180,13 @@ export default {
 .content-container {
   position: relative;
 }
-
-.button {
-  color: rgb(0, 162, 255);
-  background-color: #fff;
-  border: solid 3px;
-  border-color: rgb(0, 162, 255);
-  padding: 5px 10px;
-  border-radius: 8px;
-  font-size: 14px;
+.review-list {
+  width: 70%;
+  margin-top: 10%;
 }
-
-.button:hover {
-  background-color: rgb(0, 162, 255);
-  color: #eee;
-  cursor: pointer;
+.review-button{
+  background-color: grey;
+  width: 150px;
+  margin: 7px 0;
 }
 </style>
