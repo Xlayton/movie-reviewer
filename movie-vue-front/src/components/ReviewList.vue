@@ -6,7 +6,7 @@
       v-bind:key="review.id"
     >
       <div
-      class="review-button"
+      class="button delete-button"
         v-if="isAdmin"
         v-on:click="
           () => {
@@ -96,22 +96,7 @@ export default {
 };
 </script>
 
-<style>
-.review {
-  display: flex;
-  width: 75%;
-  justify-content: space-between;
-  align-items: center;
-  position: relative;
-  margin: 1vh 0;
-}
-
-.review-container {
-  width: 100%;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-}
+<style scoped>
 
 .review-container .poster {
   width: 25%;
@@ -123,7 +108,6 @@ export default {
   border: 0.5px solid #000;
   border-radius: 5px;
 }
-
 .poster-container {
   position: relative;
   height: 250px;
@@ -136,30 +120,30 @@ export default {
   height: 90%;
 }
 
-.review-data {
-  display: flex;
-  align-items: center;
-  flex-direction: column;
-}
-
-.edit-button {
-  position: absolute;
-  display: none;
-}
-.edit-button.hovered {
-  display: block;
-}
-
 .content-container {
   position: relative;
 }
 .review-list {
   width: 70%;
-  margin-top: 10%;
+  margin: 10% 0;
 }
-.review-button{
-  background-color: grey;
-  width: 150px;
-  margin: 7px 0;
+
+
+.button {
+  width: 20%;
+  color: rgb(0, 0, 0);
+  background-color: #fff;
+  border: solid 3px;
+  border-color: rgb(255, 0, 0);
+  padding: 5px 10px;
+  border-radius: 8px;
+  font-size: 14px;
 }
+
+.button:hover {
+  background-color: rgb(255, 0, 0);
+  color: #eee;
+  cursor: pointer;
+}
+
 </style>

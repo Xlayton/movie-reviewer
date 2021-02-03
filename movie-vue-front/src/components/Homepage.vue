@@ -4,10 +4,12 @@
     <br/>
     <div class="searchBar">
       <div class="row">
-        <button id="title" class="query button" v-on:click="selectTitle">Title</button>
-        <button id="person" class="query button" v-on:click="selectPerson">Person</button>
+        <button id="title" class="selected black button" v-on:click="selectTitle">Title</button>
+        <button id="person" class="black button" v-on:click="selectPerson">Person</button>
       </div>
       <br/>
+      <label>Genre: </label>
+      <GenreSelectionDropdown :onGenreChange="onGenreChange" />
       <!-- <select class="selectQuery" v-model="query">
         <option value="title" selected>Title</option>
         <option value="person">Person</option>
@@ -16,14 +18,25 @@
       <button class="button" v-on:click="handleSearchQuery">Search</button>
     </div>
     <br/>
-    <div class="searchBar">
+    <!-- <div class="searchBar">
       <label>Genre: </label>
       <GenreSelectionDropdown :onGenreChange="onGenreChange" />
       <br />
       <br />
-    </div>
+    </div> -->
     <div class="MovieSet">
-      <div class="movie" v-for="movie in movies" :key="movie.id">
+      <div class="movie" v-for="movie in moviesFirstHalf" :key="movie.id">
+        <router-link v-bind:to="'/movie?id=' + movie.id + '&user_id=' + user_id">
+          <img
+            v-bind:src="'https://image.tmdb.org/t/p/w500/' + movie.poster_path"
+            v-bind:alt="{ movie }"
+          />
+        </router-link>
+        <h2>{{ movie.original_title }}</h2>
+      </div>
+    </div>
+    <div v-if="renderSecondHalf" class="MovieSet">
+      <div class="movie" v-for="movie in moviesSecondHalf" :key="movie.id">
         <router-link v-bind:to="'/movie?id=' + movie.id + '&user_id=' + user_id">
           <img
             v-bind:src="'https://image.tmdb.org/t/p/w500/' + movie.poster_path"
@@ -35,10 +48,14 @@
     </div>
     <br />
     <br />
+    <div class="center">
+      <button id="showMore" class="button large" v-on:click="showAllMovies">Show More</button>
+    </div>
     <br />
-    <div class="row">
-      <button class="button" v-on:click="decrementPage">Previous</button>
-      <button class="button" v-on:click="incrementPage">Next</button>
+    <br />
+    <div class="row separate">
+      <button class="black button" v-on:click="decrementPage">Previous</button>
+      <button id="next" class="black button" v-on:click="incrementPage">Next</button>
     </div>
   </div>
 </template>
@@ -49,10 +66,12 @@ export default {
   name: "homepage",
   data() {
     return {
-      movies: [],
+      moviesFirstHalf: [],
+      moviesSecondHalf:[],
       searchText: "",
       query: "title",
-      user_id: ""
+      user_id: "",
+      renderSecondHalf: false
     };
   },
   components: { GenreSelectionDropdown },
@@ -67,8 +86,13 @@ export default {
         )
           .then((res) => res.json())
           .then((data) => {
-            console.log(data);
-            this.movies = data.results;
+            if(data.results.length > 10){
+              var half = data.results.length / 2; 
+              this.moviesFirstHalf = data.results.splice(0, half);
+              this.moviesSecondHalf = data.results.splice(-half);
+            } else {
+              this.moviesFirstHalf = data.results;
+            }
           });
       } else if (this.query === "person") {
         var personString = this.searchText;
@@ -79,8 +103,9 @@ export default {
         )
           .then((res) => res.json())
           .then((data) => {
-            console.log(data);
-            this.movies = data.results[0].known_for;
+            this.moviesFirstHalf = data.results[0].known_for;
+            document.getElementById('showMore').style.display = "none";
+            this.moviesSecondHalf = [];
           });
       }
     },
@@ -88,8 +113,12 @@ export default {
       fetch(
         `https://api.themoviedb.org/3/discover/movie?api_key=77c34d76c76368a57135c21fcb3db278&language=en-US&sort_by=popularity.desc&include_adult=false&include_video=false&page=1&with_genres=${evt.target.value}`
       )
-        .then((res) => res.json())
-        .then((data) => (this.movies = data.results));
+      .then((res) => res.json())
+      .then((data) => {
+        var half = data.results.length / 2; 
+        this.moviesFirstHalf = data.results.splice(0, half);
+        this.moviesSecondHalf = data.results.splice(-half);
+      });
     },
     incrementPage() {
       var pageNumber = window.sessionStorage.getItem("pageNumber"); 
@@ -117,6 +146,10 @@ export default {
       this.query = "person";
       document.getElementById('person').classList.add("selected");
       document.getElementById('title').classList.remove("selected");
+    },
+    showAllMovies(){
+      this.renderSecondHalf = true;
+      document.getElementById('showMore').style.display = "none";
     }
   },
   created() {
@@ -130,8 +163,9 @@ export default {
     )
     .then((res) => res.json())
     .then((data) => {
-      this.movies = data.results;
-      console.log(this.movies);
+      var half = data.results.length / 2; 
+      this.moviesFirstHalf = data.results.splice(0, half);
+      this.moviesSecondHalf = data.results.splice(-half);
     });
   },
 };
@@ -152,6 +186,7 @@ img {
 
 .searchInput {
   width: 60%;
+  margin-left: 10px;
   margin-right: 10px;
   margin-bottom: 2%;
 }
@@ -165,11 +200,20 @@ img {
   margin: 10px;
 }
 
+.center {
+  text-align: center;
+}
+
 .row {
   display: flex;
   flex-direction: row;
   justify-content: center;
   align-items: center;
+  margin: 0px 15%;
+}
+
+.separate {
+  justify-content: space-between;
 }
 
 .MovieSet {
@@ -177,6 +221,7 @@ img {
   justify-content: center;
   flex-direction: row;
   flex-wrap: wrap;
+  margin: 0px 10%;
 }
 
 .movie {
@@ -186,8 +231,8 @@ img {
   border-radius: 8px;
   padding: 10px 20px 42px 20px;
   margin: 10px;
-  width: 250px;
-  height: 420px;
+  width: 200px;
+  height: 370px;
   white-space: pre-wrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -216,7 +261,14 @@ img {
   cursor: pointer;
 }
 
-.query{
+.large {
+  padding: 15px 30px;
+  border-radius: 2px;
+  font-size: 18px;
+  text-transform: uppercase;
+}
+
+.black{
   color: rgb(41, 41, 41);
   background-color: #fff;
   border: solid 3px;
@@ -225,7 +277,7 @@ img {
   font-size: 12pt;
 }
 
-.query:hover {
+.black:hover {
   background-color: rgb(41, 41, 41);
   color: #eee;
   cursor: pointer;
@@ -239,5 +291,9 @@ img {
 #title {
   padding: 5px 20px;
   margin-left: 15px;
+}
+
+#next {
+  padding: 5px 20px;
 }
 </style>
