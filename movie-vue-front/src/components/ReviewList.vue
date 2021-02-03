@@ -24,7 +24,6 @@
         </div>
         <div class="content-container">
           <Review
-            v-if="reviews && user"
             v-bind:editReview="editReview"
             v-bind:index="index"
             v-bind:handleRating="handleRating"
@@ -33,7 +32,7 @@
             v-bind:isEditable="reviews[index][1] === user_review_id"
             v-bind:review_body="reviews[index][3]"
             v-bind:rating="reviews[index][4]"
-            v-bind:user_id="user[1]"
+            v-bind:user_id="reviews[index][1]"
             v-bind:review_id="reviews[index][0]"
           />
         </div>
@@ -79,7 +78,6 @@ export default {
         .then((res) => res.json())
         .then((data) => {
           if (data) {
-            console.log(data);
             this.refreshReviews();
           }
         });
@@ -91,15 +89,11 @@ export default {
         .then((res) => res.json())
         .then((data) => {
           this.movies.push(data.poster_path);
-          console.log(data);
         });
     },
   },
   created() {
     this.reviews.forEach((review) => this.getMoviePoster(review[2]));
-    fetch(`http://localhost:8080/api/users?user_id=${this.user_review_id}`)
-      .then((res) => res.json())
-      .then((data) => (this.user = data[0]));
   },
   watch: {
     reviews: function (reviews) {
@@ -135,11 +129,19 @@ export default {
   border-top-right-radius: 2px;
 }
 
-.review-container:nth-child(even) > .review > .content-container > .review-data > .edit-button {
+.review-container:nth-child(even)
+  > .review
+  > .content-container
+  > .review-data
+  > .edit-button {
   top: 0;
   right: 0;
 }
-.review-container:nth-child(odd) > .review > .content-container > .review-data > .edit-button {
+.review-container:nth-child(odd)
+  > .review
+  > .content-container
+  > .review-data
+  > .edit-button {
   top: 0;
   left: 0;
 }
@@ -165,13 +167,13 @@ export default {
 
 .content-container {
   flex-grow: 2;
-  
+
   background-color: #5f5f5f;
   height: 90%;
 }
 
 .review-data {
- display: flex;
+  display: flex;
   align-items: center;
   flex-direction: column;
 }
@@ -186,5 +188,21 @@ export default {
 
 .content-container {
   position: relative;
+}
+
+.button {
+  color: rgb(0, 162, 255);
+  background-color: #fff;
+  border: solid 3px;
+  border-color: rgb(0, 162, 255);
+  padding: 5px 10px;
+  border-radius: 8px;
+  font-size: 14px;
+}
+
+.button:hover {
+  background-color: rgb(0, 162, 255);
+  color: #eee;
+  cursor: pointer;
 }
 </style>

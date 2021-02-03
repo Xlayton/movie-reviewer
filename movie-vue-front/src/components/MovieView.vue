@@ -13,11 +13,12 @@
       v-bind:user_id="user_id"
     />
     <ReviewList
+      :should_show_poster="true"
       v-bind:editReview="editReview"
       v-bind:handleRating="handleRating"
       v-bind:handleReview="handleReview"
       v-bind:reviews="reviews"
-      v-bind:user_review_id="user_review_id"
+      v-bind:user_review_id="user_id"
       v-bind:refreshReviews="refreshReviews"
       v-bind:movie_id="id"
     />
@@ -125,5 +126,8 @@ export default {
 img {
   width: 200px;
   height: auto;
+}
+.review-data {
+  border-radius: 5px;
 }
 </style>
