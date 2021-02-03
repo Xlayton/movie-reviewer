@@ -16,7 +16,7 @@
       >
         Remove Review
       </div>
-      <img class="poster" v-bind:src="'https://image.tmdb.org/t/p/w500/' + movies[index]" />
+      <img v-if="should_show_poster" class="poster" v-bind:src="'https://image.tmdb.org/t/p/w500/' + movies[index]" />
       <Review
         v-bind:editReview="editReview"
         v-bind:index="index"
@@ -111,6 +111,11 @@ export default {
 .poster-container {
   position: relative;
   height: 250px;
+}
+
+.review-container {
+  display: flex;
+  align-items: center;
 }
 
 .content-container {

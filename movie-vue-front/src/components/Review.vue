@@ -4,7 +4,7 @@
     @mouseover="isHovering = true"
     @mouseout="isHovering = false"
   >
-    <h1>{{ user_id }}</h1>
+    <h1>{{ user }}</h1>
     <ReviewStars
       v-bind:score="rating"
       :size="20"
@@ -31,7 +31,12 @@
     <div
       class="button"
       v-if="enableEdit"
-      v-on:click="() => {editReview(index);this.enableEdit = false; }"
+      v-on:click="
+        () => {
+          editReview(index);
+          this.enableEdit = false;
+        }
+      "
     >
       Update
     </div>
@@ -56,22 +61,23 @@ export default {
     "review_id",
   ],
   data() {
-      return {
-          enableEdit: false,
-          isHovering: false,
-          user: ""
-      }
+    return {
+      enableEdit: false,
+      isHovering: false,
+      user: "",
+    };
   },
   created() {
+    console.log(this.user_id);
     fetch(`http://localhost:8080/api/users?user_id=${this.user_id}`)
       .then((res) => res.json())
       .then((data) => (this.user = data[0][1]));
-  }
+  },
 };
 </script>
 
 <style scoped>
-.review> h1 {
+.review > h1 {
   font-size: 2em;
 }
 .review > p {
@@ -87,16 +93,14 @@ textarea {
   display: flex;
   align-items: center;
   flex-direction: column;
+  width: 100%;
 }
-/* .edit-button {
-  bottom: 0;
-}
-.edit-button.hovered {
+.button.hovered {
   display: block;
-} */
+}
 .button {
-  /* position: absolute; */
-  /* display: none; */
+  position: absolute;
+  display: none;
   align-self: flex-end;
   color: rgb(0, 162, 255);
   background-color: #fff;

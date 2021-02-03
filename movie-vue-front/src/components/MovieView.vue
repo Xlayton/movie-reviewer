@@ -145,19 +145,15 @@ export default {
   filter: blur(3px);
 }
 .movie-view-content {
-  min-height: 100vh;
-  min-width: 70vw;
   display: flex;
   flex-direction: column;
   align-items: center;
-  /* TODO MAKE SEPARATE BACKGROUND GRADIENT DIV */
   background-color: white;
-  background: linear-gradient(0deg, rgba(255,255,255,1) 30%, rgba(255,255,255,.5) 50%, rgba(255, 255, 255, 0) 100%);
-  margin-top: 1%;
+  margin-top: 25%;
 }
 .movie-header {
   width: 100%;
-  /* margin: -20% 0 0% 0; */
+  margin: -20% 0 0% 0;
   display: flex;
   flex-direction: row;
   justify-content: center;
@@ -172,6 +168,7 @@ export default {
   align-items: center;
   background-color: rgba(255, 255, 255, 0.8);
   border-top-right-radius: 7px;
+  padding: 1%;
 }
 .movie-image {
   max-height: 70vh;
@@ -193,12 +190,12 @@ export default {
   }
 }
 @media screen and (max-width: 686px) {
-  /* .movie-view-content {
+  .movie-view-content {
     margin-top: 45%;
   }
   .movie-header {
     margin: -40% 0 5% 0;
-  } */
+  }
   /* .movie-image {
     max-height: 40vh;
   } */
