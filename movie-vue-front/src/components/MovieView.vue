@@ -161,7 +161,6 @@ export default {
 }
 .movie-header {
   width: 100%;
-  margin: -20% 0 0% 0;
   display: flex;
   flex-direction: row;
   justify-content: center;
