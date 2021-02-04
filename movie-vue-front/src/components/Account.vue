@@ -82,6 +82,9 @@
       <label for="openReviews" v-if="show_reviews" class="dropdown-header"
         ><span>&#8595;</span>&nbsp;Reviews</label
       >
+      <div>
+      <p class="update-text" v-if="user_reviews.length === 0">You have no reviews</p>
+      </div>
       <ReviewList
         :should_show_poster="true"
         :editReview="editReview"
