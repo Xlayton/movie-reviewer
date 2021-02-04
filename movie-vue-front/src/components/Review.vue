@@ -29,7 +29,7 @@
       Edit Review
     </button>
     <div
-      class="button"
+      class="button hovered"
       v-if="enableEdit"
       v-on:click="
         () => {
