@@ -8,6 +8,7 @@ export default {
     await window.sessionStorage.removeItem("currentUser");
     await window.sessionStorage.removeItem("isLoggedIn");
     await window.sessionStorage.removeItem("isAdmin");
+    await window.sessionStorage.removeItem("userID");
     window.location.href = "/";
   },
 };
