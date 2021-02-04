@@ -123,5 +123,8 @@ textarea {
   .button {
     margin-top: -32px;
   }
+  .review > h1 {
+  font-size: 1em;
+}
 }
 </style>

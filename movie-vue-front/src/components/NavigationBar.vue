@@ -5,8 +5,7 @@
             <p class="email" v-if="isLoggedIn"><router-link v-bind:to="'/account?user_id='+user_id">{{this.email}}</router-link></p>
             <router-link v-if="isAdmin === '1'" to='/admin'>Admin Tools</router-link>
             <router-link v-if="isLoggedIn" to='/logout'>Logout</router-link>
-            <router-link v-if="!isLoggedIn" to='/login'>Login</router-link>
-            <router-link v-if="!isLoggedIn" to='/register'>Register</router-link>
+            <router-link v-if="!isLoggedIn" to='/login'>Login/Register</router-link>
             <!-- {{ v-if:"isAdmin" === "1" ? (<router-link to='/admin'>Admin Tools</router-link>) : ""}}
             {{ v-if:"isLoggedIn" && (<router-link to='/logout'>Logout</router-link>)}}
             {{ v-if:!"isLoggedIn" && (<router-link to='/login'>Login</router-link>)}}
@@ -76,6 +75,13 @@ export default {
 #heading {
     color: rgb(0, 162, 255);
     font-size: 16pt;
+}
+
+@media only screen and (max-width: 600px) {
+    .navbar {
+        display: flex;
+        flex-direction: column;
+    }
 }
 
 </style>
