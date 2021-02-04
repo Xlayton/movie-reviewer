@@ -116,7 +116,7 @@ export default {
 .review-container {
   display: flex;
   align-items: center;
-  flex-wrap: wrap;
+  /* flex-wrap: wrap; */
 
 }
 
