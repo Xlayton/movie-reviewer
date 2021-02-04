@@ -338,6 +338,11 @@ export default {
   justify-content: space-between;
   width: 20%;
 }
+
+.hidden-input:checked ~ div.review-list {
+  flex-direction: column;
+}
+
 .optional {
   font-weight: normal;
 }
