@@ -148,10 +148,11 @@ export default {
 .gradient-back{
   width: 100%;
   height: 100vh;
+  z-index: -1;
+  top: 0;
   position: fixed;
   background-color: white;
   background: linear-gradient(0deg, rgba(255,255,255,1) 0%, rgba(255,255,255,1) 40%, rgba(255, 255, 255, 0) 100%);
-  z-index: -1;
 }
 .movie-view-content {
   display: flex;
@@ -167,7 +168,7 @@ export default {
   flex-wrap: wrap;
 }
 .movie-header-content {
-  width: 50%;
+  width: 70%;
   min-height: 700px;
   padding: 0 2%;
   display: flex;
@@ -195,8 +196,11 @@ export default {
   .movie-image {
     max-height: 45vh;
   }
+  .gradient-back{
+      background: linear-gradient(0deg, rgba(255,255,255,1) 0%, rgba(255,255,255,1) 70%, rgba(255, 255, 255, 0) 100%);
+  }
 }
-@media screen and (max-width: 686px) {
+@media screen and (max-width: 700px) {
   .movie-view-content {
     margin-top: 45%;
   }

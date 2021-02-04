@@ -35,8 +35,7 @@
         () => {
           editReview(index);
           this.enableEdit = false;
-        }
-      "
+        }"
     >
       Update
     </div>
@@ -94,7 +93,10 @@ textarea {
   align-items: center;
   flex-direction: column;
   width: 100%;
+  overflow-wrap: anywhere;
+  hyphens: auto;
 }
+
 .button.hovered {
   display: block;
 }
@@ -115,5 +117,10 @@ textarea {
   background-color: rgb(0, 162, 255);
   color: #eee;
   cursor: pointer;
+}
+@media screen and (max-width: 1100px) {
+  .button {
+    margin-top: -32px;
+  }
 }
 </style>

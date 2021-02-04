@@ -14,7 +14,7 @@
           }
         "
       >
-        Remove Review
+        ✖
       </div>
       <img v-if="should_show_poster" class="poster" v-bind:src="'https://image.tmdb.org/t/p/w500/' + movies[index]" />
       <Review
@@ -116,6 +116,8 @@ export default {
 .review-container {
   display: flex;
   align-items: center;
+  flex-wrap: wrap;
+
 }
 
 .content-container {
@@ -135,7 +137,7 @@ export default {
 
 
 .button {
-  width: 20%;
+  /* min-width:120px; */
   color: rgb(0, 0, 0);
   background-color: #fff;
   border: solid 3px;
