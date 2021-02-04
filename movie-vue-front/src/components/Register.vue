@@ -64,7 +64,7 @@
     <div v-if="accountCreated">
       <h3>Account successfully created!</h3>
       <p className="email">
-        Please <a href="/login">click here</a> to login in...
+        <a href="/login">Please <span>click here</span> to login in...</a>
       </p>
     </div>
   </div>
