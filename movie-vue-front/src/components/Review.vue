@@ -77,7 +77,7 @@ export default {
 
 <style scoped>
 .review > h1 {
-  font-size: 2em;
+  font-size: 1.5em;
 }
 .review > p {
   font-size: 1.25em;

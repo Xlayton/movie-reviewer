@@ -1,13 +1,21 @@
 <template>
   <div class="content">
-    <br/>
-    <br/>
+    <br />
+    <br />
     <div class="searchBar">
       <div class="row">
-        <button id="title" class="selected black button" v-on:click="selectTitle">Title</button>
-        <button id="person" class="black button" v-on:click="selectPerson">Person</button>
+        <button
+          id="title"
+          class="selected black button"
+          v-on:click="selectTitle"
+        >
+          Title
+        </button>
+        <button id="person" class="black button" v-on:click="selectPerson">
+          Person
+        </button>
       </div>
-      <br/>
+      <br />
       <label>Genre: </label>
       <GenreSelectionDropdown :onGenreChange="onGenreChange" />
       <!-- <select class="selectQuery" v-model="query">
@@ -17,7 +25,7 @@
       <input v-model="searchText" class="searchInput" />
       <button class="button" v-on:click="handleSearchQuery">Search</button>
     </div>
-    <br/>
+    <br />
     <!-- <div class="searchBar">
       <label>Genre: </label>
       <GenreSelectionDropdown :onGenreChange="onGenreChange" />
@@ -25,41 +33,62 @@
       <br />
     </div> -->
     <div class="MovieSet">
-      <div class="movie" v-for="(movie, index) in moviesFirstHalf" :key="movie.id">
-        <router-link v-bind:to="'/movie?id=' + movie.id + '&user_id=' + user_id">
+      <div class="movie" v-for="movie in moviesFirstHalf" :key="movie.id">
+        <router-link
+          v-bind:to="'/movie?id=' + movie.id + '&user_id=' + user_id"
+        >
           <img
             v-bind:src="'https://image.tmdb.org/t/p/w500/' + movie.poster_path"
             v-bind:alt="{ movie }"
           />
         </router-link>
-        <h3 class="title">{{ movie.original_title }}</h3>
-        <ReviewStars v-bind:score="reviewsAvg[index]" :size="30" />
+        <h3 class="title">
+          {{
+            movie.original_title.length > 20
+              ? movie.original_title.substr(0, 20) + "..."
+              : movie.original_title
+          }}
+        </h3>
+        <ReviewStars v-bind:score="reviewsAvg[movie.id]" :size="30" />
         <!-- <p class="release">Released On: {{ movie.release_date }}</p> -->
       </div>
     </div>
     <div v-if="renderSecondHalf" class="MovieSet">
       <div class="movie" v-for="movie in moviesSecondHalf" :key="movie.id">
-        <router-link v-bind:to="'/movie?id=' + movie.id + '&user_id=' + user_id">
+        <router-link
+          v-bind:to="'/movie?id=' + movie.id + '&user_id=' + user_id"
+        >
           <img
             v-bind:src="'https://image.tmdb.org/t/p/w500/' + movie.poster_path"
             v-bind:alt="{ movie }"
           />
         </router-link>
-        <h3 class="title">{{ movie.original_title }}</h3>
-        <ReviewStars v-bind:score="getAverageScore(movie.id)" :size="30" />
+        <h3 class="title">
+          {{
+            movie.original_title.length > 20
+              ? movie.original_title.substr(0, 20) + "..."
+              : movie.original_title
+          }}
+        </h3>
+
+        <ReviewStars v-bind:score="reviewsAvg[movie.id]" :size="30" />
         <!-- <p class="release">Released On: {{ movie.release_date }}</p> -->
       </div>
     </div>
     <br />
     <br />
     <div class="center">
-      <button id="showMore" class="button large" v-on:click="showAllMovies">Show More</button>
+      <button id="showMore" class="button large" v-on:click="showAllMovies">
+        Show More
+      </button>
     </div>
     <br />
     <br />
     <div class="row separate">
       <button class="black button" v-on:click="decrementPage">Previous</button>
-      <button id="next" class="black button" v-on:click="incrementPage">Next</button>
+      <button id="next" class="black button" v-on:click="incrementPage">
+        Next
+      </button>
     </div>
   </div>
 </template>
@@ -72,12 +101,12 @@ export default {
   data() {
     return {
       moviesFirstHalf: [],
-      moviesSecondHalf:[],
+      moviesSecondHalf: [],
       searchText: "",
       query: "title",
       user_id: "",
       renderSecondHalf: false,
-      reviewsAvg: []
+      reviewsAvg: {},
     };
   },
   components: { GenreSelectionDropdown, ReviewStars },
@@ -92,8 +121,8 @@ export default {
         )
           .then((res) => res.json())
           .then((data) => {
-            if(data.results.length > 10){
-              var half = data.results.length / 2; 
+            if (data.results.length > 10) {
+              var half = data.results.length / 2;
               this.moviesFirstHalf = data.results.splice(0, half);
               this.moviesSecondHalf = data.results.splice(-half);
             } else {
@@ -110,7 +139,7 @@ export default {
           .then((res) => res.json())
           .then((data) => {
             this.moviesFirstHalf = data.results[0].known_for;
-            document.getElementById('showMore').style.display = "none";
+            document.getElementById("showMore").style.display = "none";
             this.moviesSecondHalf = [];
           });
       }
@@ -119,61 +148,64 @@ export default {
       fetch(
         `https://api.themoviedb.org/3/discover/movie?api_key=77c34d76c76368a57135c21fcb3db278&language=en-US&sort_by=popularity.desc&include_adult=false&include_video=false&page=1&with_genres=${evt.target.value}`
       )
-      .then((res) => res.json())
-      .then((data) => {
-        var half = data.results.length / 2; 
-        this.moviesFirstHalf = data.results.splice(0, half);
-        this.moviesSecondHalf = data.results.splice(-half);
-      });
+        .then((res) => res.json())
+        .then((data) => {
+          var half = data.results.length / 2;
+          this.moviesFirstHalf = data.results.splice(0, half);
+          this.moviesSecondHalf = data.results.splice(-half);
+        });
     },
     incrementPage() {
-      var pageNumber = window.sessionStorage.getItem("pageNumber"); 
+      var pageNumber = window.sessionStorage.getItem("pageNumber");
       pageNumber++;
       window.sessionStorage.setItem("pageNumber", pageNumber);
       this.refreshPage();
     },
     decrementPage() {
-      var pageNumber = window.sessionStorage.getItem("pageNumber"); 
-      if(pageNumber > 1){
+      var pageNumber = window.sessionStorage.getItem("pageNumber");
+      if (pageNumber > 1) {
         pageNumber--;
         window.sessionStorage.setItem("pageNumber", pageNumber);
       }
       this.refreshPage();
-    },  
+    },
     refreshPage() {
       window.location.reload(false);
     },
     selectTitle() {
       this.query = "title";
-      document.getElementById('title').classList.add("selected");
-      document.getElementById('person').classList.remove("selected");
+      document.getElementById("title").classList.add("selected");
+      document.getElementById("person").classList.remove("selected");
     },
     selectPerson() {
       this.query = "person";
-      document.getElementById('person').classList.add("selected");
-      document.getElementById('title').classList.remove("selected");
+      document.getElementById("person").classList.add("selected");
+      document.getElementById("title").classList.remove("selected");
     },
-    showAllMovies(){
+    showAllMovies() {
       this.renderSecondHalf = true;
-      document.getElementById('showMore').style.display = "none";
+      document.getElementById("showMore").style.display = "none";
     },
-    getAverageScore(movieId) {
-      var reviews = [];
-      fetch(`http://localhost:8080/api/reviews/?movie_id=${movieId}`)
-        .then((res) => res.json())
-        .then((data) => {
-          if (Array.isArray(data)) {
-            console.log(data);
-            reviews = data;
-            let total = 0;
-            reviews.forEach((review) => {
-              total += review[4];
-              console.log("Total", total);
-            });
-            let average = total / reviews.length;
-            console.log("Average", average);
-            this.reviewsAvg.push(average);
-          }
+    getAverageScores(movies) {
+      movies.forEach((movie) => {
+        var reviews = [];
+        fetch(`http://localhost:8080/api/reviews/?movie_id=${movie.id}`)
+          .then((res) => res.json())
+          .then((data) => {
+            if (Array.isArray(data)) {
+              console.log(data);
+              reviews = data;
+              let total = 0;
+              reviews.forEach((review) => {
+                total += review[4];
+                console.log("Total", total);
+              });
+              let average = total / reviews.length;
+              console.log("Average", average);
+              this.reviewsAvg[movie.id] = average;
+              this.$forceUpdate()
+            }
+          });
       });
     },
   },
@@ -186,20 +218,27 @@ export default {
         "pageNumber"
       )}`
     )
-    .then((res) => res.json())
-    .then((data) => {
-      var half = data.results.length / 2; 
-      this.moviesFirstHalf = data.results.splice(0, half);
-      this.moviesSecondHalf = data.results.splice(-half);
-      console.log(this.moviesFirstHalf);
-    });
+      .then((res) => res.json())
+      .then((data) => {
+        var half = data.results.length / 2;
+        this.moviesFirstHalf = data.results.splice(0, half);
+        this.moviesSecondHalf = data.results.splice(-half);
+        console.log(this.moviesFirstHalf);
+      });
+  },
+  watch: {
+    moviesFirstHalf: function (movies) {
+      console.log("Movies", movies);
+      this.getAverageScores(movies);
+      console.log("Averages", this.reviewsAvg);
+    },
   },
 };
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-@import url('https://fonts.googleapis.com/css2?family=Merriweather:wght@700&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Merriweather:wght@700&display=swap");
 
 img {
   width: 100%;
@@ -216,7 +255,6 @@ input {
 }
 
 .searchInput {
-
   margin-left: 10px;
   margin-right: 10px;
   margin-bottom: 2%;
@@ -267,7 +305,7 @@ input {
   white-space: pre-wrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  font-family: 'Merriweather', serif;
+  font-family: "Merriweather", serif;
   color: #333;
 }
 
@@ -310,7 +348,7 @@ input {
   text-transform: uppercase;
 }
 
-.black{
+.black {
   color: rgb(41, 41, 41);
   background-color: #fff;
   border: solid 3px;
