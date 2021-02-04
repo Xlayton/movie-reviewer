@@ -16,8 +16,12 @@
           class="movie-image"
         />
         <div class="movie-header-content">
+        <div class="overview-container">
           <p class="movie-title">{{ this.movie.original_title }}</p>
           <ReviewStars v-bind:score="averageScore" :size="50" />
+          <h3 class='overview-title'>Overview: </h3>
+          <p class="overview-text">{{this.movie.overview}}</p>
+        </div>
           <CreateReview
             v-if="user_id && !userHasReview"
             v-bind:refreshReviews="refreshReviews"
@@ -192,6 +196,19 @@ export default {
   filter: blur(3px);
 }
 
+.overview-container {
+  background-color: rgba(215,215,215,0.5);
+  border-radius: 5px;
+  padding: 5px;
+}
+
+.overview-title {
+  font-size: 2em;
+}
+.overview-text {
+  font-size: 1em;
+}
+
 @media screen and (max-width: 850px) {
   .movie-image {
     max-height: 45vh;
@@ -210,6 +227,9 @@ export default {
   /* .movie-image {
     max-height: 40vh;
   } */
+  .overview-title {
+    font-size: 1.5em;
+  }
 }
 .review-data {
   border-radius: 5px;
