@@ -282,4 +282,27 @@ a span {
   color: #eee;
   cursor: pointer;
 }
+
+.content > div > label {
+  font-weight: bold;
+}
+.content > div > input {
+  border: none;
+  border-bottom: 1px solid #000;
+}
+.content > div > input:focus {
+  background-color: #efefef;
+}
+.content > div {
+  display: flex;
+  justify-content: space-between;
+  width:15%;
+  margin: 0.5% 0;
+}
+
+@media only screen and (max-width: 600px) {
+    .content > div {
+          width:75%;
+    }
+}
 </style>

@@ -1,5 +1,6 @@
 <template>
   <div>
+    <!-- LINE UP FORM DATA -->
     <section class="account-data">
       <input
         type="checkbox"
@@ -332,14 +333,15 @@ export default {
 .hidden-input ~ div > input:focus {
   background-color: #efefef;
 }
-
+.hidden-input:checked ~ div {
+  display: flex;
+  justify-content: space-between;
+  width: 20%;
+}
 .optional {
   font-weight: normal;
 }
 
-.hidden-input:checked ~ div {
-  display: block;
-}
 
 section {
   border: 1px solid #000;

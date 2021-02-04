@@ -7,12 +7,14 @@
         <input v-model="email" />
       </div>
       <div>
-      <label>Password: </label>
-      <input v-model="password" type="password" />
+        <label>Password: </label>
+        <input v-model="password" type="password" />
       </div>
       <button v-on:click="authenticateUser" class="button">Submit</button>
       <a href="/register">Don't have an account?&nbsp;<span>Register!</span></a>
-      <a href="/emailconfirmation">Forgot your Password?&nbsp;<span>Reset it here!</span></a>
+      <a href="/emailconfirmation"
+        >Forgot your Password?&nbsp;<span>Reset it here!</span></a
+      >
     </div>
   </div>
 </template>
@@ -108,5 +110,28 @@ a span {
   background-color: rgb(0, 162, 255);
   color: #eee;
   cursor: pointer;
+}
+
+.content > div > label {
+  font-weight: bold;
+}
+.content > div > input {
+  border: none;
+  border-bottom: 1px solid #000;
+}
+.content > div > input:focus {
+  background-color: #efefef;
+}
+.content > div {
+  display: flex;
+  justify-content: space-between;
+  width:15%;
+  margin: 0.5% 0;
+}
+
+@media only screen and (max-width: 600px) {
+    .content > div {
+          width:75%;
+    }
 }
 </style>
