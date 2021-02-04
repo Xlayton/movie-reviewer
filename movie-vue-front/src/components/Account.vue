@@ -334,4 +334,15 @@ section {
   border: 1px solid #000;
   border-radius: 5px;
 }
+
+.button {
+  align-self: flex-end;
+  color: rgb(0, 162, 255);
+  background-color: #fff;
+  border: solid 3px;
+  border-color: rgb(0, 162, 255);
+  padding: 5px 10px;
+  border-radius: 8px;
+  font-size: 14px;
+}
 </style>
