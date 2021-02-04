@@ -87,6 +87,7 @@ textarea {
   background-color: #fff;
   font-family: "Roboto";
   box-sizing: border-box;
+  width: 100%;
 }
 .review {
   display: flex;
