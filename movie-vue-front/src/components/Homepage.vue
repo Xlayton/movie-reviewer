@@ -250,6 +250,7 @@ input {
 
 .movie:hover {
   background-color: rgb(221, 221, 221);
+  border-color:rgb(0, 162, 255);
   cursor: pointer;
 }
 
