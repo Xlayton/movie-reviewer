@@ -49,7 +49,9 @@
               : movie.original_title
           }}
         </h3>
-        <ReviewStars v-bind:score="reviewsAvg[movie.id]" :size="30" />
+        <div class="review">
+          <ReviewStars v-bind:score="reviewsAvg[movie.id]" :size="30" />
+        </div>
         <!-- <p class="release">Released On: {{ movie.release_date }}</p> -->
       </div>
     </div>
@@ -70,8 +72,9 @@
               : movie.original_title
           }}
         </h3>
-
-        <ReviewStars v-bind:score="reviewsAvg[movie.id]" :size="30" />
+        <div class="review">
+          <ReviewStars v-bind:score="reviewsAvg[movie.id]" :size="30" />
+        </div>
         <!-- <p class="release">Released On: {{ movie.release_date }}</p> -->
       </div>
     </div>
@@ -193,7 +196,7 @@ export default {
           .then((res) => res.json())
           .then((data) => {
             if (Array.isArray(data)) {
-              console.log(data);
+              // console.log(data);
               reviews = data;
               let total = 0;
               reviews.forEach((review) => {
@@ -201,7 +204,7 @@ export default {
                 console.log("Total", total);
               });
               let average = total / reviews.length;
-              console.log("Average", average);
+              // console.log("Average", average);
               this.reviewsAvg[movie.id] = average;
               this.$forceUpdate()
             }
@@ -311,10 +314,36 @@ input {
 }
 
 .movie:hover {
-  background-color: rgb(221, 221, 221);
-  border-color:rgb(0, 162, 255);
+  background-color: rgb(223, 223, 223);
+  border-color:#00a2ff;
   cursor: pointer;
+  animation: bounce 1s;
 }
+
+@keyframes bounce {
+  0%, 20%, 60%, 100% {
+    -webkit-transform: translateY(0);
+    transform: translateY(0);
+  }
+
+  40% {
+    -webkit-transform: translateY(-20px);
+    transform: translateY(-20px);
+  }
+
+  80% {
+    -webkit-transform: translateY(-10px);
+    transform: translateY(-10px);
+  }  
+}
+
+/* .movie:hover .review {
+  display: block;
+}
+
+.review {
+  display: none;
+} */
 
 .title {
   font-weight: bold;
