@@ -132,7 +132,7 @@ export default {
 }
 .review-list {
   width: 70%;
-  margin: 10% 0;
+  margin: 5% 0;
 }
 
 
