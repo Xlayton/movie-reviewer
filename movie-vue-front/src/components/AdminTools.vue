@@ -1,17 +1,78 @@
 <template>
   <div class="userList">
-    <div class="userRow" v-for="user in users" :key="user[0]">
-      <p className="userAttribute">{{ user[0] }}</p>
-      <p className="userAttribute">{{ user[1] }}</p>
-      <p className="userAttribute">{{ user[2] }}</p>
-      <p className="userAttribute">{{ user[3] }}</p>
-      <p className="userAttribute">{{ user[8] }}</p>
-      <p className="userAttribute">{{ user[10] }}</p>
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Username</th>
+          <th>First Name</th>
+          <th>Last Name</th>
+          <th>Email</th>
+          <th>Phone</th>
+          <th>User/Admin</th>
+          <th>Toggle Admin</th>
+          <th>Delete Account</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-for="user in users" :key="user[0]">
+          <td>{{ user[0] }})</td>
+          <td>{{ user[1] }}</td>
+          <td>{{ user[2] }}</td>
+          <td>{{ user[3] }}</td>
+          <td>{{ user[8] }}</td>
+          <td class="phone">{{ user[10] }}</td>
+          <td v-if="user[11] === 1">Admin</td>
+          <td v-if="user[11] !== 1">User</td>
+          <td>
+            <button
+              class="button black"
+              v-if="currentId !== user[0]"
+              :id="user[0]"
+              v-on:click="makeAdmin(user[0], user[11])"
+            >
+              Toggle Admin
+            </button>
+          </td>
+          <td>
+            <button
+              class="button black"
+              v-if="currentId !== user[0]"
+              :id="user[0]"
+              v-on:click="deleteUser(user[0])"
+            >
+              Delete User
+            </button>
+          </td>
+        </tr>
+        <br/>
+        <br/>
+      </tbody>
+    </table>
+    <!-- <div class="userRow" v-for="user in users" :key="user[0]">
+      <div>
+        <p className="userAttribute"></p>
+      </div>
+      <div class="username">
+        <p className="userAttribute">{{ user[1] }}</p>
+      </div>
+      <div class="firstName">
+        <p className="userAttribute">{{ user[2] }}</p>
+      </div>
+      <div class="lastName">
+        <p className="userAttribute">{{ user[3] }}</p>
+      </div>
+      <div class="email">
+        <p className="userAttribute">{{ user[8] }}</p>
+      </div>
+      <div class="phone">
+        <p className="userAttribute">{{ user[10] }}</p>
+      </div>
       <p className="userAttribute" v-if="user[11] === 1">Admin</p>
-      <p className="userAttribute" v-if="user[11] !== 1">User</p>
+      <p className="userAttribute" v-if="user[11] !== 1">User</p> -->
       <!-- {user[11] === 1 ? (<p className="userAttribute">Admin</p>) : (<p className="userAttribute">User</p>)} -->
       <!-- {/* Ignore user one because this is the common test user */} -->
-      <button
+      <!-- <button
         v-if="currentId !== user[0] && user[0] !== 1"
         :id="user[0]"
         v-on:click="makeAdmin(user[0], user[11])"
@@ -25,7 +86,7 @@
       >
         Delete User
       </button>
-    </div>
+    </div> -->
   </div>
 </template>
 
@@ -120,17 +181,87 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .userList {
-  width: 70%;
+  width: 90%;
 }
+
+.userList p {
+  margin: 10px;
+}
+
+.username {
+  width: 100px;
+  text-align: left;
+  margin-right: 25px;
+}
+
+table {
+  border-spacing: 10px;
+}
+
+thead th {
+  border-bottom: 2px solid black;
+}
+
+td {
+  width: auto;
+  text-align: center;
+}
+
+.underline {
+  width: 90%;
+}
+
 .userAttribute {
   width: 12%;
-  padding-left: 10px;
+  padding-right: 100px;
 }
+
 .userRow {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
+  align-content: flex-end;
+  text-align: left;
 }
+
+.button {
+  color: rgb(0, 162, 255);
+  background-color: #fff;
+  border: solid 3px;
+  border-color: rgb(0, 162, 255);
+  padding: 5px 10px;
+  border-radius: 8px;
+  font-size: 14px;
+}
+
+.button:hover {
+  background-color: rgb(0, 162, 255);
+  color: #eee;
+  cursor: pointer;
+}
+
+.large {
+  padding: 15px 30px;
+  border-radius: 2px;
+  font-size: 18px;
+  text-transform: uppercase;
+}
+
+.black{
+  color: rgb(41, 41, 41);
+  background-color: #fff;
+  border: solid 3px;
+  border-color: rgb(41, 41, 41);
+  padding: 5px 10px;
+  font-size: 12pt;
+}
+
+.black:hover {
+  background-color: rgb(41, 41, 41);
+  color: #eee;
+  cursor: pointer;
+}
+
 </style>
