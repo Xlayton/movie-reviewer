@@ -61,7 +61,7 @@ export default {
     font-size: 14pt;
     padding-right: 10px;
     margin: 0;
-    color: rgb(0, 162, 255);
+    color: rgb(0, 162, 255) !important;
 }
 
 .home a {

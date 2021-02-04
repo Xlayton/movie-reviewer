@@ -228,9 +228,10 @@ export default {
   },
   watch: {
     moviesFirstHalf: function (movies) {
-      console.log("Movies", movies);
       this.getAverageScores(movies);
-      console.log("Averages", this.reviewsAvg);
+    },
+    moviesSecondHalf: function (movies) {
+      this.getAverageScores(movies);
     },
   },
 };
