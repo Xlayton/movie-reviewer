@@ -25,7 +25,7 @@
       <br />
     </div> -->
     <div class="MovieSet">
-      <div class="movie" v-for="movie in moviesFirstHalf" :key="movie.id">
+      <div class="movie" v-for="(movie, index) in moviesFirstHalf" :key="movie.id">
         <router-link v-bind:to="'/movie?id=' + movie.id + '&user_id=' + user_id">
           <img
             v-bind:src="'https://image.tmdb.org/t/p/w500/' + movie.poster_path"
@@ -33,7 +33,8 @@
           />
         </router-link>
         <h3 class="title">{{ movie.original_title }}</h3>
-        <p class="release">Released On: {{ movie.release_date }}</p>
+        <ReviewStars v-bind:score="reviewsAvg[index]" :size="30" />
+        <!-- <p class="release">Released On: {{ movie.release_date }}</p> -->
       </div>
     </div>
     <div v-if="renderSecondHalf" class="MovieSet">
@@ -45,7 +46,8 @@
           />
         </router-link>
         <h3 class="title">{{ movie.original_title }}</h3>
-        <p class="release">Released On: {{ movie.release_date }}</p>
+        <ReviewStars v-bind:score="getAverageScore(movie.id)" :size="30" />
+        <!-- <p class="release">Released On: {{ movie.release_date }}</p> -->
       </div>
     </div>
     <br />
@@ -64,6 +66,7 @@
 
 <script>
 import GenreSelectionDropdown from "./GenreSelectionDropdown.vue";
+import ReviewStars from "./ReviewStars.vue";
 export default {
   name: "homepage",
   data() {
@@ -73,10 +76,11 @@ export default {
       searchText: "",
       query: "title",
       user_id: "",
-      renderSecondHalf: false
+      renderSecondHalf: false,
+      reviewsAvg: []
     };
   },
-  components: { GenreSelectionDropdown },
+  components: { GenreSelectionDropdown, ReviewStars },
   methods: {
     handleSearchQuery() {
       if (this.query === "title") {
@@ -152,7 +156,26 @@ export default {
     showAllMovies(){
       this.renderSecondHalf = true;
       document.getElementById('showMore').style.display = "none";
-    }
+    },
+    getAverageScore(movieId) {
+      var reviews = [];
+      fetch(`http://localhost:8080/api/reviews/?movie_id=${movieId}`)
+        .then((res) => res.json())
+        .then((data) => {
+          if (Array.isArray(data)) {
+            console.log(data);
+            reviews = data;
+            let total = 0;
+            reviews.forEach((review) => {
+              total += review[4];
+              console.log("Total", total);
+            });
+            let average = total / reviews.length;
+            console.log("Average", average);
+            this.reviewsAvg.push(average);
+          }
+      });
+    },
   },
   created() {
     if (!window.sessionStorage.getItem("pageNumber")) {
@@ -237,7 +260,7 @@ input {
   text-align: center;
   border-color: #333;
   border-radius: 8px;
-  padding: 10px 20px 42px 20px;
+  padding: 10px 10px 60px 10px;
   margin: 10px;
   width: 225px;
   height: 415px;
