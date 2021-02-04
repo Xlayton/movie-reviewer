@@ -345,13 +345,4 @@ section {
   border-radius: 8px;
   font-size: 14px;
 }
-
-.review-container {
-  display: flex;
-  align-items: center;
-  flex-direction: row;
-  width: 100%;
-  overflow-wrap: anywhere;
-  hyphens: auto;
-}
 </style>
