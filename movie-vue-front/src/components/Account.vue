@@ -13,6 +13,7 @@
       <label for="openData" v-if="show_account_data" class="dropdown-header"
         ><span>&#8595;</span>&nbsp;Account Data</label
       >
+      <p v-if="update_text" class="update-text">{{update_text}}</p>
       <div>
         <p v-if="emailError" class="error-text">{{ this.emailError }}</p>
         <label><span class="required-marker">*</span>Email: </label>
@@ -118,6 +119,7 @@ export default {
       stateError: "",
       phoneError: "",
       zip_codeError: "",
+      update_text: "",
       user_reviews: [],
       show_account_data: false,
       show_reviews: true
@@ -151,9 +153,15 @@ export default {
             if (!res.ok) throw res;
             res.json();
           })
-          .then((data) => console.log(data))
+          .then(() => {
+            setTimeout(() => this.update_text = "", 3000)
+            this.update_text="Update Successful!"
+            })
           .catch((err) => {
-            err.text().then((txt) => console.log(txt));
+            err.text().then(() => {
+              setTimeout(() => this.update_text = "", 3000)
+              this.update_text="Update Failed!"
+              });
           });
       } else {
         this.renderValidation(errors);
@@ -344,5 +352,10 @@ section {
   padding: 5px 10px;
   border-radius: 8px;
   font-size: 14px;
+}
+
+.update-text {
+  color: #000;
+  font-size: 1em;
 }
 </style>
